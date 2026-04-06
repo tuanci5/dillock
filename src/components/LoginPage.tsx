@@ -1,0 +1,148 @@
+import React, { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import { motion } from 'motion/react';
+import { ShieldCheck, Loader2, AlertCircle, Lock, Wifi } from 'lucide-react';
+
+interface GoogleUser {
+  email: string;
+  name: string;
+  picture: string;
+}
+
+interface LoginPageProps {
+  onLoginSuccess: (user: any) => void;
+}
+
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/18COLyL6c9rO0QQjg3EndMpqvAa2aRiDCYyqQK_KcoZI/export?format=csv';
+
+const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSuccess = async (credentialResponse: any) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const decoded: GoogleUser = jwtDecode(credentialResponse.credential);
+      const userEmail = decoded.email.toLowerCase();
+
+      // Fetch the authorized emails from Google Sheet (CSV format)
+      const response = await fetch(SHEET_CSV_URL);
+      const csvData = await response.text();
+      
+      // Parse CSV (Column A = Email, Column B = Role)
+      const lines = csvData.split('\n').map(line => line.split(','));
+      
+      // Find user in the list
+      const authorizedUser = lines.find(row => 
+        row[0] && row[0].trim().toLowerCase() === userEmail
+      );
+
+      if (authorizedUser) {
+        const userData = {
+          ...decoded,
+          role: authorizedUser[1]?.trim() || 'Thành viên'
+        };
+        
+        // Success: pass user data back to App
+        onLoginSuccess(userData);
+      } else {
+        setError(`Email ${userEmail} không có trong danh sách được phép. Vui lòng liên hệ Quản trị viên.`);
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Đã có lỗi xảy ra trong quá trình xác thực. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen w-full bg-[#0a0f1a] flex flex-col items-center justify-center p-4 selection:bg-blue-500/30">
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-[420px] relative z-10"
+      >
+        <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl shadow-blue-900/20">
+          {/* Logo & Header */}
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 mb-6 group transition-transform hover:scale-110">
+              <Wifi className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Sky Mobile Dashboard</h1>
+            <p className="text-slate-400 text-sm font-medium">Hệ thống Quản trị Doanh nghiệp</p>
+          </div>
+
+          {/* Info Card */}
+          <div className="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-5 mb-8 flex items-start gap-4">
+            <div className="p-2 bg-blue-500/10 rounded-lg shrink-0">
+              <ShieldCheck className="w-5 h-5 text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-blue-200 text-sm font-bold mb-1">Xác thực 2 Lớp</h3>
+              <p className="text-blue-200/60 text-xs leading-relaxed">
+                Hệ thống yêu cầu đăng nhập tài khoản Google và kiểm tra email thủ công để cấp quyền truy cập.
+              </p>
+            </div>
+          </div>
+
+          {/* Login Section */}
+          <div className="space-y-6">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl flex items-start gap-3"
+              >
+                <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                <p className="text-red-200 text-xs leading-relaxed">{error}</p>
+              </motion.div>
+            )}
+
+            <div className="relative flex justify-center py-2">
+              {isLoading ? (
+                <div className="flex flex-col items-center gap-4 py-4">
+                  <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+                  <p className="text-blue-200/50 text-sm animate-pulse">Đang kiểm tra quyền hạn...</p>
+                </div>
+              ) : (
+                <div className="w-full transform transition-all hover:scale-[1.02] active:scale-[0.98]">
+                  <GoogleLogin
+                    onSuccess={handleSuccess}
+                    onError={() => setError('Đăng nhập thất bại. Vui lòng thử lại.')}
+                    useOneTap
+                    theme="filled_blue"
+                    shape="pill"
+                    width="100%"
+                    text="continue_with"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-center gap-2 pt-4">
+              <Lock className="w-3 h-3 text-slate-500" />
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Authorized Personnel Only</span>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-center mt-10 text-slate-600 text-sm">
+          &copy; 2026 Sky Mobile. All rights reserved.
+        </p>
+      </motion.div>
+    </div>
+  );
+};
+
+export default LoginPage;

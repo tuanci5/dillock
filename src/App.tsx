@@ -46,6 +46,10 @@ import { JobDescription, Role, ProcessStep } from './types';
 import { JD_DATA, ROLES } from './data/hrData';
 import { PROCESS_STEPS, DEPARTMENTS } from './data/modelData';
 import { TRAINING_GROUPS, CULTURE_PILLARS, CORE_VALUES } from './data/trainingData';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import LoginPage from './components/LoginPage';
+
+const GOOGLE_CLIENT_ID = '637002508826-b7jmlrenhbagrh6rjp4m4uq8n210fq9a.apps.googleusercontent.com';
 
 // --- Types ---
 
@@ -347,7 +351,21 @@ const ValueSection = () => (
 
 // --- Main App ---
 
-const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activeTab: TabType, setActiveTab: (t: TabType) => void, activeDept: string | null, setActiveDept: (d: string | null) => void }) => {
+const Sidebar = ({ 
+  activeTab, 
+  setActiveTab, 
+  activeDept, 
+  setActiveDept,
+  onLogout,
+  user
+}: { 
+  activeTab: TabType, 
+  setActiveTab: (t: TabType) => void, 
+  activeDept: string | null, 
+  setActiveDept: (d: string | null) => void,
+  onLogout: () => void,
+  user: any
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
@@ -362,6 +380,10 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
     { id: 'cost', label: 'Cơ cấu chi phí', icon: <PieChart className="w-5 h-5" /> },
     { id: 'training', label: 'Đào tạo & Văn hóa', icon: <GraduationCap className="w-5 h-5" /> },
   ];
+
+  // Filter menu items if not admin (though user said Quản trị can see everything, 
+  // we can add logic here if other roles are added later)
+  const filteredMenuItems = menuItems;
 
   return (
     <>
@@ -406,8 +428,18 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
             </div>
           </div>
 
-          <nav className="space-y-2">
-            {menuItems.map((item) => (
+          {user && (
+            <div className="mb-6 mx-2 p-3 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-3">
+              <img src={user.picture} alt="" className="w-8 h-8 rounded-full border border-blue-500/30" />
+              <div className="overflow-hidden">
+                <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                <p className="text-[10px] text-blue-400 font-medium">{user.role}</p>
+              </div>
+            </div>
+          )}
+
+          <nav className="space-y-1">
+            {filteredMenuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
@@ -434,12 +466,15 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
               </button>
             ))}
           </nav>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-xs text-slate-400 mb-1">Phiên bản</p>
-            <p className="text-sm font-bold">v2.0 - Specialized</p>
+          
+          <div className="absolute bottom-6 left-6 right-6">
+            <button 
+              onClick={onLogout}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 border border-transparent hover:border-red-500/20"
+            >
+              <X className="w-5 h-5" />
+              <span className="font-bold text-xs uppercase tracking-wider">Đăng xuất</span>
+            </button>
           </div>
         </div>
       </motion.aside>
@@ -995,11 +1030,32 @@ const TrainingTab = () => {
   );
 };
 
-export default function App() {
+function AppContent() {
+  const [user, setUser] = useState<any>(() => {
+    const savedUser = localStorage.getItem('sky_mobile_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   const [activeTab, setActiveTab] = useState<TabType>('model');
   const [activeRole, setActiveRole] = useState<string>('head');
   const [activeDept, setActiveDept] = useState<string | null>(null);
   const [activeTeam, setActiveTeam] = useState<'marketing' | 'sale' | 'cskh' | null>(null);
+
+  const handleLoginSuccess = (userData: any) => {
+    localStorage.setItem('sky_mobile_user', JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('sky_mobile_user');
+    setUser(null);
+  };
+
+  if (!user) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  const canAccessSensitive = user.role === 'Quản trị';
 
   type TeamDetail = {
     title: string;
@@ -1697,7 +1753,20 @@ export default function App() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} activeDept={activeDept} setActiveDept={setActiveDept} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={(tab) => {
+          if (!canAccessSensitive && (tab === 'salary' || tab === 'cost')) {
+            alert('Bạn không có quyền truy cập mục này.');
+            return;
+          }
+          setActiveTab(tab);
+        }} 
+        activeDept={activeDept} 
+        setActiveDept={setActiveDept} 
+        onLogout={handleLogout}
+        user={user}
+      />
       
       <main className="flex-1 p-4 md:p-12 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
@@ -1711,8 +1780,8 @@ export default function App() {
             >
               {activeTab === 'model' && <ModelTab />}
               {activeTab === 'hr' && <HRTab selectedRole={activeRole} setSelectedRole={setActiveRole} setActiveTab={setActiveTab} />}
-              {activeTab === 'salary' && <SalaryTab selectedRole={activeRole} setSelectedRole={setActiveRole} setActiveTab={setActiveTab} />}
-              {activeTab === 'cost' && <CostTab />}
+              {activeTab === 'salary' && (canAccessSensitive ? <SalaryTab selectedRole={activeRole} setSelectedRole={setActiveRole} setActiveTab={setActiveTab} /> : <div className="text-center py-20 text-slate-400">Bạn không có quyền truy cập mục này.</div>)}
+              {activeTab === 'cost' && (canAccessSensitive ? <CostTab /> : <div className="text-center py-20 text-slate-400">Bạn không có quyền truy cập mục này.</div>)}
               {activeTab === 'training' && <TrainingTab />}
             </motion.div>
           </AnimatePresence>
@@ -1726,5 +1795,13 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AppContent />
+    </GoogleOAuthProvider>
   );
 }
