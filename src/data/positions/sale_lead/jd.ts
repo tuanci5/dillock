@@ -17,6 +17,7 @@ export const saleLeadJD: JobDescription = {
     'Doanh thu của đội tư vấn',
     'Chất lượng cập nhật thông tin khách hàng'
   ],
-  salaryRange: '20M - 30M VNĐ',
+  salaryRange: '12M - 18M VNĐ',
+  baseSalary: '8M - 10M VNĐ',
   salaryCalculation: 'Lương cứng + % Doanh thu đội + Thưởng KPI đội'
 };

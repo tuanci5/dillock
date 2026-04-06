@@ -15,6 +15,7 @@ export const mktContentJD: JobDescription = {
     'Mức độ tương tác của nội dung',
     'Tỷ lệ chuyển đổi từ nội dung sang inbox/form'
   ],
-  salaryRange: '10M - 15M VNĐ',
+  salaryRange: '7M - 10M VNĐ',
+  baseSalary: '5.5M - 7M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng theo tương tác/chuyển đổi nội dung'
 };

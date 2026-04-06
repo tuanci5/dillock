@@ -14,6 +14,7 @@ export const opsJD: JobDescription = {
     'Tỷ lệ sai sót đơn hàng',
     'Tốc độ xử lý đơn'
   ],
-  salaryRange: '8M - 12M VNĐ',
+  salaryRange: '6M - 8M VNĐ',
+  baseSalary: '5M - 6M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng KPI vận hành'
 };

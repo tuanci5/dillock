@@ -14,6 +14,7 @@ export const mktMediaJD: JobDescription = {
     'Chất lượng hình ảnh/video',
     'Mức độ phù hợp với khách hàng mục tiêu'
   ],
-  salaryRange: '10M - 15M VNĐ',
+  salaryRange: '7M - 10M VNĐ',
+  baseSalary: '5.5M - 7M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng theo tiến độ/chất lượng ấn phẩm'
 };

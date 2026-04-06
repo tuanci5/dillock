@@ -16,6 +16,7 @@ export const cskhStaffJD: JobDescription = {
     'Số khách tái mua/giới thiệu thêm',
     'Mức độ hài lòng của khách hàng'
   ],
-  salaryRange: '10M - 15M VNĐ + Thưởng gia hạn',
+  salaryRange: '7M - 10M VNĐ + Thưởng gia hạn',
+  baseSalary: '5.5M - 7M VNĐ',
   salaryCalculation: 'Lương cứng + % Thưởng trên doanh thu gia hạn'
 };

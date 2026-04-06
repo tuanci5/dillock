@@ -17,6 +17,7 @@ export const cskhLeadJD: JobDescription = {
     'Tỷ lệ xử lý vấn đề thành công',
     'Doanh thu từ khách cũ'
   ],
-  salaryRange: '18M - 25M VNĐ',
+  salaryRange: '12M - 16M VNĐ',
+  baseSalary: '8M - 10M VNĐ',
   salaryCalculation: 'Lương cứng + % Doanh thu gia hạn toàn đội + Thưởng KPI CSKH'
 };

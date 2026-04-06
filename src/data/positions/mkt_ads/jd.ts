@@ -16,6 +16,7 @@ export const mktAdsJD: JobDescription = {
     'Tỷ lệ lead hợp lệ',
     'Hiệu suất ngân sách quảng cáo'
   ],
-  salaryRange: '12M - 18M VNĐ',
+  salaryRange: '8M - 12M VNĐ',
+  baseSalary: '6.5M - 8M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng theo hiệu quả Ads (Lead/Cost)'
 };

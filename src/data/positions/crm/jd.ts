@@ -14,6 +14,7 @@ export const crmJD: JobDescription = {
     'Tỷ lệ cập nhật đúng hạn',
     'Chất lượng báo cáo'
   ],
-  salaryRange: '10M - 15M VNĐ',
+  salaryRange: '7M - 10M VNĐ',
+  baseSalary: '5.5M - 7M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng KPI vận hành/báo cáo'
 };

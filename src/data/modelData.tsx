@@ -1,14 +1,21 @@
 import React from 'react';
-import { Target, Users, MessageSquare, TrendingUp, Cpu, Briefcase, DollarSign } from 'lucide-react';
+import { Target, Users, MessageSquare, TrendingUp, Cpu, Briefcase, DollarSign, Megaphone } from 'lucide-react';
 import { ProcessStep, Department } from '../types';
 
 export const DEPARTMENTS: Department[] = [
   {
     id: 'sales-mkt',
-    title: 'Kinh doanh – Marketing – CSKH',
-    description: 'Quản lý doanh thu, thu hút khách hàng và chăm sóc sau bán.',
+    title: 'Phòng KD - MKT (Hiệu suất)',
+    description: 'Chạy ads chuyển đổi, quản lý khách hàng và tái chốt đơn hiệu quả.',
     icon: <MessageSquare className="w-6 h-6" />,
     color: 'bg-blue-600'
+  },
+  {
+    id: 'comms-dept',
+    title: 'Phòng Truyền thông',
+    description: 'Xây dựng hình ảnh thương hiệu, Viral content, PR và xử lý khủng hoảng.',
+    icon: <Megaphone className="w-6 h-6" />,
+    color: 'bg-amber-500'
   },
   {
     id: 'hr-dept',

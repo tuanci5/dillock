@@ -39,5 +39,6 @@ export interface JobDescription {
   kpis: string[];
   requirements?: string[];
   salaryRange: string;
+  baseSalary?: string;
   salaryCalculation: string;
 }

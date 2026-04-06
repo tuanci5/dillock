@@ -17,6 +17,7 @@ export const mktLeadJD: JobDescription = {
     'Tỷ lệ lead đúng tệp',
     'Tỷ lệ chuyển đổi từ lead sang tư vấn'
   ],
-  salaryRange: '20M - 30M VNĐ',
+  salaryRange: '12M - 18M VNĐ',
+  baseSalary: '8M - 10M VNĐ',
   salaryCalculation: 'Lương cứng + Thưởng theo số lượng Lead chất lượng'
 };

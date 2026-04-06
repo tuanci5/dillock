@@ -14,6 +14,7 @@ export const telesaleJD: JobDescription = {
     'Tỷ lệ chốt qua điện thoại',
     'Doanh thu từ data telesales'
   ],
-  salaryRange: '8M - 12M VNĐ + Hoa hồng',
+  salaryRange: '6M - 8M VNĐ + Hoa hồng',
+  baseSalary: '4M - 5M VNĐ',
   salaryCalculation: 'Lương cứng + % Hoa hồng trên đơn hàng chốt được'
 };

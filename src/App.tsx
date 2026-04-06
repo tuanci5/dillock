@@ -33,16 +33,23 @@ import {
   Briefcase,
   Award,
   DollarSign,
-  PieChart
+  PieChart,
+  AlertCircle,
+  Cpu,
+  GraduationCap,
+  BookOpen,
+  Star,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { JobDescription, Role, ProcessStep } from './types';
 import { JD_DATA, ROLES } from './data/hrData';
 import { PROCESS_STEPS, DEPARTMENTS } from './data/modelData';
+import { TRAINING_GROUPS, CULTURE_PILLARS, CORE_VALUES } from './data/trainingData';
 
 // --- Types ---
 
-type TabType = 'model' | 'hr' | 'salary';
+type TabType = 'model' | 'hr' | 'salary' | 'cost' | 'training';
 
 // --- Components ---
 
@@ -346,10 +353,14 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
   const menuItems = [
     { id: 'model', label: 'Mô hình Vận hành', icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: 'sales-mkt', label: 'P. KD - MKT', icon: <MessageSquare className="w-4 h-4" />, indent: true, small: true },
+    { id: 'comms-dept', label: 'P. Truyền thông', icon: <Megaphone className="w-4 h-4" />, indent: true, small: true },
     { id: 'hr-dept', label: 'P. HCNS', icon: <Briefcase className="w-4 h-4" />, indent: true, small: true },
     { id: 'finance-dept', label: 'P. Kế toán', icon: <DollarSign className="w-4 h-4" />, indent: true, small: true },
+    { id: 'technical', label: 'P. Kỹ thuật', icon: <Cpu className="w-4 h-4" />, indent: true, small: true },
     { id: 'hr', label: 'Nhân sự & JD', icon: <UserCog className="w-5 h-5" /> },
     { id: 'salary', label: 'Lương & KPI', icon: <Wallet className="w-5 h-5" /> },
+    { id: 'cost', label: 'Cơ cấu chi phí', icon: <PieChart className="w-5 h-5" /> },
+    { id: 'training', label: 'Đào tạo & Văn hóa', icon: <GraduationCap className="w-5 h-5" /> },
   ];
 
   return (
@@ -400,7 +411,7 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
               <button
                 key={item.id}
                 onClick={() => {
-                  if (['sales-mkt', 'hr-dept', 'finance-dept'].includes(item.id)) {
+                  if (['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'].includes(item.id)) {
                     setActiveTab('model');
                     setActiveDept(item.id);
                   } else if (item.id === 'model') {
@@ -413,7 +424,7 @@ const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activ
                   setIsOpen(false);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 ${item.indent ? 'ml-6' : ''} ${item.small ? 'text-sm' : ''} ${
-                  (activeTab === item.id || (['sales-mkt', 'hr-dept', 'finance-dept'].includes(item.id) && activeDept === item.id))
+                  (activeTab === item.id || (['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'].includes(item.id) && activeDept === item.id))
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
@@ -593,8 +604,6 @@ const HRTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRole: 
 };
 
 const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRole: string, setSelectedRole: (role: string) => void, setActiveTab: (tab: TabType) => void }) => {
-  const [selectedSalary, setSelectedSalary] = useState<string>('head');
-
   return (
     <div className="max-w-6xl mx-auto">
       <header className="mb-10">
@@ -608,9 +617,9 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
           {Object.entries(JD_DATA).map(([id, jd]) => (
             <button
               key={id}
-              onClick={() => setSelectedSalary(id)}
+              onClick={() => setSelectedRole(id)}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
-                selectedSalary === id
+                selectedRole === id
                   ? 'bg-white border-2 border-blue-600 shadow-sm text-blue-700 font-bold'
                   : 'bg-transparent border-2 border-transparent text-slate-600 hover:bg-slate-100'
               }`}
@@ -624,7 +633,7 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
         <div className="lg:col-span-3">
           <AnimatePresence mode="wait">
             <motion.div
-              key={selectedSalary}
+              key={selectedRole}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -635,7 +644,7 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
                   <DollarSign className="w-8 h-8" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedSalary].title}</h3>
+                  <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
                   <p className="text-slate-500 italic">Cơ chế đãi ngộ</p>
                 </div>
                 <button
@@ -647,14 +656,20 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                  <h4 className="font-bold text-blue-900 mb-2">Mức lương</h4>
-                  <p className="text-2xl font-bold text-blue-700">{JD_DATA[selectedSalary].salaryRange}</p>
+                  <h4 className="font-bold text-blue-900 mb-2">Tổng thu nhập</h4>
+                  <p className="text-2xl font-bold text-blue-700">{JD_DATA[selectedRole].salaryRange}</p>
                 </div>
+                {JD_DATA[selectedRole].baseSalary && (
+                  <div className="p-6 bg-rose-50 rounded-2xl border border-rose-100">
+                    <h4 className="font-bold text-rose-900 mb-2">Lương cứng</h4>
+                    <p className="text-2xl font-bold text-rose-700">{JD_DATA[selectedRole].baseSalary}</p>
+                  </div>
+                )}
                 <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
                   <h4 className="font-bold text-emerald-900 mb-2">Cách tính</h4>
-                  <p className="text-slate-700">{JD_DATA[selectedSalary].salaryCalculation}</p>
+                  <p className="text-sm text-slate-700">{JD_DATA[selectedRole].salaryCalculation}</p>
                 </div>
               </div>
             </motion.div>
@@ -734,29 +749,412 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
   );
 };
 
+const CostTab = () => {
+  return (
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-10 flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <PieChart className="w-8 h-8 text-blue-600" />
+            Cơ cấu Chi phí & Biên Lợi nhuận
+          </h2>
+          <p className="text-slate-600 mt-2">Đề xuất mô hình tài chính phân loại theo nhóm sản phẩm cốt lõi.</p>
+        </div>
+      </div>
+
+      <div className="space-y-8">
+        {/* A. Nhóm SIM Data bán đứt 1 năm */}
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-indigo-100 text-indigo-600 rounded-2xl">
+              <ShoppingCart className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">A. Nhóm SIM Data bán đứt 1 năm</h3>
+          </div>
+          <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: 5GB giá vốn ~65%, 10GB giá vốn ~71%</p>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-50 text-red-700 rounded-xl"><span>Giá vốn trực tiếp</span><span className="font-bold">65% – 72%</span></div>
+                <div className="flex items-center justify-between p-3 bg-amber-50 text-amber-700 rounded-xl"><span>Marketing</span><span className="font-bold">4% – 6%</span></div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 text-blue-700 rounded-xl"><span>Phòng KD-Marketing-CSKH</span><span className="font-bold">6% – 8%</span></div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 text-slate-700 rounded-xl"><span>Cố định & Rủi ro</span><span className="font-bold">4% – 6%</span></div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-center items-center p-8 bg-emerald-50 rounded-2xl border border-emerald-100 shadow-[inset_0_0_20px_rgba(0,0,0,0.02)] relative overflow-hidden">
+              <div className="absolute -right-4 -bottom-4 opacity-5"><ShoppingCart className="w-48 h-48" /></div>
+              <TrendingUp className="w-12 h-12 text-emerald-500 mb-4 z-10" />
+              <div className="text-center z-10">
+                <span className="block text-sm text-emerald-800 font-bold mb-1">LỢI NHUẬN RÒNG LẦN MUA</span>
+                <span className="text-4xl font-black text-emerald-600">8% - 15%</span>
+              </div>
+              <p className="text-xs text-emerald-600/80 mt-4 text-center z-10">Thu tiền ngay 1 lần, biên lợi nhuận nằm gọn ở giao dịch đầu.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* B. Nhóm SIM Data thu cước hàng tháng */}
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-rose-100 text-rose-600 rounded-2xl">
+              <RefreshCcw className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">B. Nhóm SIM Data Thu cước hàng tháng</h3>
+          </div>
+          <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: Softbank 30GB giá vốn ~76%, Rakuten 100GB giá vốn ~80%</p>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-50 text-red-700 rounded-xl"><span>Giá vốn trực tiếp</span><span className="font-bold">74% – 80%</span></div>
+                <div className="flex items-center justify-between p-3 bg-amber-50 text-amber-700 rounded-xl"><span>Marketing</span><span className="font-bold">3% – 5%</span></div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 text-blue-700 rounded-xl"><span>Phòng KD-Marketing-CSKH</span><span className="font-bold">6% – 8%</span></div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 text-slate-700 rounded-xl"><span>Cố định & Rủi ro</span><span className="font-bold">4% – 6%</span></div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-center items-center p-8 bg-emerald-50 rounded-2xl border border-emerald-100 relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.02)]">
+              <div className="absolute -right-4 -bottom-4 opacity-5"><RefreshCcw className="w-48 h-48" /></div>
+              <div className="text-center z-10">
+                <span className="block text-sm text-emerald-800 font-bold mb-1">LỢI NHUẬN RÒNG (MỖI THÁNG)</span>
+                <span className="text-4xl font-black text-emerald-600">3% - 8%</span>
+              </div>
+              <div className="mt-6 p-4 bg-emerald-100/50 rounded-xl border border-emerald-200 z-10 flex items-start gap-3">
+                <Info className="w-5 h-5 shrink-0 text-emerald-600" />
+                <p className="text-sm text-emerald-800 font-medium">Lợi nhuận thật sự đến từ: Số tháng duy trì, Phí phạt hủy sớm, Gia hạn vòng đời.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* C. Nhóm Data + Voice */}
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-amber-100 text-amber-600 rounded-2xl">
+              <Smartphone className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">C. Nhóm Data + Voice</h3>
+          </div>
+          <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: Docomo/Rakuten Voice thường có biên lợi nhuận cao hơn Data thuần.</p>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-50 text-red-700 rounded-xl"><span>Giá vốn trực tiếp</span><span className="font-bold">60% – 70%</span></div>
+                <div className="flex items-center justify-between p-3 bg-amber-50 text-amber-700 rounded-xl"><span>Marketing</span><span className="font-bold">4% – 6%</span></div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 text-blue-700 rounded-xl"><span>Phòng KD-Marketing-CSKH</span><span className="font-bold">7% – 9%</span></div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 text-slate-700 rounded-xl"><span>Cố định & Rủi ro</span><span className="font-bold">4% – 6%</span></div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-center items-center p-8 bg-emerald-50 rounded-2xl border border-emerald-100 shadow-[inset_0_0_20px_rgba(0,0,0,0.02)] overflow-hidden relative">
+              <div className="absolute -right-4 -bottom-4 opacity-5"><Smartphone className="w-48 h-48" /></div>
+              <TrendingUp className="w-12 h-12 text-emerald-500 mb-4 z-10" />
+              <div className="text-center z-10">
+                <span className="block text-sm text-emerald-800 font-bold mb-1">LỢI NHUẬN RÒNG</span>
+                <span className="text-4xl font-black text-emerald-600">8% - 15%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 7. Kết luận cuối cùng */}
+        <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white relative overflow-hidden">
+          <div className="absolute right-0 top-0 opacity-10"><PieChart className="w-64 h-64 -translate-y-10 translate-x-10" /></div>
+          <div className="relative z-10">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <AlertCircle className="w-6 h-6 text-amber-400" />
+              Kết luận quản trị trọng tâm
+            </h3>
+            
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">1</div>
+                <div>
+                  <h4 className="font-bold text-lg mb-1">Mức giá vốn 70% chỉ là trung bình chung</h4>
+                  <p className="text-slate-400">Thực tế phải phân mảnh: <span className="text-white">65-72%</span> (bán đứt), <span className="text-white">74-80%</span> (thu cước), <span className="text-white">60-70%</span> (data+voice). Việc gộp chung sẽ làm sai số chiến lược về giá.</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">2</div>
+                <div>
+                  <h4 className="font-bold text-lg mb-1">Bản chất dòng thu nhập rất khác biệt</h4>
+                  <p className="text-slate-400">
+                    <span className="text-white font-medium">Bán đứt:</span> Nhận ngay lợi nhuận ở giao dịch mua mới đầu tiên.<br/>
+                    <span className="text-white font-medium">Thu cước:</span> Lợi nhuận nằm rải rác ở số tháng duy trì, phí báo hủy, phí làm lại sim.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">3</div>
+                <div>
+                  <h4 className="font-bold text-lg mb-1">Thiết kế KPI phải tách rời</h4>
+                  <p className="text-slate-400">Tuyệt đối không dùng 1 cơ cấu KPI chung. Chuyên viên đánh vào nhóm bán đứt thiên về <span className="text-white">tốc độ & số lượng</span>, đánh vào nhóm thu cước phải thiên về <span className="text-white">chăm sóc & tỷ lệ tái gia hạn</span>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TrainingTab = () => {
+  return (
+    <div className="max-w-6xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-16">
+      <div className="mb-10 text-center flex flex-col items-center">
+        <div className="p-4 bg-indigo-100 text-indigo-600 rounded-full mb-6 shadow-sm">
+          <GraduationCap className="w-10 h-10" />
+        </div>
+        <h2 className="text-4xl font-bold text-slate-900 mb-4">
+          Hệ thống Đào tạo & Văn hoá
+        </h2>
+        <p className="text-slate-600 max-w-2xl text-lg relative">
+          Mô hình <span className="font-bold text-slate-800">"Học để làm được – Đo bằng hiệu quả – Thưởng theo giá trị"</span>. 
+          Bám sát thực chiến từ Marketing, Sale, CSKH đến Kỹ thuật.
+        </p>
+      </div>
+
+      {/* Section 1: Khung chương trình đào tạo */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-3 mb-8 border-b border-slate-200 pb-4">
+          <BookOpen className="w-8 h-8 text-blue-600" />
+          <h3 className="text-3xl font-bold text-slate-900">Khung chương trình Đào tạo</h3>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TRAINING_GROUPS.map((group) => (
+            <div key={group.id} className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+              <div className="flex items-center justify-between mb-6">
+                <div className={`p-4 rounded-2xl shadow-sm ${group.lightColor}`}>
+                  {group.icon}
+                </div>
+                <div className="text-5xl font-black text-slate-100/60 drop-shadow-sm">{group.id}</div>
+              </div>
+              <h4 className="text-xl font-bold text-slate-900 mb-2">{group.title}</h4>
+              <p className="text-slate-500 text-sm mb-6 pb-4 border-b border-slate-100 min-h-[40px]">{group.desc}</p>
+              <ul className="space-y-3 flex-1">
+                {group.courses.map((course, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-slate-700 text-sm font-medium">
+                    <div className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
+                    <span className="leading-snug">{course}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Section 2: Trụ cột Văn hoá */}
+      <section className="py-4">
+        <div className="flex items-center gap-3 mb-8 border-b border-slate-200 pb-4">
+          <Star className="w-8 h-8 text-amber-500" />
+          <h3 className="text-3xl font-bold text-slate-900">6 Trụ cột Văn hoá Doanh nghiệp</h3>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {CULTURE_PILLARS.map((pillar, i) => (
+            <div key={i} className="flex items-start gap-5 p-6 bg-amber-50/60 rounded-3xl border border-amber-100 hover:bg-amber-50 hover:shadow-md hover:border-amber-200 transition-all">
+              <div className="w-12 h-12 rounded-full bg-white text-amber-600 flex items-center justify-center font-bold shrink-0 text-xl shadow-sm border border-amber-100">
+                {i + 1}
+              </div>
+              <div className="pt-1">
+                <h4 className="font-bold text-slate-900 text-lg mb-2">{pillar.title}</h4>
+                <p className="text-slate-600 leading-relaxed text-sm">{pillar.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Section 3: Giá trị cốt lõi */}
+      <section className="bg-slate-900 text-white rounded-[2.5rem] p-10 lg:p-14 shadow-2xl relative overflow-hidden mt-12">
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none hidden md:block">
+          <Sparkles className="w-96 h-96 -translate-y-20 translate-x-10" />
+        </div>
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">Bộ 5 Giá trị Cốt lõi</h3>
+            <p className="text-slate-400 text-lg italic tracking-wide">"Đúng sản phẩm – Đúng quy trình – Đúng trách nhiệm – Đúng kết quả"</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+            {CORE_VALUES.map((val) => (
+              <div key={val.id} className="bg-white/5 rounded-3xl p-6 border border-white/10 backdrop-blur-sm text-center hover:bg-white/10 transition-colors shadow-inner col-span-1">
+                <div className="text-amber-400 font-black text-2xl mb-3 drop-shadow-md">{val.title}</div>
+                <p className="text-slate-300 text-sm leading-snug">{val.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('model');
   const [activeRole, setActiveRole] = useState<string>('head');
-  const [activeTeam, setActiveTeam] = useState<string | null>(null);
+  const [activeDept, setActiveDept] = useState<string | null>(null);
+  const [activeTeam, setActiveTeam] = useState<'marketing' | 'sale' | 'cskh' | null>(null);
 
-  const teamDetails: Record<string, { title: string; objective: string; tasks: string[]; kpis: string[] }> = {
-    'marketing': {
+  type TeamDetail = {
+    title: string;
+    objective: string;
+    summary: string;
+    tasks: string[];
+    kpis: string[];
+    roles: Array<{ title: string; description: string; items: string[] }>;
+  };
+
+  const teamDetails: Record<'marketing' | 'sale' | 'cskh', TeamDetail> = {
+    marketing: {
       title: 'Tổ Marketing',
-      objective: 'Tổ chức và triển khai hoạt động marketing nhằm thu hút đúng khách hàng mục tiêu.',
-      tasks: ['Xây dựng kế hoạch marketing', 'Triển khai quảng cáo', 'Sản xuất nội dung', 'Quản lý social media'],
-      kpis: ['Số lượng lead', 'Chi phí/lead', 'Tỷ lệ chuyển đổi']
+      objective: 'Tổ chức và triển khai hoạt động marketing nhằm thu hút đúng khách hàng mục tiêu là người nước ngoài tại Nhật có nhu cầu SIM Data, Pocket WiFi và dịch vụ viễn thông.',
+      summary: 'Xây dựng hệ thống lead chất lượng qua quảng cáo, nội dung và thông điệp phù hợp để hỗ trợ sale chốt đơn nhanh chóng.',
+      tasks: [
+        'Xây dựng kế hoạch marketing theo tuần/tháng',
+        'Triển khai quảng cáo trên Facebook, TikTok, Google, Instagram và nền tảng phù hợp',
+        'Định hướng nội dung theo từng nhóm khách hàng',
+        'Phối hợp với sale để tối ưu thông điệp và chất lượng lead',
+        'Theo dõi số lượng và chất lượng lead từ từng kênh',
+        'Sản xuất nội dung bài viết, hình ảnh, video và landing page',
+        'Quản lý fanpage, social media và cộng đồng khách hàng',
+        'Đề xuất chương trình khuyến mãi, ưu đãi truyền thông',
+        'Báo cáo hiệu quả chiến dịch marketing định kỳ',
+        'Cập nhật xu hướng và hành vi khách hàng người nước ngoài tại Nhật'
+      ],
+      kpis: [
+        'Số lead/inbox/form',
+        'Giá mỗi lead (CPL)',
+        'Tỷ lệ lead đúng tệp',
+        'Tỷ lệ chuyển đổi lead sang tư vấn',
+        'Hiệu quả chiến dịch quảng cáo (% chi phí quảng cáo / Doanh thu)'
+      ],
+      roles: [
+        {
+          title: 'Trưởng nhóm Marketing',
+          description: 'Quản lý chiến dịch, điều phối ngân sách và kết nối với sale.',
+          items: [
+            'Xây dựng kế hoạch marketing theo tuần/tháng',
+            'Phân bổ ngân sách quảng cáo',
+            'Theo dõi hiệu suất lead và chiến dịch',
+            'Phối hợp với sale để nâng cao tỷ lệ chuyển đổi'
+          ]
+        },
+        {
+          title: 'Nhân viên Marketing Ads',
+          description: 'Vận hành quảng cáo và tối ưu tệp mục tiêu để thu lead chất lượng.',
+          items: [
+            'Thiết lập và vận hành chiến dịch quảng cáo',
+            'Giám sát ngân sách và hiệu suất hàng ngày',
+            'Tối ưu mẫu quảng cáo và chi phí',
+            'Phân tích chỉ số, giá lead và đề xuất điều chỉnh'
+          ]
+        },
+      ]
     },
-    'sales': {
+    sale: {
       title: 'Tổ Sale / Tư vấn',
-      objective: 'Quản lý đội ngũ tư vấn, đảm bảo tiếp nhận khách nhanh và chốt đơn.',
-      tasks: ['Phân chia lead', 'Giám sát phản hồi', 'Chuẩn hóa kịch bản tư vấn', 'Theo dõi tỷ lệ chốt'],
-      kpis: ['Tỷ lệ phản hồi', 'Tỷ lệ chốt đơn', 'Doanh thu đội']
+      objective: 'Quản lý đội tư vấn, đảm bảo tiếp nhận khách nhanh và tư vấn đúng nhu cầu để chốt đơn hiệu quả.',
+      summary: 'Đội tư vấn lấy lead từ marketing, xác định nhu cầu và thuyết phục khách chốt gói SIM hoặc Pocket WiFi phù hợp.',
+      tasks: [
+        'Phân chia lead cho nhân viên tư vấn',
+        'Giám sát tốc độ phản hồi khách hàng',
+        'Theo dõi tỷ lệ chốt đơn từng nhân viên',
+        'Chuẩn hóa kịch bản tư vấn theo nhu cầu khách',
+        'Hướng dẫn nhân viên xử lý khách khó chốt',
+        'Kiểm tra chất lượng tư vấn và cuộc trò chuyện',
+        'Phối hợp với marketing phản hồi chất lượng lead',
+        'Tổng hợp lý do khách không mua',
+        'Đề xuất cải tiến quy trình tư vấn và chốt đơn'
+      ],
+      kpis: [
+        'Tỷ lệ phản hồi nhanh',
+        'Tỷ lệ chốt đơn của đội',
+        'Doanh thu từ đội tư vấn',
+        'Tỷ lệ khách bị bỏ sót',
+        'Độ chính xác dữ liệu khách hàng'
+      ],
+      roles: [
+        {
+          title: 'Trưởng nhóm Sale/Tư vấn',
+          description: 'Quản lý quy trình tư vấn, phân bổ lead và nâng cao tỷ lệ chốt.',
+          items: [
+            'Phân chia lead và giám sát phản hồi',
+            'Theo dõi tỷ lệ chốt đơn cá nhân',
+            'Chuẩn hóa kịch bản tư vấn',
+            'Huấn luyện nhân viên xử lý tình huống khó'
+          ]
+        },
+        {
+          title: 'Nhân viên Sale/Chat Tư vấn',
+          description: 'Tiếp nhận lead online, xác định nhu cầu và tư vấn gói phù hợp.',
+          items: [
+            'Trả lời inbox, chat và form khách hàng',
+            'Xác định nhu cầu và mức sử dụng',
+            'Tư vấn gói và chốt đơn',
+            'Cập nhật dữ liệu khách và lý do không mua'
+          ]
+        },
+        {
+          title: 'Nhân viên Telesales',
+          description: 'Gọi điện cho lead để xác nhận nhu cầu và chốt đơn qua điện thoại.',
+          items: [
+            'Gọi khách ngay sau khi có lead',
+            'Xác minh nhu cầu và tư vấn gói',
+            'Chốt đơn qua điện thoại',
+            'Theo dõi khách chưa chốt'
+          ]
+        }
+      ]
     },
-    'cskh': {
+    cskh: {
       title: 'Tổ Chăm sóc khách hàng',
-      objective: 'Tổ chức hoạt động chăm sóc sau bán đảm bảo khách hài lòng và gia hạn.',
-      tasks: ['Quy trình CSKH', 'Theo dõi hỗ trợ', 'Nhắc gia hạn', 'Xử lý khiếu nại'],
-      kpis: ['Tỷ lệ gia hạn', 'Tỷ lệ xử lý sự cố', 'Mức độ hài lòng']
+      objective: 'Tổ chức chăm sóc sau bán để khách dùng dịch vụ ổn định, hài lòng và gia hạn/tái mua.',
+      summary: 'Đội CSKH đảm bảo khách được hỗ trợ sau mua, giải quyết sự cố và được nhắc gia hạn đúng hạn.',
+      tasks: [
+        'Xây dựng quy trình CSKH sau bán',
+        'Phân công danh sách khách cần chăm sóc',
+        'Theo dõi tỷ lệ hỗ trợ thành công',
+        'Kiểm soát nhắc gia hạn và đổi gói',
+        'Theo dõi phản hồi và khiếu nại',
+        'Hướng dẫn nhân viên xử lý tình huống khó',
+        'Phối hợp với sale và marketing cải thiện trải nghiệm',
+        'Tổng hợp lỗi và vấn đề khách thường gặp'
+      ],
+      kpis: [
+        'Tỷ lệ chăm sóc đúng hạn',
+        'Tỷ lệ gia hạn',
+        'Tỷ lệ xử lý vấn đề thành công',
+        'Mức độ hài lòng khách hàng',
+        'Doanh thu từ khách cũ'
+      ],
+      roles: [
+        {
+          title: 'Trưởng nhóm Chăm sóc khách hàng',
+          description: 'Tổ chức hoạt động chăm sóc, nhắc gia hạn và đảm bảo chất lượng xử lý sự vụ.',
+          items: [
+            'Xây dựng quy trình CSKH sau bán',
+            'Phân công khách cần chăm sóc',
+            'Theo dõi tiến độ gia hạn và hỗ trợ',
+            'Phối hợp với sale để cải thiện trải nghiệm khách'
+          ]
+        },
+        {
+          title: 'Nhân viên Chăm sóc khách hàng',
+          description: 'Hỗ trợ khách sau bán, xử lý lỗi cơ bản và nhắc gia hạn đúng hạn.',
+          items: [
+            'Gọi/nhắn tin xác nhận khách nhận hàng',
+            'Hướng dẫn lắp SIM và cài APN',
+            'Xử lý lỗi cơ bản và hỗ trợ gia hạn',
+            'Thu thập phản hồi và đề xuất cải tiến'
+          ]
+        }
+      ]
     }
   };
 
@@ -780,16 +1178,88 @@ export default function App() {
             </motion.div>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {DEPARTMENTS.map(dept => (
-              <button key={dept.id} onClick={() => setActiveDept(dept.id)} className="p-8 bg-white border rounded-3xl shadow-sm hover:shadow-md transition-all text-left">
-                <div className={`p-4 rounded-2xl w-fit mb-6 text-white ${dept.color}`}>
-                  {dept.icon}
+          <div className="relative py-12 flex flex-col items-center overflow-x-auto w-full">
+            {/* Giám Đốc/CEO Node */}
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="p-6 bg-slate-900 border-4 border-slate-200 text-white rounded-3xl shadow-xl flex items-center gap-4 w-72 md:w-80 justify-center relative">
+                <ShieldCheck className="w-8 h-8 text-blue-400 shrink-0" />
+                <div className="text-left w-full">
+                  <h3 className="font-bold text-xl">GIÁM ĐỐC / CEO</h3>
+                  <p className="text-sm text-slate-400">Ban Điều Hành</p>
                 </div>
-                <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
-                <p className="text-slate-500 text-sm">{dept.description}</p>
-              </button>
-            ))}
+              </div>
+              {/* Cột dọc xuống */}
+              <div className="w-1 bg-slate-300 h-12"></div>
+            </div>
+
+            {/* Trục ngang cho 4 phòng */}
+            <div className="relative w-full max-w-7xl">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-slate-300 hidden lg:block"></div>
+
+              {/* 5 Phòng */}
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 pt-0 lg:pt-12 w-full">
+                {[
+                  {
+                    id: 'sales-mkt', label: 'PHÒNG KD – MKT (ADS)', icon: <MessageSquare className="w-6 h-6" />, color: 'bg-blue-600',
+                    teams: ['Chạy Ads chuyển đổi', 'Bộ phận Sale / Tư vấn', 'Chăm sóc khách hàng', 'Tối ưu giá Lead']
+                  },
+                  {
+                    id: 'comms-dept', label: 'PHÒNG TRUYỀN THÔNG', icon: <Megaphone className="w-6 h-6" />, color: 'bg-amber-600',
+                    teams: ['Content & Viral PR', 'Thiết kế & Media', 'Kịch bản thương hiệu', 'Xử lý khủng hoảng']
+                  },
+                  {
+                    id: 'hr-dept', label: 'HÀNH CHÍNH – NHÂN SỰ', icon: <Briefcase className="w-6 h-6" />, color: 'bg-emerald-600',
+                    teams: ['Tuyển dụng & Đào tạo', 'Hành chính văn phòng', 'Quản lý nhân sự', 'Văn hóa doanh nghiệp']
+                  },
+                  {
+                    id: 'finance-dept', label: 'TÀI CHÍNH – KẾ TOÁN', icon: <DollarSign className="w-6 h-6" />, color: 'bg-rose-600',
+                    teams: ['Kế toán doanh thu', 'Kế toán chi phí', 'Công nợ đối tác', 'Lương, thưởng, hoa hồng']
+                  },
+                  {
+                    id: 'technical', label: 'KỸ THUẬT – VẬN HÀNH', icon: <Cpu className="w-6 h-6" />, color: 'bg-indigo-600',
+                    teams: ['Quản lý SIM & Gói cước', 'Quản lý kho Pocket WiFi', 'Hỗ trợ sự cố kỹ thuật', 'Kiểm tra & Kích hoạt']
+                  }
+                ].map((dept, idx) => (
+                  <div key={dept.id} className="relative flex flex-col items-center group w-full">
+                    {/* Đường cắm từ trục ngang xuống khối */}
+                    <div className="absolute top-[-48px] w-1 bg-slate-300 h-12 hidden lg:block"></div>
+                    
+                    {/* Đường cắm cho màn mobile/tablet (không có trục ngang chung) */}
+                    <div className="w-1 bg-slate-300 h-6 lg:hidden"></div>
+
+                    <button 
+                      onClick={() => setActiveDept(dept.id)}
+                      className="w-full h-full bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col group/btn"
+                    >
+                      <div className="absolute top-0 right-0 p-4 opacity-0 group-hover/btn:opacity-100 transition-opacity">
+                        <span className="text-slate-400 font-bold">&rarr;</span>
+                      </div>
+                      <div className={`p-4 rounded-2xl w-fit mb-5 text-white ${dept.color} shadow-md`}>
+                        {dept.icon}
+                      </div>
+                      <h4 className="font-bold text-slate-800 mb-4 h-12 flex items-center leading-snug">{dept.label}</h4>
+                      
+                      <div className="w-[80%] bg-slate-100 h-px mb-5"></div>
+                      
+                      <ul className="space-y-3 flex-1 w-full">
+                        {dept.teams.map((t, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
+                            <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${dept.color.replace('bg-', 'bg-').replace('-600', '-400')}`} />
+                            <span className="leading-tight pt-0.5">{t}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <div className="mt-6 pt-4 border-t border-slate-100 w-full text-left">
+                        <span className={`text-xs font-bold inline-flex items-center gap-1 ${dept.id === 'sales-mkt' ? 'text-blue-600' : 'text-slate-400'}`}>
+                          {dept.id === 'sales-mkt' ? 'Xem chi tiết vận hành' : 'Đang cập nhật'}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </>
       );
@@ -804,51 +1274,308 @@ export default function App() {
           <Header />
           <div className="mb-12">
             <div className="flex flex-col items-center">
-              <div className="bg-blue-600 text-white p-6 rounded-2xl shadow-lg text-center mb-8 max-w-md">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <ShieldCheck className="w-5 h-5" />
-                  <span className="text-xs font-semibold uppercase tracking-wider opacity-80">Quản trị Doanh thu & Vòng đời</span>
-                </div>
-                <h3 className="text-xl font-bold">Trưởng phòng Kinh doanh – Marketing – CSKH</h3>
-              </div>
-              
-              <div className="w-full h-px bg-slate-300 mb-8" />
-              
               {!activeTeam ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                  {[
-                    { id: 'marketing', icon: Megaphone, color: 'indigo', title: 'Tổ Marketing' },
-                    { id: 'sales', icon: MessageSquare, color: 'emerald', title: 'Tổ Sale / Tư vấn' },
-                    { id: 'cskh', icon: HeartHandshake, color: 'rose', title: 'Tổ Chăm sóc khách hàng' }
-                  ].map(team => (
-                    <button key={team.id} onClick={() => setActiveTeam(team.id)} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all text-left">
-                      <div className={`p-2 bg-${team.color}-100 text-${team.color}-600 rounded-lg w-fit mb-4`}>
-                        <team.icon className="w-6 h-6" />
-                      </div>
-                      <h4 className="font-bold text-lg mb-2">{team.title}</h4>
-                      <p className="text-slate-600 text-sm">Nhấp để xem chi tiết nhiệm vụ và KPI.</p>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm w-full">
-                  <button onClick={() => setActiveTeam(null)} className="mb-4 text-blue-600 font-bold flex items-center gap-2 hover:underline">
-                    &larr; Quay lại danh sách tổ
-                  </button>
-                  <h3 className="text-2xl font-bold mb-4">{teamDetails[activeTeam].title}</h3>
-                  <p className="text-slate-600 mb-6">{teamDetails[activeTeam].objective}</p>
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div>
-                      <h5 className="font-bold text-slate-900 mb-3">Nhiệm vụ chính:</h5>
-                      <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
-                        {teamDetails[activeTeam].tasks.map((task, i) => <li key={i}>{task}</li>)}
-                      </ul>
+                <div className="w-full flex flex-col items-center animate-in zoom-in-95 fade-in duration-300">
+                  {/* 1. Đề xuất mô hình tổ chức */}
+                  <section className="w-full mb-12">
+                    <div className="mb-6 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">1</div>
+                      <h2 className="text-2xl font-bold text-slate-900">Đề xuất mô hình tổ chức</h2>
                     </div>
-                    <div>
-                      <h5 className="font-bold text-slate-900 mb-3">Chỉ số đánh giá (KPI):</h5>
-                      <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
-                        {teamDetails[activeTeam].kpis.map((kpi, i) => <li key={i}>{kpi}</li>)}
-                      </ul>
+                    <p className="text-slate-600 mb-8 max-w-3xl">
+                      Đề xuất tập trung vào mô hình Phòng Kinh doanh – Marketing – Chăm sóc khách hàng, chịu trách nhiệm trọn hành trình khách hàng từ tiếp cận đến sau bán.
+                    </p>
+
+                    {/* Vẫn giữ lại khả năng bấm vào 3 Tổ Chiến Lược */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-8">
+                      {(['marketing', 'sale', 'cskh'] as const).map(teamId => {
+                        const team = teamDetails[teamId];
+                        const icon = teamId === 'marketing' ? Megaphone : teamId === 'sale' ? MessageSquare : HeartHandshake;
+                        const color = teamId === 'marketing' ? 'bg-indigo-100 text-indigo-600' : teamId === 'sale' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600';
+                        return (
+                          <button key={teamId} onClick={() => setActiveTeam(teamId)} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 group transition-all duration-300 text-left relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+                              <span className="text-blue-600 font-bold">&rarr;</span>
+                            </div>
+                            <div className={`p-3 rounded-2xl w-fit mb-5 ${color}`}>
+                              {React.createElement(icon, { className: 'w-6 h-6' })}
+                            </div>
+                            <h4 className="font-bold text-xl mb-3">{team.title}</h4>
+                            <p className="text-slate-600 text-sm mb-5">{team.summary}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-wrap gap-4 justify-between items-center bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+                      <div className="flex-1 min-w-[200px] flex gap-3 items-center">
+                        <Search className="w-6 h-6 text-indigo-400 shrink-0" />
+                        <span className="font-medium text-sm">Tìm khách hàng đúng tệp</span>
+                      </div>
+                      <ChevronDown className="w-5 h-5 text-slate-600 hidden md:block -rotate-90 shrink-0" />
+                      <div className="flex-1 min-w-[200px] flex gap-3 items-center">
+                        <MessageSquare className="w-6 h-6 text-emerald-400 shrink-0" />
+                        <span className="font-medium text-sm">Tư vấn và chốt đơn theo nhu cầu</span>
+                      </div>
+                      <ChevronDown className="w-5 h-5 text-slate-600 hidden md:block -rotate-90 shrink-0" />
+                      <div className="flex-1 min-w-[200px] flex gap-3 items-center">
+                        <Clock className="w-6 h-6 text-rose-400 shrink-0" />
+                        <span className="font-medium text-sm">Giao hàng/hỗ trợ sử dụng</span>
+                      </div>
+                      <ChevronDown className="w-5 h-5 text-slate-600 hidden md:block -rotate-90 shrink-0" />
+                      <div className="flex-1 min-w-[200px] flex gap-3 items-center">
+                        <RefreshCcw className="w-6 h-6 text-blue-400 shrink-0" />
+                        <span className="font-medium text-sm">Chăm sóc sau bán, giới thiệu</span>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* 2. Tóm tắt mô hình */}
+                  <section className="w-full mb-12">
+                    <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-8 rounded-3xl border border-indigo-100 shadow-sm">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-3 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30">
+                          <LayoutDashboard className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-bold text-indigo-950">2. Tóm tắt mô hình</h2>
+                          <p className="text-indigo-700/80 mt-1">Vận hành trọn chuỗi khách hàng cho SIM Data, Pocket WiFi tại Nhật</p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid gap-6 md:grid-cols-3 mt-6">
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50">
+                          <Target className="w-5 h-5 text-rose-500 mb-3" />
+                          <h3 className="font-bold text-slate-900 mb-2">Phạm vi</h3>
+                          <p className="text-sm text-slate-600">SIM Data, Pocket WiFi, gói cước internet di động và dịch vụ hỗ trợ khách hàng người nước ngoài tại Nhật.</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50">
+                          <RefreshCcw className="w-5 h-5 text-blue-500 mb-3" />
+                          <h3 className="font-bold text-slate-900 mb-2">Chuỗi hoạt động</h3>
+                          <ul className="text-sm text-slate-600 space-y-1">
+                            <li>• Marketing kéo lead</li>
+                            <li>• Sale tư vấn & chốt đơn</li>
+                            <li>• CSKH hỗ trợ sau bán & gia hạn</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50">
+                          <Award className="w-5 h-5 text-amber-500 mb-3" />
+                          <h3 className="font-bold text-slate-900 mb-2">Mục tiêu chính</h3>
+                          <ul className="text-sm text-slate-600 space-y-1">
+                            <li>• Kéo đúng khách hàng mục tiêu</li>
+                            <li>• Chốt đơn nhanh, giảm thất thoát</li>
+                            <li>• Gia hạn, tái mua, tăng giới thiệu</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* 3. Bối cảnh và khách hàng */}
+                  <section className="w-full mb-12">
+                    <div className="mb-6 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">3</div>
+                      <h2 className="text-2xl font-bold text-slate-900">Bối cảnh & Khách hàng</h2>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
+                        <Users className="w-8 h-8 text-emerald-600 mb-4" />
+                        <h3 className="text-xl font-bold text-slate-900 mb-4">Khách hàng mục tiêu</h3>
+                        <ul className="space-y-3">
+                          {[
+                            'Người nước ngoài mới sang Nhật',
+                            'Thực tập sinh, kỹ sư, du học sinh',
+                            'Lao động thời vụ, người chuyển vùng',
+                            'Nhóm cần kết nối nhanh, tiện lợi'
+                          ].map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-slate-600">
+                              <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
+                        <Zap className="w-8 h-8 text-amber-500 mb-4" />
+                        <h3 className="text-xl font-bold text-slate-900 mb-4">Nhu cầu đặc thù</h3>
+                        <ul className="space-y-3">
+                          {[
+                            'Internet nhanh, dễ đăng ký',
+                            'Hỗ trợ tiếng Việt/tiếng Anh rõ ràng',
+                            'Giao hàng nhanh và kích hoạt dễ',
+                            'Giải quyết sự cố kịp thời'
+                          ].map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-slate-600">
+                              <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* 4. Tại sao phù hợp với SIM Data & Pocket WiFi */}
+                  <section className="w-full mb-12">
+                    <div className="mb-6 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 font-bold">4</div>
+                      <h2 className="text-2xl font-bold text-slate-900">Tại sao phù hợp với SIM/WiFi?</h2>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-white p-6 rounded-3xl border border-rose-100 shadow-sm shadow-rose-100/50">
+                        <div className="p-3 bg-rose-50 text-rose-600 w-fit rounded-2xl mb-4">
+                          <Headphones className="w-6 h-6" />
+                        </div>
+                        <h3 className="font-bold text-slate-900 mb-3 text-lg">Cần tư vấn</h3>
+                        <ul className="text-sm text-slate-600 space-y-2">
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />Chọn SIM hay Pocket WiFi</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />Chọn gói tháng, dài hạn hay 1 năm</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />Phù hợp với số người và nhu cầu</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-6 rounded-3xl border border-amber-100 shadow-sm shadow-amber-100/50">
+                        <div className="p-3 bg-amber-50 text-amber-600 w-fit rounded-2xl mb-4">
+                          <Clock className="w-6 h-6" />
+                        </div>
+                        <h3 className="font-bold text-slate-900 mb-3 text-lg">Cần phản hồi nhanh</h3>
+                        <ul className="text-sm text-slate-600 space-y-2">
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />Lead cần được xử lý ngay</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />Sale tư vấn nhanh, chính xác</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />CSKH giải quyết sự cố kịp thời</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-6 rounded-3xl border border-blue-100 shadow-sm shadow-blue-100/50">
+                        <div className="p-3 bg-blue-50 text-blue-600 w-fit rounded-2xl mb-4">
+                          <ShieldCheck className="w-6 h-6" />
+                        </div>
+                        <h3 className="font-bold text-slate-900 mb-3 text-lg">Cần chăm sóc sau bán</h3>
+                        <ul className="text-sm text-slate-600 space-y-2">
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />Hướng dẫn cài đặt/kích hoạt</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />Hỗ trợ lỗi kết nối</li>
+                          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />Nhắc gia hạn và đổi gói</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* 5. Luồng công việc chính */}
+                  <section className="w-full mb-8">
+                    <div className="mb-8 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">5</div>
+                      <h2 className="text-2xl font-bold text-slate-900">Luồng công việc chính</h2>
+                    </div>
+                    
+                    <div className="relative">
+                      <div className="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-indigo-100 via-emerald-100 to-rose-100 -translate-y-1/2 hidden lg:block rounded-full" />
+                      <div className="grid gap-6 lg:grid-cols-4">
+                        <div className="relative z-10 bg-white p-6 rounded-3xl border border-indigo-200 shadow-lg shadow-indigo-100/40">
+                          <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
+                            <Megaphone className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-slate-900 text-center mb-4">Thu hút khách</h3>
+                          <ul className="text-sm text-slate-600 space-y-2">
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Quảng cáo online</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Social media và nội dung</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Landing page, form, inbox</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="relative z-10 bg-white p-6 rounded-3xl border border-emerald-200 shadow-lg shadow-emerald-100/40">
+                          <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
+                            <MessageSquare className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-slate-900 text-center mb-4">Tư vấn & chốt đơn</h3>
+                          <ul className="text-sm text-slate-600 space-y-2">
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Nhận lead chat, call</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Định vị nhu cầu, gợi ý gói</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Giải thích ưu đãi, kích hoạt</li>
+                          </ul>
+                        </div>
+                        
+                        <div className="relative z-10 bg-white p-6 rounded-3xl border border-blue-200 shadow-lg shadow-blue-100/40">
+                          <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
+                            <ShieldCheck className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-slate-900 text-center mb-4">Hỗ trợ sau bán</h3>
+                          <ul className="text-sm text-slate-600 space-y-2">
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Kiểm tra nhận hàng</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Hỗ trợ cài đặt, APN</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Giải quyết sự cố cơ bản</li>
+                          </ul>
+                        </div>
+
+                        <div className="relative z-10 bg-white p-6 rounded-3xl border border-rose-200 shadow-lg shadow-rose-100/40">
+                          <div className="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
+                            <RefreshCcw className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-slate-900 text-center mb-4">Tái khai thác khách</h3>
+                          <ul className="text-sm text-slate-600 space-y-2">
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Nhắc gia hạn đúng hạn</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Upsell gói cao hơn</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Khai thác giới thiệu</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+              </div>
+              ) : (
+                <div className="space-y-8 w-full animate-in fade-in slide-in-from-right-4 duration-500">
+                  <div className="bg-gradient-to-br from-white to-slate-50 p-8 rounded-3xl border border-slate-200 shadow-xl border-t-4 border-t-blue-500">
+                    <button onClick={() => setActiveTeam(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:text-blue-800 transition-colors bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl w-fit">
+                      &larr; Quay lại danh sách tổ
+                    </button>
+                    <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+                      <div>
+                        <h3 className="text-3xl font-bold mb-3">{teamDetails[activeTeam].title}</h3>
+                        <p className="text-slate-600 mb-6">{teamDetails[activeTeam].objective}</p>
+                        <div className="grid gap-6">
+                          <div className="rounded-3xl bg-slate-50 p-6 border border-slate-200">
+                            <h4 className="font-bold text-slate-900 mb-4">Nhiệm vụ chính</h4>
+                            <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                              {teamDetails[activeTeam].tasks.map((task, i) => (
+                                <li key={i}>{task}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="rounded-3xl bg-slate-50 p-6 border border-slate-200">
+                            <h4 className="font-bold text-slate-900 mb-4">Vai trò chính trong tổ</h4>
+                            <div className="space-y-5">
+                              {teamDetails[activeTeam].roles.map((role, idx) => (
+                                <div key={idx}>
+                                  <h5 className="font-semibold text-slate-900 mb-2">{role.title}</h5>
+                                  <p className="text-slate-600 mb-3">{role.description}</p>
+                                  <ul className="space-y-2 text-slate-600 list-disc list-inside">
+                                    {role.items.map((item, itemIdx) => (
+                                      <li key={itemIdx}>{item}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-6">
+                        <div className="rounded-3xl bg-blue-50 p-6 border border-blue-100">
+                          <h4 className="font-bold text-blue-900 mb-4">Chỉ số đánh giá (KPI)</h4>
+                          <ul className="space-y-3 text-slate-700 list-disc list-inside">
+                            {teamDetails[activeTeam].kpis.map((kpi, i) => (
+                              <li key={i}>{kpi}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="rounded-3xl bg-white p-6 border border-slate-200">
+                          <h4 className="font-bold text-slate-900 mb-4">Tổng quan</h4>
+                          <p className="text-slate-600 leading-relaxed">
+                            {teamDetails[activeTeam].summary}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -859,31 +1586,113 @@ export default function App() {
       );
     }
 
-    if (activeDept === 'hr-dept' || activeDept === 'finance-dept') {
+    const OTHER_DEPTS_DATA: Record<string, { title: string, objective: string, teams: string[], icon: any, color: string }> = {
+      'hr-dept': {
+        title: 'Hành chính – Nhân sự',
+        objective: 'Tuyển đúng người, đào tạo nhanh, giữ người và chuẩn hóa vận hành nội quy nội bộ.',
+        color: 'text-emerald-600 bg-emerald-100',
+        icon: <Briefcase className="w-8 h-8" />,
+        teams: [
+          'Tuyển dụng',
+          'Đào tạo nội bộ',
+          'Hành chính văn phòng',
+          'Quản lý hồ sơ nhân sự',
+          'Văn hóa doanh nghiệp / nội quy'
+        ]
+      },
+      'finance-dept': {
+        title: 'Tài chính – Kế toán',
+        objective: 'Kiểm soát dòng tiền, báo cáo lời lỗ và cập nhật lương thưởng doanh thu.',
+        color: 'text-rose-600 bg-rose-100',
+        icon: <DollarSign className="w-8 h-8" />,
+        teams: [
+          'Kế toán doanh thu',
+          'Kế toán chi phí',
+          'Kế toán công nợ',
+          'Theo dõi dòng tiền',
+          'Lương – thưởng – hoa hồng'
+        ]
+      },
+      'comms-dept': {
+        title: 'Truyền thông & Thương hiệu',
+        objective: 'Xây dựng hình ảnh chuyên nghiệp, Viral content và nhận diện thương hiệu cộng đồng người nước ngoài.',
+        color: 'text-amber-600 bg-amber-100',
+        icon: <Megaphone className="w-8 h-8" />,
+        teams: [
+          'Nhóm Content & PR (Viral)',
+          'Nhóm Media & Thiết kế (Video, Ảnh)',
+          'Nhóm Quản trị Thương hiệu & Cộng đồng',
+          'Sản xuất ấn phẩm & POSM',
+          'Xử lý khủng hoảng truyền thông'
+        ]
+      },
+      'technical': {
+        title: 'Kỹ thuật – Vận hành hạ tầng',
+        objective: 'Đảm bảo hoạt động hạ tầng, quản lý thiết bị, cấu hình SIM và hỗ trợ kỹ thuật chuyên sâu.',
+        color: 'text-indigo-600 bg-indigo-100',
+        icon: <Cpu className="w-8 h-8" />,
+        teams: [
+          'Nhóm quản lý SIM / nhà mạng / cấu hình gói',
+          'Nhóm hỗ trợ kỹ thuật khách hàng',
+          'Nhóm quản lý thiết bị Pocket WiFi',
+          'Nhóm kiểm tra chất lượng / kích hoạt / đổi lỗi',
+          'Nhóm vận hành kho thiết bị – SIM'
+        ]
+      }
+    };
+
+    if (activeDept && activeDept !== 'sales-mkt') {
+      const deptData = OTHER_DEPTS_DATA[activeDept];
       return (
-        <>
-          <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:underline">
+        <div className="animate-in fade-in slide-in-from-right-4 duration-500 pb-12 w-full">
+          <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors w-fit">
             &larr; Quay lại sơ đồ công ty
           </button>
-          <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center">
-            <h2 className="text-2xl font-bold text-slate-900">Bộ phận: {DEPARTMENTS.find(d => d.id === activeDept)?.title}</h2>
-            <p className="text-slate-500 mt-4">Nội dung chi tiết cho bộ phận này đang được cập nhật.</p>
-          </div>
-        </>
+          
+          {deptData ? (
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden w-full">
+              <div className="p-8 md:p-12 border-b border-slate-100 bg-slate-50 relative overflow-hidden">
+                <div className="absolute right-0 top-0 opacity-5 -translate-y-10 translate-x-10 pointer-events-none hidden md:block">
+                  {React.cloneElement(deptData.icon as React.ReactElement, { className: 'w-64 h-64' })}
+                </div>
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <div className={`p-4 rounded-2xl shadow-sm ${deptData.color}`}>
+                    {deptData.icon}
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-slate-900 mb-2">{deptData.title}</h2>
+                    <p className="text-slate-600 max-w-2xl">{deptData.objective}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-8 md:p-12 relative overflow-hidden">
+                <div className="absolute left-1/2 top-0 w-px bg-slate-100 h-full hidden md:block" />
+                <h3 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3 relative z-10 bg-white w-fit pr-4">
+                  <Target className="w-6 h-6 text-blue-500" />
+                  Cơ cấu Nhân sự
+                </h3>
+                <div className="grid md:grid-cols-2 gap-x-16 gap-y-6 relative z-10">
+                  {deptData.teams.map((team, idx) => (
+                    <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex items-center gap-4 hover:shadow-md transition-shadow hover:-translate-y-0.5">
+                      <div className="w-10 h-10 rounded-full bg-white shadow-sm border border-slate-100 text-blue-600 flex items-center justify-center font-bold shrink-0">
+                        {idx + 1}
+                      </div>
+                      <h4 className="font-bold text-slate-800 leading-snug">{team}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center w-full">
+              <h2 className="text-2xl font-bold text-slate-900">Bộ phận: {DEPARTMENTS.find(d => d.id === activeDept)?.title}</h2>
+              <p className="text-slate-500 mt-4">Nội dung chi tiết cho bộ phận này đang được cập nhật.</p>
+            </div>
+          )}
+        </div>
       );
     }
-
-    return (
-      <>
-        <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:underline">
-          &larr; Quay lại sơ đồ công ty
-        </button>
-        <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center">
-          <h2 className="text-2xl font-bold text-slate-900">Bộ phận: {DEPARTMENTS.find(d => d.id === activeDept)?.title}</h2>
-          <p className="text-slate-500 mt-4">Nội dung chi tiết cho bộ phận này đang được cập nhật.</p>
-        </div>
-      </>
-    );
   };
 
   return (
@@ -903,26 +1712,13 @@ export default function App() {
               {activeTab === 'model' && <ModelTab />}
               {activeTab === 'hr' && <HRTab selectedRole={activeRole} setSelectedRole={setActiveRole} setActiveTab={setActiveTab} />}
               {activeTab === 'salary' && <SalaryTab selectedRole={activeRole} setSelectedRole={setActiveRole} setActiveTab={setActiveTab} />}
+              {activeTab === 'cost' && <CostTab />}
+              {activeTab === 'training' && <TrainingTab />}
             </motion.div>
           </AnimatePresence>
 
           {/* Footer / Call to Action */}
           <footer className="mt-20 py-12 border-t border-slate-200 text-center">
-            <div className="p-8 bg-slate-900 rounded-3xl text-white shadow-xl">
-              <h3 className="text-2xl font-bold mb-4">Tạo khách – Chốt khách – Giữ khách – Tăng doanh thu</h3>
-              <p className="max-w-2xl mx-auto mb-8 opacity-80">
-                Mô hình quản trị doanh thu theo vòng đời khách hàng, đặc biệt phù hợp với ngành viễn thông 
-                bán theo hình thức quảng cáo – tư vấn – chốt đơn – hỗ trợ sử dụng – gia hạn.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg">
-                  Trình ký Đề án
-                </button>
-                <button className="px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors border border-white/20">
-                  Tải Slide Outline
-                </button>
-              </div>
-            </div>
             <p className="mt-8 text-slate-400 text-sm">
               © 2026 Hệ thống Quản trị Doanh nghiệp Online. Thiết kế chuyên biệt cho ngành Viễn thông tại Nhật.
             </p>

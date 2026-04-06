@@ -25,6 +25,7 @@ export const headJD: JobDescription = {
     'Tỷ lệ chuyển đổi từ lead sang đơn hàng',
     'Hiệu quả chi phí marketing (ROI)'
   ],
-  salaryRange: '25M - 40M VNĐ',
+  salaryRange: '15M - 25M VNĐ',
+  baseSalary: '10M - 12M VNĐ',
   salaryCalculation: 'Lương cứng + % Doanh thu toàn phòng + Thưởng KPI tổng'
 };

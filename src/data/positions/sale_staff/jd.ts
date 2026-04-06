@@ -17,6 +17,7 @@ export const saleStaffJD: JobDescription = {
     'Tỷ lệ chốt đơn',
     'Doanh thu cá nhân'
   ],
-  salaryRange: '10M - 15M VNĐ + Hoa hồng',
+  salaryRange: '7M - 10M VNĐ + Hoa hồng',
+  baseSalary: '4.5M - 5.5M VNĐ',
   salaryCalculation: 'Lương cứng + % Hoa hồng trên đơn hàng mới'
 };
