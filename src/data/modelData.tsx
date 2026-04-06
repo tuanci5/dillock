@@ -1,6 +1,37 @@
 import React from 'react';
-import { Target, Users, MessageSquare, TrendingUp } from 'lucide-react';
-import { ProcessStep } from '../types';
+import { Target, Users, MessageSquare, TrendingUp, Cpu, Briefcase, DollarSign } from 'lucide-react';
+import { ProcessStep, Department } from '../types';
+
+export const DEPARTMENTS: Department[] = [
+  {
+    id: 'sales-mkt',
+    title: 'Kinh doanh – Marketing – CSKH',
+    description: 'Quản lý doanh thu, thu hút khách hàng và chăm sóc sau bán.',
+    icon: <MessageSquare className="w-6 h-6" />,
+    color: 'bg-blue-600'
+  },
+  {
+    id: 'hr-dept',
+    title: 'Hành chính – Nhân sự',
+    description: 'Tuyển dụng, đào tạo, quản lý văn phòng và văn hóa doanh nghiệp.',
+    icon: <Briefcase className="w-6 h-6" />,
+    color: 'bg-emerald-500'
+  },
+  {
+    id: 'finance-dept',
+    title: 'Tài chính – Kế toán',
+    description: 'Quản lý dòng tiền, thu chi, báo cáo tài chính và lương thưởng.',
+    icon: <DollarSign className="w-6 h-6" />,
+    color: 'bg-rose-500'
+  },
+  {
+    id: 'technical',
+    title: 'Kỹ thuật & Hạ tầng',
+    description: 'Quản lý hạ tầng mạng, SIM, thiết bị và hỗ trợ kỹ thuật chuyên sâu.',
+    icon: <Cpu className="w-6 h-6" />,
+    color: 'bg-indigo-500'
+  }
+];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {

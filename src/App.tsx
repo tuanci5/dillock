@@ -38,7 +38,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { JobDescription, Role, ProcessStep } from './types';
 import { JD_DATA, ROLES } from './data/hrData';
-import { PROCESS_STEPS } from './data/modelData';
+import { PROCESS_STEPS, DEPARTMENTS } from './data/modelData';
 
 // --- Types ---
 
@@ -340,11 +340,14 @@ const ValueSection = () => (
 
 // --- Main App ---
 
-const Sidebar = ({ activeTab, setActiveTab }: { activeTab: TabType, setActiveTab: (t: TabType) => void }) => {
+const Sidebar = ({ activeTab, setActiveTab, activeDept, setActiveDept }: { activeTab: TabType, setActiveTab: (t: TabType) => void, activeDept: string | null, setActiveDept: (d: string | null) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
     { id: 'model', label: 'Mô hình Vận hành', icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: 'sales-mkt', label: 'P. KD - MKT', icon: <MessageSquare className="w-4 h-4" />, indent: true, small: true },
+    { id: 'hr-dept', label: 'P. HCNS', icon: <Briefcase className="w-4 h-4" />, indent: true, small: true },
+    { id: 'finance-dept', label: 'P. Kế toán', icon: <DollarSign className="w-4 h-4" />, indent: true, small: true },
     { id: 'hr', label: 'Nhân sự & JD', icon: <UserCog className="w-5 h-5" /> },
     { id: 'salary', label: 'Lương & KPI', icon: <Wallet className="w-5 h-5" /> },
   ];
@@ -397,11 +400,20 @@ const Sidebar = ({ activeTab, setActiveTab }: { activeTab: TabType, setActiveTab
               <button
                 key={item.id}
                 onClick={() => {
-                  setActiveTab(item.id as TabType);
+                  if (['sales-mkt', 'hr-dept', 'finance-dept'].includes(item.id)) {
+                    setActiveTab('model');
+                    setActiveDept(item.id);
+                  } else if (item.id === 'model') {
+                    setActiveTab('model');
+                    setActiveDept(null);
+                  } else {
+                    setActiveTab(item.id as TabType);
+                    setActiveDept(null);
+                  }
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  activeTab === item.id
+                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 ${item.indent ? 'ml-6' : ''} ${item.small ? 'text-sm' : ''} ${
+                  (activeTab === item.id || (['sales-mkt', 'hr-dept', 'finance-dept'].includes(item.id) && activeDept === item.id))
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
@@ -725,43 +737,98 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab }: { selectedRo
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('model');
   const [activeRole, setActiveRole] = useState<string>('head');
+  const [activeDept, setActiveDept] = useState<string | null>(null);
 
   const currentRole = ROLES.find(r => r.id === activeRole) || ROLES[0];
 
-  const ModelTab = () => (
-    <>
-      <Header />
+  const ModelTab = () => {
+    if (!activeDept) {
+      return (
+        <>
+          <header className="mb-12 text-center">
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Wifi className="w-6 h-6 text-blue-600" />
+                <span className="px-3 py-1 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full">
+                  Hệ thống Quản trị Doanh nghiệp
+                </span>
+              </div>
+              <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+                Sơ đồ tổ chức Công ty
+              </h1>
+            </motion.div>
+          </header>
 
-      {/* Section 1: Org Chart */}
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Users className="w-6 h-6 text-blue-600" />
-          Cơ cấu tổ chức đề xuất
-        </h2>
-        <p className="text-sm text-slate-500 hidden sm:block">Nhấp vào từng vị trí để xem chi tiết</p>
-      </div>
-      
-      <OrgChart activeRole={activeRole} setActiveRole={setActiveRole} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {DEPARTMENTS.map(dept => (
+              <button key={dept.id} onClick={() => setActiveDept(dept.id)} className="p-8 bg-white border rounded-3xl shadow-sm hover:shadow-md transition-all text-left">
+                <div className={`p-4 rounded-2xl w-fit mb-6 text-white ${dept.color}`}>
+                  {dept.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-2">{dept.title}</h3>
+                <p className="text-slate-500 text-sm">{dept.description}</p>
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    }
 
-      {/* Section 2: Role Details */}
-      <AnimatePresence mode="wait">
-        <RoleDetailPanel role={currentRole} />
-      </AnimatePresence>
+    if (activeDept === 'sales-mkt') {
+      return (
+        <>
+          <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:underline">
+            &larr; Quay lại sơ đồ công ty
+          </button>
+          <Header />
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <Users className="w-6 h-6 text-blue-600" />
+              Cơ cấu tổ chức đề xuất
+            </h2>
+            <p className="text-sm text-slate-500 hidden sm:block">Nhấp vào từng vị trí để xem chi tiết</p>
+          </div>
+          <OrgChart activeRole={activeRole} setActiveRole={setActiveRole} />
+          <AnimatePresence mode="wait">
+            <RoleDetailPanel role={currentRole} />
+          </AnimatePresence>
+          <WhySection />
+          <ProcessSection />
+          <ValueSection />
+        </>
+      );
+    }
 
-      {/* Section 3: Why This Model? */}
-      <WhySection />
+    if (activeDept === 'hr-dept' || activeDept === 'finance-dept') {
+      return (
+        <>
+          <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:underline">
+            &larr; Quay lại sơ đồ công ty
+          </button>
+          <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center">
+            <h2 className="text-2xl font-bold text-slate-900">Bộ phận: {DEPARTMENTS.find(d => d.id === activeDept)?.title}</h2>
+            <p className="text-slate-500 mt-4">Nội dung chi tiết cho bộ phận này đang được cập nhật.</p>
+          </div>
+        </>
+      );
+    }
 
-      {/* Section 4: Process Flow */}
-      <ProcessSection />
-
-      {/* Section 5: Value & Goals */}
-      <ValueSection />
-    </>
-  );
+    return (
+      <>
+        <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:underline">
+          &larr; Quay lại sơ đồ công ty
+        </button>
+        <div className="p-12 bg-white rounded-3xl border border-slate-200 text-center">
+          <h2 className="text-2xl font-bold text-slate-900">Bộ phận: {DEPARTMENTS.find(d => d.id === activeDept)?.title}</h2>
+          <p className="text-slate-500 mt-4">Nội dung chi tiết cho bộ phận này đang được cập nhật.</p>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} activeDept={activeDept} setActiveDept={setActiveDept} />
       
       <main className="flex-1 p-4 md:p-12 overflow-y-auto">
         <div className="max-w-7xl mx-auto">

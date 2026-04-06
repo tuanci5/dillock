@@ -23,6 +23,14 @@ export interface ProcessStep {
   icon: React.ReactNode;
 }
 
+export interface Department {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
 export interface JobDescription {
   title: string;
   objective: string;
