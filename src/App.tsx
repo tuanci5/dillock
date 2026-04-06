@@ -553,65 +553,70 @@ const HRTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: { se
                 </button>
               </div>
 
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <section>
-                    <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                      <FileText className="w-5 h-5 text-blue-500" />
-                      Nhiệm vụ chính
-                    </h4>
-                    <ul className="space-y-3">
-                      {JD_DATA[selectedRole].tasks.map((task, i) => (
-                        <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{task}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  {JD_DATA[selectedRole].powers && (
+              {!JD_DATA[selectedRole] ? (
+                <div className="py-20 text-center text-slate-400">
+                  Thông tin vị trí ({selectedRole}) đang được cập nhật.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
                     <section>
                       <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                        <Zap className="w-5 h-5 text-amber-500" />
-                        Quyền hạn
+                        <FileText className="w-5 h-5 text-blue-500" />
+                        Nhiệm vụ chính
                       </h4>
                       <ul className="space-y-3">
-                        {JD_DATA[selectedRole].powers?.map((power, i) => (
+                        {JD_DATA[selectedRole].tasks.map((task, i) => (
                           <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
-                            <span>{power}</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                            <span>{task}</span>
                           </li>
                         ))}
                       </ul>
                     </section>
-                  )}
-                </div>
 
-                <div className="space-y-6">
-                  <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                      <Award className="w-5 h-5 text-indigo-500" />
-                      Chỉ số đánh giá (KPI)
-                    </h4>
-                    <div className="grid grid-cols-1 gap-3">
-                      {JD_DATA[selectedRole].kpis.map((kpi, i) => (
-                        <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
-                          {kpi}
-                        </div>
-                      ))}
+                    {JD_DATA[selectedRole].powers && (
+                      <section>
+                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                          <Zap className="w-5 h-5 text-amber-500" />
+                          Quyền hạn
+                        </h4>
+                        <ul className="space-y-3">
+                          {JD_DATA[selectedRole].powers?.map((power, i) => (
+                            <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
+                              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
+                              <span>{power}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </div>
+
+                  <div className="space-y-6">
+                    <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                      <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                        <Award className="w-5 h-5 text-indigo-500" />
+                        Chỉ số đánh giá (KPI)
+                      </h4>
+                      <div className="grid grid-cols-1 gap-3">
+                        {JD_DATA[selectedRole].kpis.map((kpi, i) => (
+                          <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
+                            {kpi}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+
+                    <div className="p-6 bg-blue-600 rounded-2xl text-white">
+                      <h4 className="font-bold mb-2">Yêu cầu chung</h4>
+                      <p className="text-sm text-blue-100 leading-relaxed">
+                        Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
+                      </p>
                     </div>
-                  </section>
-
-                  <div className="p-6 bg-blue-600 rounded-2xl text-white">
-                    <h4 className="font-bold mb-2">Yêu cầu chung</h4>
-                    <p className="text-sm text-blue-100 leading-relaxed">
-                      Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
-                    </p>
                   </div>
                 </div>
-              </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1062,7 +1067,8 @@ const ROLE_MAPPING: Record<string, string> = {
   'Nhân viên CSKH': 'cskh_staff',
   'Telesale': 'telesale',
   'Nhân viên Kỹ thuật': 'ops',
-  'Quản lý': 'head'
+  'Quản lý': 'head',
+  'Trưởng phòng Kinh doanh – Marketing – CSKH': 'head'
 };
 
 function AppContent() {
