@@ -538,86 +538,92 @@ const HRTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: { se
               exit={{ opacity: 0, y: -10 }}
               className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm"
             >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
-                  <Briefcase className="w-8 h-8" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
-                  <p className="text-slate-500 italic">Mục tiêu: {JD_DATA[selectedRole].objective}</p>
-                </div>
-                <button
-                  onClick={() => setActiveTab('salary')}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2"
-                >
-                  <DollarSign className="w-4 h-4" />
-                  Xem Lương & KPI
-                </button>
-              </div>
-
               {!JD_DATA[selectedRole] ? (
                 <div className="py-20 text-center text-slate-400">
-                  Thông tin vị trí ({selectedRole}) đang được cập nhật.
+                  <div className="p-4 bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <UserCog className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-700 mb-2">Đang tải dữ liệu...</h3>
+                  <p className="text-sm">Thông tin vị trí ({selectedRole}) đang được cập nhật hoặc không tồn tại.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <section>
-                      <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                        <FileText className="w-5 h-5 text-blue-500" />
-                        Nhiệm vụ chính
-                      </h4>
-                      <ul className="space-y-3">
-                        {JD_DATA[selectedRole].tasks.map((task, i) => (
-                          <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                            <span>{task}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
+                <>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
+                      <Briefcase className="w-8 h-8" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
+                      <p className="text-slate-500 italic">Mục tiêu: {JD_DATA[selectedRole].objective}</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('salary')}
+                      className="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    >
+                      <DollarSign className="w-4 h-4" />
+                      Xem Lương & KPI
+                    </button>
+                  </div>
 
-                    {JD_DATA[selectedRole].powers && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
                       <section>
                         <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                          <Zap className="w-5 h-5 text-amber-500" />
-                          Quyền hạn
+                          <FileText className="w-5 h-5 text-blue-500" />
+                          Nhiệm vụ chính
                         </h4>
                         <ul className="space-y-3">
-                          {JD_DATA[selectedRole].powers?.map((power, i) => (
+                          {JD_DATA[selectedRole].tasks.map((task, i) => (
                             <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
-                              <span>{power}</span>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                              <span>{task}</span>
                             </li>
                           ))}
                         </ul>
                       </section>
-                    )}
-                  </div>
 
-                  <div className="space-y-6">
-                    <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                      <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                        <Award className="w-5 h-5 text-indigo-500" />
-                        Chỉ số đánh giá (KPI)
-                      </h4>
-                      <div className="grid grid-cols-1 gap-3">
-                        {JD_DATA[selectedRole].kpis.map((kpi, i) => (
-                          <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
-                            {kpi}
-                          </div>
-                        ))}
+                      {JD_DATA[selectedRole].powers && (
+                        <section>
+                          <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                            <Zap className="w-5 h-5 text-amber-500" />
+                            Quyền hạn
+                          </h4>
+                          <ul className="space-y-3">
+                            {JD_DATA[selectedRole].powers?.map((power, i) => (
+                              <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
+                                <span>{power}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+                      )}
+                    </div>
+
+                    <div className="space-y-6">
+                      <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                          <Award className="w-5 h-5 text-indigo-500" />
+                          Chỉ số đánh giá (KPI)
+                        </h4>
+                        <div className="grid grid-cols-1 gap-3">
+                          {JD_DATA[selectedRole].kpis.map((kpi, i) => (
+                            <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
+                              {kpi}
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+
+                      <div className="p-6 bg-blue-600 rounded-2xl text-white">
+                        <h4 className="font-bold mb-2">Yêu cầu chung</h4>
+                        <p className="text-sm text-blue-100 leading-relaxed">
+                          Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
+                        </p>
                       </div>
-                    </section>
-
-                    <div className="p-6 bg-blue-600 rounded-2xl text-white">
-                      <h4 className="font-bold mb-2">Yêu cầu chung</h4>
-                      <p className="text-sm text-blue-100 leading-relaxed">
-                        Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
-                      </p>
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </motion.div>
           </AnimatePresence>
@@ -701,39 +707,103 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: 
               exit={{ opacity: 0, y: -10 }}
               className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm"
             >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
-                  <DollarSign className="w-8 h-8" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
-                  <p className="text-slate-500 italic">Cơ chế đãi ngộ</p>
-                </div>
-                <button
-                  onClick={() => setActiveTab('hr')}
-                  className="px-4 py-2 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
-                >
-                  <Briefcase className="w-4 h-4" />
-                  Xem lại JD
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                  <h4 className="font-bold text-blue-900 mb-2">Tổng thu nhập</h4>
-                  <p className="text-2xl font-bold text-blue-700">{JD_DATA[selectedRole].salaryRange}</p>
-                </div>
-                {JD_DATA[selectedRole].baseSalary && (
-                  <div className="p-6 bg-rose-50 rounded-2xl border border-rose-100">
-                    <h4 className="font-bold text-rose-900 mb-2">Lương cứng</h4>
-                    <p className="text-2xl font-bold text-rose-700">{JD_DATA[selectedRole].baseSalary}</p>
+              {!JD_DATA[selectedRole] ? (
+                <div className="py-20 text-center text-slate-400">
+                  <div className="p-4 bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Wallet className="w-8 h-8 text-slate-400" />
                   </div>
-                )}
-                <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
-                  <h4 className="font-bold text-emerald-900 mb-2">Cách tính</h4>
-                  <p className="text-sm text-slate-700">{JD_DATA[selectedRole].salaryCalculation}</p>
+                  <h3 className="text-xl font-bold text-slate-700 mb-2">Đang tải dữ liệu...</h3>
+                  <p className="text-sm">Thông tin cơ chế (vị trí: {selectedRole}) đang được cập nhật hoặc không tồn tại.</p>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
+                      <DollarSign className="w-8 h-8" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
+                      <p className="text-slate-500 italic">Cơ chế đãi ngộ</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('hr')}
+                      className="px-4 py-2 bg-slate-100 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
+                    >
+                      <Briefcase className="w-4 h-4" />
+                      Xem lại JD
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100 h-full">
+                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-6">
+                          <DollarSign className="w-5 h-5 text-emerald-500" />
+                          Cơ cấu Thu nhập
+                        </h4>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center p-4 bg-white rounded-xl border border-slate-200">
+                            <span className="text-sm text-slate-500">Mức lương (Khoảng)</span>
+                            <span className="font-bold text-slate-900">{JD_DATA[selectedRole].salaryRange}</span>
+                          </div>
+                          <div className="flex justify-between items-center p-4 bg-white rounded-xl border border-slate-200">
+                            <span className="text-sm text-slate-500">Lương cứng (Base)</span>
+                            <span className="font-bold text-emerald-600">{JD_DATA[selectedRole].baseSalary}</span>
+                          </div>
+                          <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <span className="text-xs text-blue-600 font-bold uppercase block mb-2">Cách thức tính</span>
+                            <p className="text-sm text-blue-900 font-medium leading-relaxed">
+                              {JD_DATA[selectedRole].salaryCalculation}
+                            </p>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+
+                    <div className="space-y-6">
+                      <section className="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 h-full">
+                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-6">
+                          <TrendingUp className="w-5 h-5 text-indigo-500" />
+                          Trọng số KPI thưởng
+                        </h4>
+                        <div className="space-y-6">
+                          {/* Progressive weights based on role */}
+                          <div>
+                            <div className="flex justify-between mb-2">
+                              <span className="font-medium text-slate-700">Chuyên môn / Hiệu suất</span>
+                              <span className="text-blue-600 font-bold">40%</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-600 w-[40%]" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex justify-between mb-2">
+                              <span className="font-medium text-slate-700">Sale (Doanh thu mới)</span>
+                              <span className="text-emerald-600 font-bold">40%</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-emerald-600 w-[40%]" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex justify-between mb-2">
+                              <span className="font-medium text-slate-700">CSKH (Tỷ lệ gia hạn)</span>
+                              <span className="text-rose-600 font-bold">20%</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-rose-600 w-[20%]" />
+                            </div>
+                          </div>
+                          <p className="text-xs text-slate-400 mt-4 italic">
+                            * Trọng số có thể điều chỉnh theo chiến lược từng tháng (Ưu tiên tìm khách mới hay giữ khách cũ).
+                          </p>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1083,7 +1153,7 @@ function AppContent() {
   const isAdmin = internalRoleId === 'admin';
 
   const [activeTab, setActiveTab] = useState<TabType>('model');
-  const [activeRole, setActiveRole] = useState<string>(internalRoleId || 'head');
+  const [activeRole, setActiveRole] = useState<string>(isAdmin ? 'head' : (internalRoleId || 'head'));
   const [activeDept, setActiveDept] = useState<string | null>(null);
   const [activeTeam, setActiveTeam] = useState<'marketing' | 'sale' | 'cskh' | null>(null);
 
