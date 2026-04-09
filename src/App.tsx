@@ -4,17 +4,18 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  Users, 
-  Target, 
-  MessageSquare, 
-  TrendingUp, 
-  CheckCircle2, 
-  BarChart3, 
-  ShieldCheck, 
-  Zap, 
-  Search, 
-  Megaphone, 
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Users,
+  Target,
+  MessageSquare,
+  TrendingUp,
+  CheckCircle2,
+  BarChart3,
+  ShieldCheck,
+  Zap,
+  Search,
+  Megaphone,
   ChevronDown,
   Info,
   HeartHandshake,
@@ -48,6 +49,7 @@ import { PROCESS_STEPS, DEPARTMENTS } from './data/modelData';
 import { TRAINING_GROUPS, CULTURE_PILLARS, CORE_VALUES } from './data/trainingData';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPage from './components/LoginPage';
+import { InterviewTab } from './components/InterviewTab';
 
 const GOOGLE_CLIENT_ID = '637002508826-b7jmlrenhbagrh6rjp4m4uq8n210fq9a.apps.googleusercontent.com';
 
@@ -74,7 +76,7 @@ const Header = () => (
         Phòng Kinh doanh – Marketing – CSKH
       </h1>
       <p className="max-w-3xl mx-auto mt-4 text-lg text-slate-600">
-        Mô hình quản trị vòng đời khách hàng chuyên biệt cho <span className="font-bold text-blue-600">SIM Data & Pocket WiFi</span>. 
+        Mô hình quản trị vòng đời khách hàng chuyên biệt cho <span className="font-bold text-blue-600">SIM Data & Pocket WiFi</span>.
         Tối ưu hóa từ lúc tìm khách đến khi gia hạn và giới thiệu.
       </p>
     </motion.div>
@@ -84,7 +86,7 @@ const Header = () => (
 const OrgChart = ({ activeRole, setActiveRole }: { activeRole: string, setActiveRole: (id: string) => void }) => (
   <section className="relative py-12 mb-16 overflow-hidden bg-white border rounded-3xl border-slate-200 shadow-sm">
     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', size: '20px 20px' }} />
-    
+
     <div className="relative z-10 flex flex-col items-center">
       {/* Head of Dept */}
       <motion.button
@@ -108,27 +110,26 @@ const OrgChart = ({ activeRole, setActiveRole }: { activeRole: string, setActive
       {/* Horizontal Connector */}
       <div className="relative w-full max-w-5xl px-4">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] h-px bg-slate-200" />
-        
+
         <div className="grid grid-cols-1 gap-6 pt-12 md:grid-cols-3">
           {ROLES.slice(1).map((role, idx) => (
             <div key={role.id} className="relative flex flex-col items-center">
               {/* Vertical Connector to Horizontal Line */}
               <div className="absolute top-[-48px] w-px h-12 bg-slate-200" />
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveRole(role.id)}
-                className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left group ${
-                  activeRole === role.id 
-                    ? `border-transparent text-white shadow-lg ${role.color}` 
+                className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left group ${activeRole === role.id
+                    ? `border-transparent text-white shadow-lg ${role.color}`
                     : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-slate-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`p-2 rounded-lg ${activeRole === role.id ? 'bg-white/20' : 'bg-white shadow-sm'}`}>
-                    {React.cloneElement(role.icon as React.ReactElement, { 
-                      className: `w-5 h-5 ${activeRole === role.id ? 'text-white' : 'text-slate-600'}` 
+                    {React.cloneElement(role.icon as React.ReactElement, {
+                      className: `w-5 h-5 ${activeRole === role.id ? 'text-white' : 'text-slate-600'}`
                     })}
                   </div>
                   <h4 className="font-bold leading-tight">{role.title}</h4>
@@ -205,7 +206,7 @@ const RoleDetailPanel = ({ role }: { role: Role }) => (
           </div>
         ))}
       </div>
-      
+
       <div className="mt-8 p-6 rounded-2xl bg-blue-500/10 border border-blue-500/20">
         <div className="flex gap-3">
           <Info className="w-5 h-5 text-blue-400 shrink-0" />
@@ -270,7 +271,7 @@ const ProcessSection = () => (
 
     <div className="relative">
       <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -translate-y-1/2 hidden lg:block" />
-      
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         {PROCESS_STEPS.map((step, idx) => (
           <motion.div
@@ -284,7 +285,7 @@ const ProcessSection = () => (
             <div className="absolute top-4 right-4 text-xs font-bold text-slate-200">0{step.id}</div>
             <h4 className="mb-2 font-bold text-slate-900">{step.title}</h4>
             <p className="text-sm text-slate-500 leading-relaxed">{step.description}</p>
-            
+
             {idx < PROCESS_STEPS.length - 1 && (
               <div className="flex justify-center mt-4 lg:hidden">
                 <ChevronDown className="w-5 h-5 text-slate-300" />
@@ -351,21 +352,28 @@ const ValueSection = () => (
 
 // --- Main App ---
 
-const Sidebar = ({ 
-  activeTab, 
-  setActiveTab, 
-  activeDept, 
-  setActiveDept,
+const TAB_TO_PATH: Record<TabType, string> = {
+  model: '/model',
+  hr: '/hr',
+  salary: '/salary',
+  cost: '/cost',
+  training: '/training',
+};
+
+const Sidebar = ({
+  activeTab,
+  activeDept,
+  hrSubTab,
   onLogout,
-  user
-}: { 
-  activeTab: TabType, 
-  setActiveTab: (t: TabType) => void, 
-  activeDept: string | null, 
-  setActiveDept: (d: string | null) => void,
-  onLogout: () => void,
-  user: any
+  user,
+}: {
+  activeTab: TabType;
+  activeDept: string | null;
+  hrSubTab?: string;
+  onLogout: () => void;
+  user: any;
 }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const baseMenuItems = [
@@ -376,7 +384,6 @@ const Sidebar = ({
     { id: 'training', label: 'Đào tạo & Văn hóa', icon: <GraduationCap className="w-5 h-5" /> },
   ];
 
-  // Dynamic department links based on role
   const deptLinks = DEPARTMENTS.map(dept => ({
     id: dept.id,
     label: `P. ${dept.title.replace('Phòng ', '')}`,
@@ -391,15 +398,38 @@ const Sidebar = ({
     return false;
   });
 
-  // Combine menus: Model (Main) -> Dept Links -> Other Tabs
+  const isAdmin = user?.role === 'Quản trị';
+  const isHR = user?.role?.includes('Hành chính - Nhân sự');
+  const isManager = user?.role?.includes('Trưởng phòng') || user?.role?.includes('Trưởng nhóm');
+
+  const hrLinks = [
+    { id: 'hr-jd', label: 'Mô tả công việc', icon: <FileText className="w-5 h-5" />, indent: true, small: true },
+    { id: 'hr-interview', label: 'Danh sách PV', icon: <Users className="w-5 h-5" />, indent: true, small: true, visible: isAdmin || isHR || isManager },
+  ];
+
   const filteredMenuItems: any[] = [];
   baseMenuItems.forEach(item => {
     if (item.adminOnly && user.role !== 'Quản trị') return;
     filteredMenuItems.push(item);
-    if (item.id === 'model') {
-      filteredMenuItems.push(...deptLinks);
-    }
+    if (item.id === 'model') filteredMenuItems.push(...deptLinks);
+    if (item.id === 'hr') filteredMenuItems.push(...hrLinks.filter(l => l.visible !== false));
   });
+
+  const handleNavigate = (item: any) => {
+    const DEPT_IDS = ['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'];
+    if (DEPT_IDS.includes(item.id)) {
+      navigate(`/model/${item.id}`);
+    } else if (item.id === 'hr-jd') {
+      navigate('/hr');
+    } else if (item.id === 'hr-interview') {
+      navigate('/hr/interview');
+    } else if (item.id === 'model') {
+      navigate('/model');
+    } else {
+      navigate(TAB_TO_PATH[item.id as TabType] || `/${item.id}`);
+    }
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -429,9 +459,8 @@ const Sidebar = ({
 
       {/* Sidebar Content */}
       <motion.aside
-        className={`fixed inset-y-0 left-0 w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="p-6">
           <div className="flex items-center gap-3 mb-10">
@@ -455,38 +484,47 @@ const Sidebar = ({
           )}
 
           <nav className="space-y-1">
-            {filteredMenuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  if (['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'].includes(item.id)) {
-                    setActiveTab('model');
-                    setActiveDept(item.id);
-                  } else if (item.id === 'model') {
-                    setActiveTab('model');
-                    setActiveDept(null);
-                  } else {
-                    setActiveTab(item.id as TabType);
-                    setActiveDept(null);
-                  }
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-left ${item.indent ? 'pl-9' : ''} ${item.small ? 'text-[13px]' : 'text-sm'} ${
-                  (activeTab === item.id || (['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'].includes(item.id) && activeDept === item.id))
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                }`}
-              >
-                {React.cloneElement(item.icon as React.ReactElement, { 
-                  className: item.small ? 'w-4 h-4 shrink-0' : 'w-5 h-5 shrink-0' 
-                })}
-                <span className="font-medium truncate">{item.label}</span>
-              </button>
-            ))}
+            {filteredMenuItems.map((item) => {
+              const DEPT_IDS = ['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'];
+              const HR_IDS = ['hr-jd', 'hr-interview'];
+              let isActive = false;
+
+              if (DEPT_IDS.includes(item.id)) {
+                isActive = activeDept === item.id;
+              } else if (HR_IDS.includes(item.id)) {
+                if (item.id === 'hr-jd') isActive = activeTab === 'hr' && hrSubTab !== 'interview';
+                if (item.id === 'hr-interview') isActive = activeTab === 'hr' && hrSubTab === 'interview';
+              } else if (item.id === 'model') {
+                isActive = activeTab === 'model' && !activeDept;
+              } else if (item.id === 'hr') {
+                isActive = activeTab === 'hr' && !hrSubTab; // Only active if no sub-tab is particularly selected (but in our case, one defaults)
+                // If we want the parent to stay active as well, we could do `activeTab === 'hr'`. Let's just highlight the parent if NO child is active.
+                // Wait, default is 'jd', so parent is never active except if we want it to be. Let's make parent not active.
+                isActive = false;
+              } else {
+                isActive = activeTab === item.id;
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigate(item)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-left ${item.indent ? 'pl-9' : ''} ${item.small ? 'text-[13px]' : 'text-sm'} ${isActive
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
+                      : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    }`}
+                >
+                  {React.cloneElement(item.icon as React.ReactElement, {
+                    className: item.small ? 'w-4 h-4 shrink-0' : 'w-5 h-5 shrink-0'
+                  })}
+                  <span className="font-medium truncate">{item.label}</span>
+                </button>
+              );
+            })}
           </nav>
-          
+
           <div className="absolute bottom-6 left-6 right-6">
-            <button 
+            <button
               onClick={onLogout}
               className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 border border-transparent hover:border-red-500/20"
             >
@@ -500,171 +538,202 @@ const Sidebar = ({
   );
 };
 
-const HRTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: { selectedRole: string, setSelectedRole: (role: string) => void, setActiveTab: (tab: TabType) => void, restricted?: boolean }) => {
+const HRTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted, hrSubTab, user }: { selectedRole: string, setSelectedRole: (role: string) => void, setActiveTab: (tab: TabType) => void, restricted?: boolean, hrSubTab?: string, user: any }) => {
+  const navigate = useNavigate();
+  const currentSubTab = hrSubTab === 'interview' ? 'interview' : 'jd';
+
   return (
     <div className="max-w-6xl mx-auto">
-      <header className="mb-10">
-        <h2 className="text-3xl font-bold text-slate-900">Mô tả công việc (JD)</h2>
-        <p className="text-slate-600 mt-2">Chi tiết nhiệm vụ, quyền hạn và KPI cho từng vị trí trong phòng ban.</p>
-      </header>
+      {/* ── Interview sub-tab ── */}
+      {currentSubTab === 'interview' && (
+        <motion.div
+          key="interview"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25 }}
+        >
+          <InterviewTab
+            sheetCsvUrl={import.meta.env.VITE_SHEET_CSV_URL}
+            appsScriptUrl={import.meta.env.VITE_APPS_SCRIPT_URL}
+            resultSheetCsvUrl={import.meta.env.VITE_RESULT_SHEET_CSV_URL}
+            user={user}
+          />
+        </motion.div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* JD List */}
-        {!restricted && (
-          <div className="lg:col-span-1 space-y-2">
-            {Object.entries(JD_DATA).map(([id, jd]) => (
-              <button
-                key={id}
-                onClick={() => setSelectedRole(id)}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
-                  selectedRole === id
-                    ? 'bg-white border-2 border-blue-600 shadow-sm text-blue-700 font-bold'
-                    : 'bg-transparent border-2 border-transparent text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <div className="text-sm">{jd.title}</div>
-              </button>
-            ))}
-          </div>
-        )}
+      {/* ── JD sub-tab ── */}
+      {currentSubTab === 'jd' && (
+        <motion.div
+          key="jd"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25 }}
+        >
+          <header className="mb-10">
+            <h2 className="text-3xl font-bold text-slate-900">Mô tả công việc (JD)</h2>
+            <p className="text-slate-600 mt-2">Chi tiết nhiệm vụ, quyền hạn và KPI cho từng vị trí trong phòng ban.</p>
+          </header>
 
-        {/* JD Detail */}
-        <div className={restricted ? "lg:col-span-4" : "lg:col-span-3"}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedRole}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm"
-            >
-              {!JD_DATA[selectedRole] ? (
-                <div className="py-20 text-center text-slate-400">
-                  <div className="p-4 bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <UserCog className="w-8 h-8 text-slate-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-700 mb-2">Đang tải dữ liệu...</h3>
-                  <p className="text-sm">Thông tin vị trí ({selectedRole}) đang được cập nhật hoặc không tồn tại.</p>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
-                      <Briefcase className="w-8 h-8" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
-                      <p className="text-slate-500 italic">Mục tiêu: {JD_DATA[selectedRole].objective}</p>
-                    </div>
-                    <button
-                      onClick={() => setActiveTab('salary')}
-                      className="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2"
-                    >
-                      <DollarSign className="w-4 h-4" />
-                      Xem Lương & KPI
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                      <section>
-                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                          <FileText className="w-5 h-5 text-blue-500" />
-                          Nhiệm vụ chính
-                        </h4>
-                        <ul className="space-y-3">
-                          {JD_DATA[selectedRole].tasks.map((task, i) => (
-                            <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                              <span>{task}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </section>
-
-                      {JD_DATA[selectedRole].powers && (
-                        <section>
-                          <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                            <Zap className="w-5 h-5 text-amber-500" />
-                            Quyền hạn
-                          </h4>
-                          <ul className="space-y-3">
-                            {JD_DATA[selectedRole].powers?.map((power, i) => (
-                              <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
-                                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
-                                <span>{power}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </section>
-                      )}
-                    </div>
-
-                    <div className="space-y-6">
-                      <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                        <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
-                          <Award className="w-5 h-5 text-indigo-500" />
-                          Chỉ số đánh giá (KPI)
-                        </h4>
-                        <div className="grid grid-cols-1 gap-3">
-                          {JD_DATA[selectedRole].kpis.map((kpi, i) => (
-                            <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
-                              {kpi}
-                            </div>
-                          ))}
-                        </div>
-                      </section>
-
-                      <div className="p-6 bg-blue-600 rounded-2xl text-white">
-                        <h4 className="font-bold mb-2">Yêu cầu chung</h4>
-                        <p className="text-sm text-blue-100 leading-relaxed">
-                          Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Staffing Scale Section */}
-      <section className="mt-16 p-8 bg-blue-50 border border-blue-100 rounded-3xl">
-        <h3 className="text-2xl font-bold text-blue-900 mb-8 flex items-center gap-2">
-          <Users className="w-6 h-6" />
-          Gợi ý cơ cấu nhân sự theo quy mô
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: 'Quy mô nhỏ',
-              staff: ['1 Trưởng phòng', '1 Marketing Ads/Content', '1–2 Sale/Chat tư vấn', '1 CSKH kiêm xử lý đơn']
-            },
-            {
-              title: 'Quy mô vừa',
-              staff: ['1 Trưởng phòng', '1 Trưởng nhóm Marketing (1 Ads, 1 Content)', '2–4 Sale/Chat tư vấn', '1 Trưởng nhóm CSKH (1–2 NV)', '1 Xử lý đơn/CRM']
-            },
-            {
-              title: 'Quy mô lớn',
-              staff: ['1 Trưởng phòng', '1 Trưởng nhóm MKT (2-3 NV)', '1 Trưởng nhóm Sale (4-8 NV)', '1 Trưởng nhóm CSKH (2-4 NV)', '1 CRM + 1-2 Vận hành đơn']
-            }
-          ].map((scale, i) => (
-            <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-blue-100">
-              <h4 className="font-bold text-blue-800 mb-4 pb-2 border-b border-blue-50">{scale.title}</h4>
-              <ul className="space-y-2">
-                {scale.staff.map((s, idx) => (
-                  <li key={idx} className="text-sm text-slate-600 flex items-center gap-2">
-                    <div className="w-1 h-1 rounded-full bg-blue-400" />
-                    {s}
-                  </li>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* JD List */}
+            {!restricted && (
+              <div className="lg:col-span-1 space-y-2">
+                {Object.entries(JD_DATA).map(([id, jd]) => (
+                  <button
+                    key={id}
+                    onClick={() => setSelectedRole(id)}
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-all ${selectedRole === id
+                        ? 'bg-white border-2 border-blue-600 shadow-sm text-blue-700 font-bold'
+                        : 'bg-transparent border-2 border-transparent text-slate-600 hover:bg-slate-100'
+                      }`}
+                  >
+                    <div className="text-sm">{jd.title}</div>
+                  </button>
                 ))}
-              </ul>
+              </div>
+            )}
+
+            {/* JD Detail */}
+            <div className={restricted ? "lg:col-span-4" : "lg:col-span-3"}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedRole}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm"
+                >
+                  {!JD_DATA[selectedRole] ? (
+                    <div className="py-20 text-center text-slate-400">
+                      <div className="p-4 bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <UserCog className="w-8 h-8 text-slate-400" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-700 mb-2">Đang tải dữ liệu...</h3>
+                      <p className="text-sm">Thông tin vị trí ({selectedRole}) đang được cập nhật hoặc không tồn tại.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-4 mb-8">
+                        <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl">
+                          <Briefcase className="w-8 h-8" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-slate-900">{JD_DATA[selectedRole].title}</h3>
+                          <p className="text-slate-500 italic">Mục tiêu: {JD_DATA[selectedRole].objective}</p>
+                        </div>
+                        <button
+                          onClick={() => setActiveTab('salary')}
+                          className="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2"
+                        >
+                          <DollarSign className="w-4 h-4" />
+                          Xem Lương & KPI
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-6">
+                          <section>
+                            <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                              <FileText className="w-5 h-5 text-blue-500" />
+                              Nhiệm vụ chính
+                            </h4>
+                            <ul className="space-y-3">
+                              {JD_DATA[selectedRole].tasks.map((task, i) => (
+                                <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                                  <span>{task}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+
+                          {JD_DATA[selectedRole].powers && (
+                            <section>
+                              <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                                <Zap className="w-5 h-5 text-amber-500" />
+                                Quyền hạn
+                              </h4>
+                              <ul className="space-y-3">
+                                {JD_DATA[selectedRole].powers?.map((power, i) => (
+                                  <li key={i} className="flex items-start gap-3 text-slate-600 text-sm">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-2" />
+                                    <span>{power}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </section>
+                          )}
+                        </div>
+
+                        <div className="space-y-6">
+                          <section className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 className="flex items-center gap-2 font-bold text-slate-800 mb-4">
+                              <Award className="w-5 h-5 text-indigo-500" />
+                              Chỉ số đánh giá (KPI)
+                            </h4>
+                            <div className="grid grid-cols-1 gap-3">
+                              {JD_DATA[selectedRole].kpis.map((kpi, i) => (
+                                <div key={i} className="px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
+                                  {kpi}
+                                </div>
+                              ))}
+                            </div>
+                          </section>
+
+                          <div className="p-6 bg-blue-600 rounded-2xl text-white">
+                            <h4 className="font-bold mb-2">Yêu cầu chung</h4>
+                            <p className="text-sm text-blue-100 leading-relaxed">
+                              Nắm chắc sản phẩm, phản hồi nhanh, giao tiếp khéo léo và luôn đặt lợi ích kết nối của khách hàng lên hàng đầu.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+
+          {/* Staffing Scale Section */}
+          <section className="mt-16 p-8 bg-blue-50 border border-blue-100 rounded-3xl">
+            <h3 className="text-2xl font-bold text-blue-900 mb-8 flex items-center gap-2">
+              <Users className="w-6 h-6" />
+              Gợi ý cơ cấu nhân sự theo quy mô
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: 'Quy mô nhỏ',
+                  staff: ['1 Trưởng phòng', '1 Marketing Ads/Content', '1–2 Sale/Chat tư vấn', '1 CSKH kiêm xử lý đơn']
+                },
+                {
+                  title: 'Quy mô vừa',
+                  staff: ['1 Trưởng phòng', '1 Trưởng nhóm Marketing (1 Ads, 1 Content)', '2–4 Sale/Chat tư vấn', '1 Trưởng nhóm CSKH (1–2 NV)', '1 Xử lý đơn/CRM']
+                },
+                {
+                  title: 'Quy mô lớn',
+                  staff: ['1 Trưởng phòng', '1 Trưởng nhóm MKT (2-3 NV)', '1 Trưởng nhóm Sale (4-8 NV)', '1 Trưởng nhóm CSKH (2-4 NV)', '1 CRM + 1-2 Vận hành đơn']
+                }
+              ].map((scale, i) => (
+                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-blue-100">
+                  <h4 className="font-bold text-blue-800 mb-4 pb-2 border-b border-blue-50">{scale.title}</h4>
+                  <ul className="space-y-2">
+                    {scale.staff.map((s, idx) => (
+                      <li key={idx} className="text-sm text-slate-600 flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-blue-400" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+        </motion.div>
+      )}
     </div>
   );
 };
@@ -685,11 +754,10 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: 
               <button
                 key={id}
                 onClick={() => setSelectedRole(id)}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
-                  selectedRole === id
+                className={`w-full text-left px-4 py-3 rounded-xl transition-all ${selectedRole === id
                     ? 'bg-white border-2 border-blue-600 shadow-sm text-blue-700 font-bold'
                     : 'bg-transparent border-2 border-transparent text-slate-600 hover:bg-slate-100'
-                }`}
+                  }`}
               >
                 {jd.title}
               </button>
@@ -820,7 +888,7 @@ const SalaryTab = ({ selectedRole, setSelectedRole, setActiveTab, restricted }: 
               <p className="text-blue-400 font-mono text-sm mb-2">THU NHẬP TỔNG =</p>
               <p className="text-lg font-bold">Lương cứng + (Doanh số mới × %HH) + (Doanh số gia hạn × %Thưởng) + Thưởng KPI</p>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-4">
               <div className="flex justify-between items-center p-4 border-b border-white/10">
                 <span className="text-slate-400">Đạt 80% KPI</span>
@@ -904,7 +972,7 @@ const CostTab = () => {
             <h3 className="text-xl font-bold text-slate-900">A. Nhóm SIM Data bán đứt 1 năm</h3>
           </div>
           <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: 5GB giá vốn ~65%, 10GB giá vốn ~71%</p>
-          
+
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
@@ -936,7 +1004,7 @@ const CostTab = () => {
             <h3 className="text-xl font-bold text-slate-900">B. Nhóm SIM Data Thu cước hàng tháng</h3>
           </div>
           <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: Softbank 30GB giá vốn ~76%, Rakuten 100GB giá vốn ~80%</p>
-          
+
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
@@ -970,7 +1038,7 @@ const CostTab = () => {
             <h3 className="text-xl font-bold text-slate-900">C. Nhóm Data + Voice</h3>
           </div>
           <p className="text-sm text-slate-500 mb-6 italic">Ví dụ: Docomo/Rakuten Voice thường có biên lợi nhuận cao hơn Data thuần.</p>
-          
+
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex justify-between items-center text-sm font-bold"><span className="text-slate-600">Hạng mục</span><span className="text-slate-900">Tỷ lệ</span></div>
@@ -1000,7 +1068,7 @@ const CostTab = () => {
               <AlertCircle className="w-6 h-6 text-amber-400" />
               Kết luận quản trị trọng tâm
             </h3>
-            
+
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">1</div>
@@ -1009,18 +1077,18 @@ const CostTab = () => {
                   <p className="text-slate-400">Thực tế phải phân mảnh: <span className="text-white">65-72%</span> (bán đứt), <span className="text-white">74-80%</span> (thu cước), <span className="text-white">60-70%</span> (data+voice). Việc gộp chung sẽ làm sai số chiến lược về giá.</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">2</div>
                 <div>
                   <h4 className="font-bold text-lg mb-1">Bản chất dòng thu nhập rất khác biệt</h4>
                   <p className="text-slate-400">
-                    <span className="text-white font-medium">Bán đứt:</span> Nhận ngay lợi nhuận ở giao dịch mua mới đầu tiên.<br/>
+                    <span className="text-white font-medium">Bán đứt:</span> Nhận ngay lợi nhuận ở giao dịch mua mới đầu tiên.<br />
                     <span className="text-white font-medium">Thu cước:</span> Lợi nhuận nằm rải rác ở số tháng duy trì, phí báo hủy, phí làm lại sim.
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex flex-col items-center justify-center font-bold shrink-0">3</div>
                 <div>
@@ -1047,7 +1115,7 @@ const TrainingTab = () => {
           Hệ thống Đào tạo & Văn hoá
         </h2>
         <p className="text-slate-600 max-w-2xl text-lg relative">
-          Mô hình <span className="font-bold text-slate-800">"Học để làm được – Đo bằng hiệu quả – Thưởng theo giá trị"</span>. 
+          Mô hình <span className="font-bold text-slate-800">"Học để làm được – Đo bằng hiệu quả – Thưởng theo giá trị"</span>.
           Bám sát thực chiến từ Marketing, Sale, CSKH đến Kỹ thuật.
         </p>
       </div>
@@ -1149,20 +1217,47 @@ function AppContent() {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  // ── Derive all navigation state from URL ────────────────────────────────
+  // /model              → model tab, no dept
+  // /model/sales-mkt    → model tab, dept = 'sales-mkt'
+  // /model/sales-mkt/marketing → model, dept='sales-mkt', team='marketing'
+  // /hr                 → hr, sub='jd'
+  // /hr/interview       → hr, sub='interview'
+  // /salary /cost /training → respective tabs
+
+  const pathParts = pathname.replace(/^\//, '').split('/');
+  const rootSeg = pathParts[0] || 'model';
+  const subSeg = pathParts[1] || '';
+  const teamSeg = pathParts[2] || '';
+
+  const PATH_TO_TAB: Record<string, TabType> = {
+    model: 'model', hr: 'hr', salary: 'salary', cost: 'cost', training: 'training',
+  };
+  const DEPT_IDS = ['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'];
+
+  const activeTab: TabType = PATH_TO_TAB[rootSeg] ?? 'model';
+  const activeDept: string | null = activeTab === 'model' && DEPT_IDS.includes(subSeg) ? subSeg : null;
+  const activeTeam: 'marketing' | 'sale' | 'cskh' | null =
+    activeDept === 'sales-mkt' && ['marketing', 'sale', 'cskh'].includes(teamSeg)
+      ? teamSeg as 'marketing' | 'sale' | 'cskh'
+      : null;
+  const hrSubTab = activeTab === 'hr' && subSeg === 'interview' ? 'interview' : 'jd';
+
   const internalRoleId = user?.role ? (ROLE_MAPPING[user.role] || 'guest') : null;
   const isAdmin = internalRoleId === 'admin';
-
-  const [activeTab, setActiveTab] = useState<TabType>('model');
   const [activeRole, setActiveRole] = useState<string>(isAdmin ? 'head' : (internalRoleId || 'head'));
-  const [activeDept, setActiveDept] = useState<string | null>(null);
-  const [activeTeam, setActiveTeam] = useState<'marketing' | 'sale' | 'cskh' | null>(null);
 
-  // Sync activeRole with user's role when login happens
   React.useEffect(() => {
-    if (user && !isAdmin) {
-      setActiveRole(internalRoleId || 'head');
-    }
+    if (user && !isAdmin) setActiveRole(internalRoleId || 'head');
   }, [user, internalRoleId, isAdmin]);
+
+  // Redirect bare '/' to '/model'
+  React.useEffect(() => {
+    if (pathname === '/' || pathname === '') navigate('/model', { replace: true });
+  }, [pathname]);
 
   const handleLoginSuccess = (userData: any) => {
     localStorage.setItem('sky_mobile_user', JSON.stringify(userData));
@@ -1180,6 +1275,22 @@ function AppContent() {
 
   const canAccessSensitive = isAdmin;
   const restrictedView = !isAdmin;
+
+  // Navigate helpers that enforce RBAC
+  const goToTab = (tab: TabType) => {
+    if (!canAccessSensitive && (tab === 'salary' || tab === 'cost')) {
+      alert('Bạn không có quyền truy cập mục này.');
+      return;
+    }
+    navigate(TAB_TO_PATH[tab]);
+  };
+  const goToDept = (dept: string | null) => {
+    navigate(dept ? `/model/${dept}` : '/model');
+  };
+  const goToTeam = (team: string | null) => {
+    if (team) navigate(`/model/sales-mkt/${team}`);
+    else navigate('/model/sales-mkt');
+  };
 
   type TeamDetail = {
     title: string;
@@ -1403,11 +1514,11 @@ function AppContent() {
                   <div key={dept.id} className="relative flex flex-col items-center group w-full">
                     {/* Đường cắm từ trục ngang xuống khối */}
                     <div className="absolute top-[-48px] w-1 bg-slate-300 h-12 hidden lg:block"></div>
-                    
+
                     {/* Đường cắm cho màn mobile/tablet (không có trục ngang chung) */}
                     <div className="w-1 bg-slate-300 h-6 lg:hidden"></div>
 
-                    <button 
+                    <button
                       onClick={() => setActiveDept(dept.id)}
                       className="w-full h-full bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col group/btn"
                     >
@@ -1418,9 +1529,9 @@ function AppContent() {
                         {dept.icon}
                       </div>
                       <h4 className="font-bold text-slate-800 mb-4 h-12 flex items-center leading-snug">{dept.label}</h4>
-                      
+
                       <div className="w-[80%] bg-slate-100 h-px mb-5"></div>
-                      
+
                       <ul className="space-y-3 flex-1 w-full">
                         {dept.teams.map((t, i) => (
                           <li key={i} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
@@ -1429,7 +1540,7 @@ function AppContent() {
                           </li>
                         ))}
                       </ul>
-                      
+
                       <div className="mt-6 pt-4 border-t border-slate-100 w-full text-left">
                         <span className={`text-xs font-bold inline-flex items-center gap-1 ${dept.id === 'sales-mkt' ? 'text-blue-600' : 'text-slate-400'}`}>
                           {dept.id === 'sales-mkt' ? 'Xem chi tiết vận hành' : 'Đang cập nhật'}
@@ -1486,7 +1597,7 @@ function AppContent() {
                         );
                       })}
                     </div>
-                    
+
                     <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-wrap gap-4 justify-between items-center bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
                       <div className="flex-1 min-w-[200px] flex gap-3 items-center">
                         <Search className="w-6 h-6 text-indigo-400 shrink-0" />
@@ -1522,7 +1633,7 @@ function AppContent() {
                           <p className="text-indigo-700/80 mt-1">Vận hành trọn chuỗi khách hàng cho SIM Data, Pocket WiFi tại Nhật</p>
                         </div>
                       </div>
-                      
+
                       <div className="grid gap-6 md:grid-cols-3 mt-6">
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50">
                           <Target className="w-5 h-5 text-rose-500 mb-3" />
@@ -1557,7 +1668,7 @@ function AppContent() {
                       <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">3</div>
                       <h2 className="text-2xl font-bold text-slate-900">Bối cảnh & Khách hàng</h2>
                     </div>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
@@ -1577,7 +1688,7 @@ function AppContent() {
                           ))}
                         </ul>
                       </div>
-                      
+
                       <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
                         <Zap className="w-8 h-8 text-amber-500 mb-4" />
@@ -1648,7 +1759,7 @@ function AppContent() {
                       <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">5</div>
                       <h2 className="text-2xl font-bold text-slate-900">Luồng công việc chính</h2>
                     </div>
-                    
+
                     <div className="relative">
                       <div className="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-indigo-100 via-emerald-100 to-rose-100 -translate-y-1/2 hidden lg:block rounded-full" />
                       <div className="grid gap-6 lg:grid-cols-4">
@@ -1658,33 +1769,33 @@ function AppContent() {
                           </div>
                           <h3 className="font-bold text-slate-900 text-center mb-4">Thu hút khách</h3>
                           <ul className="text-sm text-slate-600 space-y-2">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Quảng cáo online</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Social media và nội dung</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0"/> Landing page, form, inbox</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" /> Quảng cáo online</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" /> Social media và nội dung</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" /> Landing page, form, inbox</li>
                           </ul>
                         </div>
-                        
+
                         <div className="relative z-10 bg-white p-6 rounded-3xl border border-emerald-200 shadow-lg shadow-emerald-100/40">
                           <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
                             <MessageSquare className="w-5 h-5" />
                           </div>
                           <h3 className="font-bold text-slate-900 text-center mb-4">Tư vấn & chốt đơn</h3>
                           <ul className="text-sm text-slate-600 space-y-2">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Nhận lead chat, call</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Định vị nhu cầu, gợi ý gói</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"/> Giải thích ưu đãi, kích hoạt</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> Nhận lead chat, call</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> Định vị nhu cầu, gợi ý gói</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" /> Giải thích ưu đãi, kích hoạt</li>
                           </ul>
                         </div>
-                        
+
                         <div className="relative z-10 bg-white p-6 rounded-3xl border border-blue-200 shadow-lg shadow-blue-100/40">
                           <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center mb-4 mx-auto border-4 border-white shadow-md">
                             <ShieldCheck className="w-5 h-5" />
                           </div>
                           <h3 className="font-bold text-slate-900 text-center mb-4">Hỗ trợ sau bán</h3>
                           <ul className="text-sm text-slate-600 space-y-2">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Kiểm tra nhận hàng</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Hỗ trợ cài đặt, APN</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0"/> Giải quyết sự cố cơ bản</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" /> Kiểm tra nhận hàng</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" /> Hỗ trợ cài đặt, APN</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" /> Giải quyết sự cố cơ bản</li>
                           </ul>
                         </div>
 
@@ -1694,15 +1805,15 @@ function AppContent() {
                           </div>
                           <h3 className="font-bold text-slate-900 text-center mb-4">Tái khai thác khách</h3>
                           <ul className="text-sm text-slate-600 space-y-2">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Nhắc gia hạn đúng hạn</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Upsell gói cao hơn</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0"/> Khai thác giới thiệu</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" /> Nhắc gia hạn đúng hạn</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" /> Upsell gói cao hơn</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" /> Khai thác giới thiệu</li>
                           </ul>
                         </div>
                       </div>
                     </div>
                   </section>
-              </div>
+                </div>
               ) : (
                 <div className="space-y-8 w-full animate-in fade-in slide-in-from-right-4 duration-500">
                   <div className="bg-gradient-to-br from-white to-slate-50 p-8 rounded-3xl border border-slate-200 shadow-xl border-t-4 border-t-blue-500">
@@ -1828,7 +1939,7 @@ function AppContent() {
           <button onClick={() => setActiveDept(null)} className="mb-8 text-blue-600 font-bold flex items-center gap-2 hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors w-fit">
             &larr; Quay lại sơ đồ công ty
           </button>
-          
+
           {deptData ? (
             <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden w-full">
               <div className="p-8 md:p-12 border-b border-slate-100 bg-slate-50 relative overflow-hidden">
@@ -1845,7 +1956,7 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-8 md:p-12 relative overflow-hidden">
                 <div className="absolute left-1/2 top-0 w-px bg-slate-100 h-full hidden md:block" />
                 <h3 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3 relative z-10 bg-white w-fit pr-4">
@@ -1877,26 +1988,19 @@ function AppContent() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
-      <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={(tab) => {
-          if (!canAccessSensitive && (tab === 'salary' || tab === 'cost')) {
-            alert('Bạn không có quyền truy cập mục này.');
-            return;
-          }
-          setActiveTab(tab);
-        }} 
-        activeDept={activeDept} 
-        setActiveDept={setActiveDept} 
+      <Sidebar
+        activeTab={activeTab}
+        activeDept={activeDept}
+        hrSubTab={hrSubTab}
         onLogout={handleLogout}
         user={user}
       />
-      
+
       <main className="flex-1 p-4 md:p-12 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeTab}
+              key={pathname}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -1904,24 +2008,27 @@ function AppContent() {
             >
               {activeTab === 'model' && <ModelTab />}
               {activeTab === 'hr' && (
-                <HRTab 
-                  selectedRole={restrictedView ? internalRoleId : activeRole} 
-                  setSelectedRole={restrictedView ? () => {} : setActiveRole} 
-                  setActiveTab={setActiveTab} 
+                <HRTab
+                  selectedRole={restrictedView ? internalRoleId : activeRole}
+                  setSelectedRole={restrictedView ? () => { } : setActiveRole}
+                  setActiveTab={goToTab}
                   restricted={restrictedView}
+                  hrSubTab={hrSubTab}
+                  user={user}
                 />
               )}
               {activeTab === 'salary' && (
-                <SalaryTab 
-                  selectedRole={restrictedView ? internalRoleId : activeRole} 
-                  setSelectedRole={restrictedView ? () => {} : setActiveRole} 
-                  setActiveTab={setActiveTab} 
+                <SalaryTab
+                  selectedRole={restrictedView ? internalRoleId : activeRole}
+                  setSelectedRole={restrictedView ? () => { } : setActiveRole}
+                  setActiveTab={goToTab}
                   restricted={restrictedView}
                 />
               )}
               {activeTab === 'cost' && (isAdmin ? <CostTab /> : <div className="text-center py-20 text-slate-400">Bạn không có quyền truy cập mục này.</div>)}
               {activeTab === 'training' && <TrainingTab />}
             </motion.div>
+
           </AnimatePresence>
 
           {/* Footer / Call to Action */}
