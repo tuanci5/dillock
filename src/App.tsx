@@ -55,7 +55,7 @@ const GOOGLE_CLIENT_ID = '637002508826-b7jmlrenhbagrh6rjp4m4uq8n210fq9a.apps.goo
 
 // --- Types ---
 
-type TabType = 'model' | 'hr' | 'salary' | 'cost' | 'training';
+type TabType = 'model' | 'hr' | 'salary' | 'cost' | 'training' | 'business';
 
 // --- Components ---
 
@@ -358,6 +358,7 @@ const TAB_TO_PATH: Record<TabType, string> = {
   salary: '/salary',
   cost: '/cost',
   training: '/training',
+  business: '/business',
 };
 
 const Sidebar = ({
@@ -382,6 +383,7 @@ const Sidebar = ({
     { id: 'salary', label: 'Lương & KPI', icon: <Wallet className="w-5 h-5" /> },
     { id: 'cost', label: 'Cơ cấu chi phí', icon: <PieChart className="w-5 h-5" />, adminOnly: true },
     { id: 'training', label: 'Đào tạo & Văn hóa', icon: <GraduationCap className="w-5 h-5" /> },
+    { id: 'business', label: 'Kế hoạch kinh doanh', icon: <TrendingUp className="w-5 h-5" />, adminOnly: true },
   ];
 
   const deptLinks = DEPARTMENTS.map(dept => ({
@@ -1195,6 +1197,268 @@ const TrainingTab = () => {
   );
 };
 
+// ─── Business Plan Tab ───────────────────────────────────────────────────────
+
+const MASTER_PLAN_DATA = {
+  months: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+  operations: {
+    teams:        [1, 2, 4, 6, 8, 10, 10, 10, 10, 10, 10, 10],
+    newOrders:    [200, 360, 640, 840, 960, 1000, 1000, 1000, 1000, 1000, 1000, 1000],
+    churnOrders:  [0, 0, 0, 0, 0, 0, -200, -360, -640, -840, -960, -1000],
+    totalActive:  [0, 200, 560, 1200, 2040, 3000, 3800, 4440, 4800, 4960, 5000, 5000],
+  },
+  grossRevenueByCohort: [310, 707, 1549, 2449, 3457, 4376, 5058, 5565, 5834, 5954, 5984, 5984],
+  netCostsToProvider: [81, 249, 549, 961, 1445, 1959, 2373, 2705, 2891, 2974, 2995, 2995],
+  operatingExpenses: {
+    marketing:    [199, 358, 636, 835, 955, 994, 994, 994, 994, 994, 994, 994],
+    salary:       [58, 116, 232, 348, 464, 580, 580, 580, 580, 580, 580, 580],
+    fixed:        [70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70],
+    simRefill:    [0, 0, 0, 0, 0, 0, 73, 131, 232, 305, 348, 363],
+    total:        [327, 544, 938, 1253, 1489, 1644, 1717, 1775, 1877, 1949, 1993, 2007],
+  },
+  finalNetProfit: [-98, -86, 62, 234, 523, 773, 968, 1085, 1066, 1031, 996, 982],
+  finalProfitMargin: ['-31.6%', '-12.1%', '4.0%', '9.6%', '15.1%', '17.7%', '19.1%', '19.5%', '18.3%', '17.3%', '16.6%', '16.4%'],
+};
+
+function fmt(n: number) {
+  if (n === 0) return '0';
+  if (n < 0) return `(${Math.abs(n).toLocaleString('vi-VN')})`;
+  return `+${n.toLocaleString('vi-VN')}`;
+}
+function fmtPos(n: number) {
+  return n.toLocaleString('vi-VN');
+}
+
+const BusinessPlanTab = () => {
+  const d = MASTER_PLAN_DATA;
+  const months = d.months;
+
+  const sectionHeaderClass = 'bg-slate-800 text-white text-xs font-bold uppercase tracking-wider';
+  const subHeaderClass = 'bg-slate-100 text-slate-700 text-xs font-semibold';
+  const cellClass = 'text-center text-sm font-medium tabular-nums whitespace-nowrap';
+  const totalCellClass = 'text-center text-sm font-bold tabular-nums whitespace-nowrap bg-slate-50';
+
+  return (
+    <div className="max-w-full mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-16">
+      {/* Header */}
+      <div className="text-center flex flex-col items-center mb-4">
+        <div className="p-4 bg-emerald-100 text-emerald-600 rounded-full mb-6 shadow-sm">
+          <TrendingUp className="w-10 h-10" />
+        </div>
+        <h2 className="text-4xl font-bold text-slate-900 mb-4">Kế hoạch Kinh doanh</h2>
+        <p className="text-slate-600 max-w-3xl text-lg">
+          Bảng Dự Toán Tài Chính Toàn Diện <span className="font-bold text-slate-800">12 Tháng (Master Plan)</span> — theo chuẩn báo cáo quản trị dòng tiền.
+        </p>
+        <div className="flex flex-wrap gap-4 justify-center mt-6 text-sm text-slate-600">
+          <span className="px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full">💱 1 JPY = 165 VNĐ</span>
+          <span className="px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full">📦 70% Dock – 30% SIM</span>
+          <span className="px-3 py-1.5 bg-amber-50 border border-amber-100 rounded-full">🔄 Vòng đời KH: 6 tháng</span>
+          <span className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full">💰 Đơn vị: Triệu VNĐ</span>
+        </div>
+      </div>
+
+      {/* Master Table */}
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-slate-800 flex items-center gap-3">
+          <BarChart3 className="w-6 h-6 text-blue-400" />
+          <h3 className="text-xl font-bold text-white">Bảng Dự Toán Dòng Tiền Nét & Vận Hành 12 Tháng</h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse min-w-[900px]">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-3 text-xs font-bold text-slate-600 bg-slate-50 border-b border-r border-slate-200 w-64 sticky left-0 z-10">Chỉ số quản trị (Triệu VNĐ)</th>
+                {months.map(m => (
+                  <th key={m} className="px-3 py-3 text-center text-xs font-bold text-blue-700 bg-blue-50 border-b border-slate-200 min-w-[72px]">{m}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {/* I. Vận hành */}
+              <tr>
+                <td colSpan={13} className={`px-4 py-2 ${sectionHeaderClass}`}>
+                  I. Chỉ số vận hành
+                </td>
+              </tr>
+              {[
+                { label: '1. Quy mô nhân sự (Số Team)', data: d.operations.teams, suffix: ' team' },
+                { label: '2. Số đơn mới chốt', data: d.operations.newOrders },
+                { label: '3. Khách rụng (Hết hạn 6 tháng)', data: d.operations.churnOrders, negative: true },
+                { label: '4. Tổng khách cũ đang đóng cước', data: d.operations.totalActive, bold: true },
+              ].map((row, i) => (
+                <tr key={i} className={`border-b border-slate-100 hover:bg-slate-50/50 transition-colors ${row.bold ? 'bg-blue-50/40' : ''}`}>
+                  <td className={`px-4 py-2.5 text-slate-700 border-r border-slate-100 sticky left-0 bg-white text-[13px] ${row.bold ? 'font-semibold bg-blue-50/40' : ''}`}>{row.label}</td>
+                  {row.data.map((v, mi) => (
+                    <td key={mi} className={`${cellClass} py-2.5 px-2 ${v < 0 ? 'text-red-500' : row.bold ? 'text-blue-700 font-semibold' : 'text-slate-700'}`}>
+                      {v < 0 ? `(${Math.abs(v).toLocaleString()})` : v === 0 ? '—' : fmtPos(v)}{row.suffix || ''}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+
+              {/* II. Doanh thu */}
+              <tr>
+                <td colSpan={13} className={`px-4 py-2 ${sectionHeaderClass}`}>
+                  II. Tổng doanh thu thu từ khách hàng (Thu tiền) [A]
+                </td>
+              </tr>
+              <tr className="border-b border-slate-100 bg-indigo-50/30 hover:bg-indigo-50/50 transition-colors">
+                <td className="px-4 py-2.5 text-indigo-800 font-semibold border-r border-slate-100 sticky left-0 bg-indigo-50/30 text-[13px]">Tổng tiền thực thu</td>
+                {d.grossRevenueByCohort.map((v, mi) => (
+                  <td key={mi} className={`${cellClass} py-2.5 px-2 text-indigo-700 font-semibold`}>{fmtPos(v)}</td>
+                ))}
+              </tr>
+
+              {/* III. Chi phí nét */}
+              <tr>
+                <td colSpan={13} className={`px-4 py-2 ${sectionHeaderClass}`}>
+                  III. Chi phí nét trả nhà mạng (Gốc/COGS) [B]
+                </td>
+              </tr>
+              <tr className="border-b border-slate-100 bg-red-50/20 hover:bg-red-50/40 transition-colors">
+                <td className="px-4 py-2.5 text-red-800 font-semibold border-r border-slate-100 sticky left-0 bg-red-50/20 text-[13px]">Tổng phí trả nhà mạng</td>
+                {d.netCostsToProvider.map((v, mi) => (
+                  <td key={mi} className={`${cellClass} py-2.5 px-2 text-red-600`}>{v === 0 ? '—' : fmtPos(v)}</td>
+                ))}
+              </tr>
+
+              {/* IV. Chi phí vận hành */}
+              <tr>
+                <td colSpan={13} className={`px-4 py-2 ${sectionHeaderClass}`}>
+                  IV. Chi phí vận hành & Marketing (Cash Out) [C]
+                </td>
+              </tr>
+              {[
+                { label: '1. Ngân sách MKT (Tiền chạy QC)', data: d.operatingExpenses.marketing },
+                { label: '2. Lương các Team (58tr/Team)', data: d.operatingExpenses.salary },
+                { label: '3. Chi phí Cố định (VP, Kế toán…)', data: d.operatingExpenses.fixed },
+                { label: '4. Phí cấp lại SIM (Xoay vòng phôi)', data: d.operatingExpenses.simRefill },
+              ].map((row, i) => (
+                <tr key={i} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                  <td className="px-4 py-2.5 text-slate-700 border-r border-slate-100 sticky left-0 bg-white text-[13px]">{row.label}</td>
+                  {row.data.map((v, mi) => (
+                    <td key={mi} className={`${cellClass} py-2.5 px-2 text-red-600`}>{v === 0 ? '—' : fmtPos(v)}</td>
+                  ))}
+                </tr>
+              ))}
+              <tr className="border-b-2 border-red-200 bg-red-50/40">
+                <td className="px-4 py-3 text-red-800 font-bold border-r border-slate-100 sticky left-0 bg-red-50/40 text-[13px]">Tổng chi vận hành [C]</td>
+                {d.operatingExpenses.total.map((v, mi) => (
+                  <td key={mi} className={`${totalCellClass} py-3 px-2 text-red-700 bg-red-50/40`}>{fmtPos(v)}</td>
+                ))}
+              </tr>
+
+              {/* V. Hiệu quả */}
+              <tr>
+                <td colSpan={13} className={`px-4 py-2 ${sectionHeaderClass} bg-emerald-800`}>
+                  V. Hiệu quả quản trị dòng tiền cuối cùng
+                </td>
+              </tr>
+              <tr className="border-b border-emerald-200 bg-emerald-900 shadow-inner">
+                <td className="px-4 py-4 text-white font-bold border-r border-emerald-700 sticky left-0 bg-emerald-900 text-[14px]">LỢI NHUẬN RÒNG (A – B – C)</td>
+                {d.finalNetProfit.map((v, mi) => (
+                  <td key={mi} className="text-center py-4 px-2 text-emerald-400 font-black text-base tabular-nums whitespace-nowrap">
+                    {fmt(v)}
+                  </td>
+                ))}
+              </tr>
+              <tr className="bg-emerald-800/90 h-12">
+                <td className="px-4 py-2 text-emerald-100 font-semibold border-r border-emerald-700 sticky left-0 bg-emerald-800/90 text-[13px]">Biên lợi nhuận / Doanh thu</td>
+                {d.finalProfitMargin.map((v, mi) => (
+                  <td key={mi} className="text-center py-2 px-2 text-amber-300 font-bold text-sm whitespace-nowrap">{v}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* KPI Summary cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+        {[
+          { label: 'Tổng khách (ổn định)', value: '5.000', sub: 'Từ tháng 11 trở đi', color: 'bg-blue-600', icon: <Users className="w-6 h-6" /> },
+          { label: 'Lợi nhuận ròng / tháng', value: '~1,08 tỷ', sub: 'Tháng ổn định (T7–T12)', color: 'bg-emerald-600', icon: <TrendingUp className="w-6 h-6" /> },
+          { label: 'Ngân sách Marketing', value: '~1,0 tỷ', sub: 'Phủ sóng toàn thị trường', color: 'bg-indigo-600', icon: <Megaphone className="w-6 h-6" /> },
+          { label: 'Tỷ suất LN ổn định', value: '49%+', sub: 'Sau khi đã trừ hết chi phí', color: 'bg-amber-600', icon: <BarChart3 className="w-6 h-6" /> },
+        ].map((card, i) => (
+          <div key={i} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className={`p-3 rounded-xl w-fit mb-4 text-white ${card.color}`}>{card.icon}</div>
+            <p className="text-xs text-slate-500 mb-1">{card.label}</p>
+            <p className="text-3xl font-black text-slate-900">{card.value}</p>
+            <p className="text-xs text-slate-400 mt-1">{card.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* 3 management insights */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
+          <Star className="w-7 h-7 text-amber-500" />
+          <h3 className="text-2xl font-bold text-slate-900">3 Điểm sáng Quản trị từ Master Plan</h3>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {[
+            {
+              num: '01',
+              title: 'Giai đoạn "Thung lũng chết" T1 - T2',
+              color: 'from-blue-600 to-indigo-700',
+              highlight: '-98 triệu VNĐ trong tháng đầu',
+              body: 'Do chi phí Marketing và lương đội ngũ được chi trả ngay từ đầu trong khi doanh thu tích lũy chưa đủ lớn, dòng tiền sẽ âm nhẹ trong 2 tháng đầu. Đây là giai đoạn đầu tư nền móng cực kỳ quan trọng.',
+              tag: 'Đầu tư chiến lược',
+            },
+            {
+              num: '02',
+              title: 'Điểm hòa vốn và Bùng nổ từ Tháng 3',
+              color: 'from-emerald-600 to-teal-700',
+              highlight: 'Bầu trời lợi nhuận > 1 Tỷ',
+              body: 'Từ tháng thứ 3, nhờ các khách hàng cũ bắt đầu đóng phí dịch vụ ổn định kết hợp với hoa hồng nhà mạng (6.000 JPY), hệ thống bắt đầu có lãi và tăng trưởng phi mã, đạt mức ~1 tỷ VNĐ mỗi tháng.',
+              tag: 'Thu hoạch quả ngọt',
+            },
+            {
+              num: '03',
+              title: 'Cơ chế "Payback" nhanh và biên LN dày',
+              color: 'from-amber-500 to-orange-600',
+              highlight: 'Biên lợi nhuận ròng > 49%',
+              body: 'Nhờ tối ưu hóa phí đầu vào và tập trung vào các dòng sản phẩm có biên lợi nhuận cao như Pocket Dock, tỷ suất lợi nhuận ròng toàn hệ thống luôn duy trì mức trên 49%, đảm bảo tính bền vững lâu dài.',
+              tag: 'Mô hình tối ưu',
+            },
+          ].map((item, i) => (
+            <div key={i} className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
+              <div className={`p-6 text-white bg-gradient-to-br ${item.color} relative overflow-hidden`}>
+                <div className="absolute right-4 top-2 font-black text-8xl opacity-10 select-none">{item.num}</div>
+                <div className="relative z-10">
+                  <span className="text-xs font-bold tracking-widest opacity-80 uppercase">Điểm sáng {item.num}</span>
+                  <h4 className="text-lg font-bold mt-2 leading-snug">{item.title}</h4>
+                  <span className="mt-3 inline-block px-3 py-1 bg-white/20 rounded-full text-sm font-semibold">{item.highlight}</span>
+                </div>
+              </div>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  {item.body} <span className="font-bold text-slate-900">{item.tag}</span>.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Assumptions footnote */}
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex items-start gap-4">
+        <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+        <div className="text-sm text-slate-600 space-y-1">
+          <p className="font-bold text-slate-800">Giả định tính toán thực tế (Cập nhật lịch trình dòng tiền)</p>
+          <p>• Phí thu khách hàng: Month 1: 9.980 JPY | Month 2-6: 4.980 JPY | Hoa hồng nhà mạng (M3): 6.000 JPY</p>
+          <p>• Phí trả nhà mạng: Month 1-6: 3.500 JPY (Dock) | Month 7+: 3.880 JPY</p>
+          <p>• Marketing & Vận hành: Mkt 1st Month (6.252 JPY) | Lương 58tr/Team | Định mức LN tính theo chu kỳ 6 tháng.</p>
+          <p>• Tất cả số liệu đã làm tròn. Mô hình dựa trên giả định 70% Dock – 30% SIM và tỷ giá 165 VNĐ/JPY.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const ROLE_MAPPING: Record<string, string> = {
   'Quản trị': 'admin',
   'Trưởng nhóm Marketing': 'mkt_lead',
@@ -1234,7 +1498,7 @@ function AppContent() {
   const teamSeg = pathParts[2] || '';
 
   const PATH_TO_TAB: Record<string, TabType> = {
-    model: 'model', hr: 'hr', salary: 'salary', cost: 'cost', training: 'training',
+    model: 'model', hr: 'hr', salary: 'salary', cost: 'cost', training: 'training', business: 'business',
   };
   const DEPT_IDS = ['sales-mkt', 'comms-dept', 'hr-dept', 'finance-dept', 'technical'];
 
@@ -2027,6 +2291,7 @@ function AppContent() {
               )}
               {activeTab === 'cost' && (isAdmin ? <CostTab /> : <div className="text-center py-20 text-slate-400">Bạn không có quyền truy cập mục này.</div>)}
               {activeTab === 'training' && <TrainingTab />}
+              {activeTab === 'business' && (isAdmin ? <BusinessPlanTab /> : <div className="text-center py-20 text-slate-400">Bạn không có quyền truy cập mục này.</div>)}
             </motion.div>
 
           </AnimatePresence>
