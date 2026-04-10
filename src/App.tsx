@@ -748,7 +748,7 @@ const BudgetTab = () => (
              {MARKETING_DATA.costs.setup.map((item, i) => (
                <div key={i} className="flex justify-between items-center p-8 bg-white border border-slate-200 rounded-[2.5rem] group hover:border-primary transition-all shadow-sm">
                  <span className="text-md font-bold text-slate-600 group-hover:text-slate-900 transition-colors uppercase tracking-tight">{item.name}</span>
-                 <span className="text-primary font-bold text-2xl italic tracking-tighter leading-none border-b-2 border-primary/10">{item.price}</span>
+                 <span className="text-primary font-bold text-xl italic tracking-tighter leading-none border-b-2 border-primary/10 whitespace-nowrap shrink-0">{item.price}</span>
                </div>
              ))}
            </div>
@@ -762,7 +762,7 @@ const BudgetTab = () => (
              {MARKETING_DATA.costs.operation.map((item, i) => (
                <div key={i} className="flex justify-between items-center p-8 bg-white border border-slate-200 rounded-[2.5rem] group hover:border-primary transition-all shadow-sm">
                  <span className="text-md font-bold text-slate-600 group-hover:text-slate-900 transition-colors uppercase tracking-tight">{item.name}</span>
-                 <span className="text-slate-900 font-bold text-2xl italic tracking-tighter leading-none border-b-2 border-slate-200">{item.price}</span>
+                 <span className="text-slate-900 font-bold text-xl italic tracking-tighter leading-none border-b-2 border-slate-200 whitespace-nowrap shrink-0">{item.price}</span>
                </div>
              ))}
            </div>
@@ -997,3 +997,4 @@ function App() {
 }
 
 export default App;
+
