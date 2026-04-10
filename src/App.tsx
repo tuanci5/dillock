@@ -810,7 +810,7 @@ const BudgetTab = () => (
                     <h5 className="text-md font-bold text-slate-900 mb-4 leading-tight group-hover/service:text-primary transition-colors italic tracking-tight">{item.name}</h5>
                     <div className="mt-auto pt-6 border-t border-slate-100">
                        <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 opacity-60">Mức đầu tư dự kiến</p>
-                       <p className="text-xl font-display font-bold text-slate-900 italic tracking-tighter">{item.price}</p>
+                       <p className="text-xl font-display font-bold text-slate-900 italic tracking-tighter whitespace-nowrap">{item.price}</p>
                     </div>
                  </div>
                );

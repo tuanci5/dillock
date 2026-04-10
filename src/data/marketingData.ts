@@ -209,13 +209,13 @@ export const MARKETING_DATA = {
 
   costs: {
     setup: [
-      { name: "dillock.com - Cổng thông tin Nghệ An & Miền Trung", price: "20M - 35M" },
-      { name: "Sản xuất Nội dung Khu vực (Trọng tâm Nghệ An)", price: "15M - 30M" },
-      { name: "Quảng cáo Digital Hàng tháng (Phủ sóng toàn quốc)", price: "15M - 50M" }
+      { name: "dillock.com - Cổng thông tin Nghệ An & Miền Trung", price: "20 triệu - 35 triệu" },
+      { name: "Sản xuất Nội dung Khu vực (Trọng tâm Nghệ An)", price: "15 triệu - 30 triệu" },
+      { name: "Quảng cáo Digital Hàng tháng (Phủ sóng toàn quốc)", price: "15 triệu - 50 triệu" }
     ],
     operation: [
-      { name: "Quản trị Web & SEO Dillock (Key: Nghệ An, Vinh)", price: "10M - 15M/tháng" },
-      { name: "Fanpage & Hỗ trợ Kỹ thuật Toàn quốc", price: "8M - 12M/tháng" },
+      { name: "Quản trị Web & SEO Dillock (Key: Nghệ An, Vinh)", price: "10 triệu - 15 triệu/tháng" },
+      { name: "Fanpage & Hỗ trợ Kỹ thuật Toàn quốc", price: "8 triệu - 12 triệu/tháng" },
       { name: "Logistics & Lắp đặt khu vực Nghệ An", price: "Thỏa thuận" }
     ],
     services: [
