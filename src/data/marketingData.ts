@@ -23,7 +23,10 @@ import {
   MapPin,
   Monitor,
   MousePointer2,
-  ListRestart
+  ListRestart,
+  Search,
+  Camera,
+  Sparkles
 } from 'lucide-react';
 import React from 'react';
 
@@ -48,7 +51,7 @@ export const MARKETING_DATA = {
         description: "Tích hợp FaceID, Nhận diện tĩnh mạch lòng bàn tay chuẩn Đức.",
         models: [
           { name: "Dillock DLZ.2.0729 (Premium)", price: "16.490.000 VNĐ", features: ["FaceID", "Palm Vein"] },
-          { name: "Dillock DL T8 Pro (Budget)", price: "2.490.000 VNĐ", features: ["FPC Fingerprint"] }
+          { name: "Dillock DL T8 Pro (Tối ưu CP)", price: "2.490.000 VNĐ", features: ["FPC Fingerprint"] }
         ]
       },
       {
@@ -142,7 +145,7 @@ export const MARKETING_DATA = {
         items: [
            "Trang chủ: Headline khẳng định vị thế Độc quyền Nghệ An & Miền Trung",
            "Cửa hàng: Phân cấp theo dòng máy (Smart, Phân thể, Dự án)",
-           "Dịch vụ: Hotline 2h tại nội thành Vinh & Đà Nẵng và Lắp đặt Toàn quốc",
+           "Dịch vụ: Hotline 2h tại Vinh & Đà Nẵng và Lắp đặt Toàn quốc",
            "Dự án: Hình ảnh công trình thực tế tại Nghệ An/Đà Nẵng/Hà Nội/HCM",
            "Bảo hành: Kích hoạt bảo hành điện tử Dillock Online"
         ]
@@ -206,19 +209,47 @@ export const MARKETING_DATA = {
 
   costs: {
     setup: [
-      { name: "dillock.com - Nghệ An & Central Portal", price: "20M - 35M" },
-      { name: "Regional Content Production (Nghệ An focus)", price: "15M - 30M" },
-      { name: "Monthly Digital Ads (Focus Nghệ An - Miền Trung)", price: "15M - 50M" }
+      { name: "dillock.com - Cổng thông tin Nghệ An & Miền Trung", price: "20M - 35M" },
+      { name: "Sản xuất Nội dung Khu vực (Trọng tâm Nghệ An)", price: "15M - 30M" },
+      { name: "Quảng cáo Digital Hàng tháng (Phủ sóng toàn quốc)", price: "15M - 50M" }
     ],
     operation: [
-      { name: "Dillock Web & SEO (Key: Nghệ An, Vinh)", price: "10M - 15M/tháng" },
-      { name: "Fanpage & Support toàn diện", price: "8M - 12M/tháng" },
-      { name: "Logistics & Lắp đặt khu vực Nghệ An", price: "Tùy biến" }
+      { name: "Quản trị Web & SEO Dillock (Key: Nghệ An, Vinh)", price: "10M - 15M/tháng" },
+      { name: "Fanpage & Hỗ trợ Kỹ thuật Toàn quốc", price: "8M - 12M/tháng" },
+      { name: "Logistics & Lắp đặt khu vực Nghệ An", price: "Thỏa thuận" }
     ],
-    packages: [
-      { name: "Gói Khởi Động Dillock", fee: "25M", ads: "15M+", features: ["Setup Website", "Top 10 từ khóa Nghệ An/Đà Nẵng", "Kế hoạch FB 1 tháng"] },
-      { name: "Gói Tăng Trưởng Dillock", fee: "45M", ads: "35M+", features: ["SEO Nghệ An/Miền Trung", "Vận hành đa kênh", "Phễu khách hàng khu vực", "Lắp đặt linh hoạt"] },
-      { name: "Gói Toàn Diện Dillock", fee: "85M", ads: "60M+", features: ["Full Funnel Strategy", "Phát triển đại lý Vinh/Nghệ An", "Quản lý truyền thông", "Tối ưu hóa B2B"] }
+    services: [
+      {
+        category: "Website & Trung tâm Kỹ thuật số",
+        items: [
+          { name: "Thiết kế Landing Page Dillock", price: "5.000.000 - 15.000.000 VNĐ", unit: "Dự án", icon: "Globe" },
+          { name: "SEO Tổng thể (Key: Nghệ An/Đà Nẵng)", price: "10.000.000 - 20.000.000 VNĐ", unit: "Tháng", icon: "Search" },
+          { name: "Quản trị & Bảo trì Website", price: "3.000.000 VNĐ", unit: "Tháng", icon: "Monitor" }
+        ]
+      },
+      {
+        category: "Nội dung & Sáng tạo nội dung",
+        items: [
+          { name: "Quản lý Fanpage (15 bài + Design)", price: "6.000.000 - 10.000.000 VNĐ", unit: "Tháng", icon: "Facebook" },
+          { name: "Video Review Khoá (TikTok/Reels)", price: "2.000.000 - 5.000.000 VNĐ", unit: "Video", icon: "Video" },
+          { name: "Chụp ảnh Sản phẩm & Showroom", price: "5.000.000 VNĐ", unit: "Buổi", icon: "Camera" }
+        ]
+      },
+      {
+        category: "Quản trị Quảng cáo (Ads Management)",
+        items: [
+          { name: "Phí quản lý Ads (Facebook/Google)", price: "15% - 20%", unit: "Ngân sách", icon: "TrendingUp" },
+          { name: "Setup Phễu & Tài khoản Doanh nghiệp", price: "5.000.000 VNĐ", unit: "Một lần", icon: "Zap" },
+          { name: "Thiết kế Banner Quảng cáo", price: "500.000 VNĐ", unit: "Banner", icon: "Image" }
+        ]
+      },
+      {
+        category: "Thương mại điện tử & Hệ thống",
+        items: [
+          { name: "Vận hành Shopee/TikTok Shop", price: "5.000.000 - 8.000.000 VNĐ", unit: "Tháng", icon: "ShoppingBag" },
+          { name: "Tối ưu hóa Gian hàng/Mall", price: "3.000.000 VNĐ", unit: "Dự án", icon: "Sparkles" }
+        ]
+      }
     ]
   }
 };

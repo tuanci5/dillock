@@ -71,7 +71,7 @@ const GOOGLE_CLIENT_ID = '637002508826-b7jmlrenhbagrh6rjp4m4uq8n210fq9a.apps.goo
 
 // --- Types ---
 
-type TabType = 'overview' | 'strategy' | 'content' | 'channels' | 'website' | 'execution' | 'budget' | 'roadmap';
+type TabType = 'overview' | 'strategy' | 'content' | 'channels' | 'website' | 'budget' | 'roadmap';
 
 // --- Shared Components ---
 
@@ -118,7 +118,6 @@ const Sidebar = ({
     { id: 'content', label: 'Chiến lược nội dung', icon: <FileText className="w-5 h-5" /> },
     { id: 'website', label: 'Website & Hệ thống', icon: <Monitor className="w-5 h-5" /> },
     { id: 'channels', label: 'Kênh triển khai', icon: <Globe className="w-5 h-5" /> },
-    { id: 'execution', label: 'Thực thi & Tech', icon: <Zap className="w-5 h-5" /> },
     { id: 'budget', label: 'Ngân sách & Gói', icon: <BarChart3 className="w-5 h-5" /> },
     { id: 'roadmap', label: 'Timeline & KPI', icon: <Clock className="w-5 h-5" /> },
   ];
@@ -168,7 +167,7 @@ const Sidebar = ({
             </div>
             <div>
               <h2 className="font-display font-bold text-2xl leading-none gold-text tracking-tighter">DLOCK</h2>
-              <p className="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase mt-1">BRAND STRATEGY</p>
+              <p className="text-[10px] text-slate-500 font-bold tracking-[0.3em] uppercase mt-1">CHIẾN LƯỢC THƯƠNG HIỆU</p>
             </div>
           </div>
 
@@ -219,7 +218,7 @@ const Sidebar = ({
               <div className="p-2 bg-red-500/10 rounded-lg group-hover:bg-red-500 group-hover:text-white transition-colors">
                 <X size={18} />
               </div>
-              <span className="font-bold text-[10px] uppercase tracking-[0.3em]">Sign Out</span>
+              <span className="font-bold text-[10px] uppercase tracking-[0.3em]">Đăng xuất</span>
             </button>
           </div>
         </div>
@@ -254,7 +253,7 @@ const OverviewTab = () => (
                       <h4 className="text-xl font-bold text-slate-900 mb-2">{cat.name}</h4>
                       <p className="text-xs text-slate-500 font-bold opacity-70">{cat.description}</p>
                     </div>
-                    <div className="px-4 py-1.5 bg-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500 rounded-full border border-slate-200">Featured</div>
+                    <div className="px-4 py-1.5 bg-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500 rounded-full border border-slate-200">Nổi bật</div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {cat.models.map((model, idx) => (
@@ -301,17 +300,17 @@ const OverviewTab = () => (
           <div className="absolute bottom-[-50px] right-[-50px] p-4 opacity-[0.03] text-slate-900 pointer-events-none">
             <Award size={300} />
           </div>
-          <h3 className="text-md font-bold mb-8 text-slate-400 uppercase tracking-[0.3em] text-center italic border-b border-slate-100 pb-4">Corporate Identity</h3>
+          <h3 className="text-md font-bold mb-8 text-slate-400 uppercase tracking-[0.3em] text-center italic border-b border-slate-100 pb-4">Nhận diện Doanh nghiệp</h3>
           <div className="space-y-2 mb-10 text-center relative z-10">
              <p className="text-lg font-bold text-slate-900 leading-tight uppercase font-display">{MARKETING_DATA.brand.owner}</p>
              <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{MARKETING_DATA.brand.experience}</p>
           </div>
           <div className="space-y-4 relative z-10">
             {[
-              { label: 'Platform', value: 'dillock.vn' },
-              { label: 'Regional', value: 'dillock.com' },
-              { label: 'Tech', value: 'German Standard' },
-              { label: 'Network', value: '63 Provinces' }
+              { label: 'Nền tảng', value: 'dillock.vn' },
+              { label: 'Khu vực', value: 'dillock.com' },
+              { label: 'Công nghệ', value: 'Tiêu chuẩn Đức' },
+              { label: 'Mạng lưới', value: '63 Tỉnh thành' }
             ].map((item, i) => (
               <div key={i} className="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
                 <span className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
@@ -322,7 +321,7 @@ const OverviewTab = () => (
         </div>
         
         <div className="p-12 bg-slate-900 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.5em] mb-8 block text-center opacity-60 italic">Campaign Core Slogan</p>
+          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.5em] mb-8 block text-center opacity-60 italic">Slogan Chiến dịch Cốt lõi</p>
           <p className="text-3xl font-display font-bold text-white italic leading-[1.15] text-center mb-10 group-hover:gold-text transition-all duration-700">
             "{MARKETING_DATA.brand.slogan}"
           </p>
@@ -370,8 +369,8 @@ const StrategyTab = () => (
 
     <div className="p-14 white-card bg-slate-50/30 border-2 border-slate-100 relative overflow-hidden">
       <div className="text-center mb-16 relative z-10">
-        <h3 className="text-4xl font-bold mb-4 text-slate-900 tracking-tighter">Target Segmentation Toàn quốc</h3>
-        <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Đối tượng khách hàng Dillock 63 tỉnh thành</p>
+        <h3 className="text-4xl font-bold mb-4 text-slate-900 tracking-tighter">Phân khúc Khách hàng Toàn quốc</h3>
+        <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Phân lớp đối tượng Dillock 63 tỉnh thành</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
         {MARKETING_DATA.personas.map((per, i) => (
@@ -400,12 +399,12 @@ const StrategyTab = () => (
     <div className="p-20 bg-slate-50 rounded-[4rem] border border-slate-200 text-center relative overflow-hidden group shadow-inner">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),transparent_80%)]" />
       <div className="relative z-10 max-w-4xl mx-auto">
-        <p className="text-[10px] font-bold uppercase tracking-[0.6em] mb-10 text-slate-400 italic">Central Value Proposition</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.6em] mb-10 text-slate-400 italic">Giá trị Cốt lõi Miền Trung</p>
         <h3 className="text-5xl md:text-7xl font-display font-bold mb-12 leading-tight italic tracking-tighter text-slate-900 text-wrap">
           "Độc quyền Miền Trung <br/> Phục vụ Toàn quốc"
         </h3>
         <div className="p-10 bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl relative">
-           <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-8 py-2 bg-slate-900 text-primary text-[10px] font-bold rounded-full uppercase tracking-widest shadow-xl">Positioning Statement</div>
+           <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-8 py-2 bg-slate-900 text-primary text-[10px] font-bold rounded-full uppercase tracking-widest shadow-xl">Tuyên ngôn Định vị</div>
            <p className="font-bold text-2xl text-slate-900 leading-relaxed italic px-6 pt-4 border-l-4 border-primary">
              {MARKETING_DATA.brand.positioning}
            </p>
@@ -461,7 +460,7 @@ const ContentTab = () => {
                 </div>
                 <div>
                    <h4 className="text-2xl font-bold text-slate-900 tracking-tight">{group.title}</h4>
-                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Dillock Specific Content</p>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Nội dung Đặc thù Dillock</p>
                 </div>
              </div>
              <ul className="grid grid-cols-1 gap-4">
@@ -483,7 +482,7 @@ const ContentTab = () => {
               <div className="p-5 bg-primary text-slate-950 rounded-[2rem] shadow-2xl shadow-primary/20"><Calendar size={32} /></div>
               <div>
                  <h3 className="text-3xl font-bold text-slate-900 italic tracking-tighter text-wrap">Kế hoạch Facebook (Toàn quốc)</h3>
-                 <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1 italic">30-Day Execution Roadmap & National Support</p>
+                 <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1 italic">Lộ trình Thực thi 30 Ngày & Hỗ trợ Toàn quốc</p>
               </div>
            </div>
            
@@ -587,7 +586,7 @@ const WebsiteTab = () => (
                 </div>
                 <ImageIcon className="text-white/10 w-32 h-32" />
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 px-8 py-3 bg-primary text-slate-900 font-bold rounded-full text-xs uppercase tracking-widest shadow-2xl">
-                   Launch dillock.com
+                   Truy cập dillock.com
                 </div>
              </div>
           </div>
@@ -679,7 +678,7 @@ const ChannelsTab = () => (
                  <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest italic">{chan.role}</p>
               </div>
               <div className="mt-auto p-8 bg-slate-50 rounded-[2rem] border border-slate-200 shadow-inner group-hover:bg-white transition-colors duration-500">
-                 <p className="text-[9px] text-slate-400 uppercase font-bold tracking-[0.2em] mb-4 border-b border-slate-200 pb-2">Target Performance KPI</p>
+                 <p className="text-[9px] text-slate-400 uppercase font-bold tracking-[0.2em] mb-4 border-b border-slate-200 pb-2">Chỉ tiêu KPI Mục tiêu</p>
                  <p className="text-md text-slate-900 font-extrabold leading-tight tracking-tight italic">{chan.kpi}</p>
               </div>
             </div>
@@ -697,7 +696,7 @@ const ChannelsTab = () => (
           </div>
           <div>
             <h3 className="text-3xl font-bold text-slate-900 tracking-tighter italic">Quuy trình Tối ưu Chuyển đổi</h3>
-            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Direct Conversion Strategy Flow</p>
+            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Quy trình Chiến lược Chuyển đổi Trực tiếp</p>
           </div>
         </div>
       </div>
@@ -728,76 +727,6 @@ const ChannelsTab = () => (
   </motion.div>
 );
 
-const ExecutionTab = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 1.05 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.6 }}
-    className="space-y-16"
-  >
-    <div className="relative p-12 bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden group">
-       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.05),transparent_70%)]" />
-       <div className="flex items-center gap-6 mb-16 relative z-10">
-          <div className="p-4 bg-primary/10 rounded-2xl border border-primary/20 shadow-xl"><Cpu className="text-primary w-8 h-8"/></div>
-          <div>
-             <h3 className="text-3xl font-bold text-white italic tracking-tighter">Thực thi Kỹ thuật & Công nghệ Dillock</h3>
-             <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Deep Tech Focus & National Service Grid</p>
-          </div>
-       </div>
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-         {MARKETING_DATA.research.technologies.map((tech, i) => (
-           <div key={i} className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 transition-all group/tech">
-              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 border border-primary/20 group-hover/tech:bg-primary group-hover/tech:text-slate-950 transition-all">
-                 <ShieldCheck size={20} />
-              </div>
-              <h4 className="text-lg font-bold text-white mb-3 tracking-tight">{tech.name}</h4>
-              <p className="text-xs text-slate-500 leading-relaxed font-bold italic opacity-80">{tech.desc}</p>
-           </div>
-         ))}
-       </div>
-    </div>
-
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      <div className="space-y-8">
-        <h3 className="text-2xl font-bold text-slate-900 uppercase tracking-tighter pl-6 border-l-4 border-slate-900 italic mb-10">Series Video Công nghệ Toàn quốc</h3>
-        {[
-          { icon: <Video/>, title: "Dillock Smart Biometrics Show", desc: "Demo trực tiếp công nghệ Palm Vein & FaceID Dillock." },
-          { icon: <ShieldCheck/>, title: "Dillock National Installation", desc: "Hành trình đội kỹ thuật lắp đặt 63 tỉnh thành." },
-          { icon: <Star/>, title: "Dillock PVD Oiled Benchmark", desc: "Kiểm tra độ bền mạ Dillock SUS 304 chuẩn Đức." },
-          { icon: <Info/>, title: "Exclusive Heritage Vision", desc: "Tầm nhìn đại diện Độc quyền Miền Trung của Dillock." }
-        ].map((v, i) => (
-          <div key={i} className="p-8 bg-white border border-slate-200 rounded-[2.5rem] flex items-center gap-8 group hover:border-primary/50 transition-all duration-500 hover:shadow-2xl">
-            <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center shrink-0 border border-slate-100 group-hover:bg-primary group-hover:text-slate-950 transition-all shadow-inner">
-              <Video className="w-8 h-8 text-slate-400 group-hover:text-slate-950 transition-colors" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-900 text-lg tracking-tight mb-1">{v.title}</h4>
-              <p className="text-sm text-slate-500 font-bold italic opacity-70 leading-relaxed">{v.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="p-12 white-card bg-slate-900 relative overflow-hidden flex flex-col items-center text-center">
-         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-10 border border-primary/20"><Sparkles size={40} className="text-primary animate-pulse" /></div>
-         <h4 className="text-2xl font-bold text-white mb-6 italic tracking-tight uppercase">High-Performance Output</h4>
-         <p className="text-slate-400 font-bold leading-relaxed mb-12">Hệ tài sản kỹ thuật được phủ sóng từ website dillock.com đến Fanpage toàn quốc.</p>
-         <div className="grid grid-cols-3 gap-8 w-full">
-            {[
-              { val: "63", label: "Provinces" },
-              { val: "2h", label: "Local SLA" },
-              { val: "24/7", label: "Monitoring" }
-            ].map((stat, i) => (
-              <div key={i} className="space-y-2">
-                 <p className="text-2xl font-display font-bold gold-text">{stat.val}</p>
-                 <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{stat.label}</p>
-              </div>
-            ))}
-         </div>
-      </div>
-    </div>
-  </motion.div>
-);
 
 const BudgetTab = () => (
   <motion.div
@@ -841,41 +770,51 @@ const BudgetTab = () => (
       </div>
     </div>
 
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-      {MARKETING_DATA.costs.packages.map((pkg, i) => (
-        <div key={i} className={`p-12 rounded-[4rem] border transition-all duration-700 relative flex flex-col items-center text-center group ${
-            i === 1 ? 'bg-slate-900 border-transparent scale-105 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] z-10' : 'white-card border-slate-200 hover:border-primary/40'
-          }`}>
-          {i === 1 && (
-            <div className="absolute -top-6 px-10 py-2.5 bg-primary text-slate-950 text-[11px] font-bold rounded-full uppercase tracking-[0.4em] shadow-2xl border border-primary/20 italic transform -rotate-2">
-              Recommend Focus
+    <div className="space-y-12">
+      {MARKETING_DATA.costs.services.map((group, i) => (
+        <div key={i} className="p-10 white-card bg-white border border-slate-200 rounded-[3rem] shadow-xl overflow-hidden group">
+          <div className="flex items-center gap-6 mb-12 border-b border-slate-100 pb-8">
+            <div className="p-4 bg-slate-900 rounded-2xl shadow-xl shadow-slate-900/10">
+               <Layers className="w-8 h-8 text-primary" />
             </div>
-          )}
-          <h4 className={`text-4xl font-display font-bold mb-3 tracking-tighter ${i === 1 ? 'text-white' : 'text-slate-900'}`}>{pkg.name}</h4>
-          <p className={`text-[11px] font-bold uppercase mb-14 tracking-widest opacity-40 ${i === 1 ? 'text-slate-400' : 'text-slate-500'}`}>Phí Gói Quản lý</p>
-          <div className={`text-7xl font-display font-bold mb-16 italic tracking-tighter ${i === 1 ? 'text-primary' : 'gold-text'}`}>
-            {pkg.fee}
+            <div>
+               <h4 className="text-2xl font-bold text-slate-900 tracking-tighter italic">{group.category}</h4>
+               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Giải pháp theo Nền tảng</p>
+            </div>
           </div>
           
-          <div className="w-full space-y-6 mb-16 text-left px-4">
-             <div className={`flex items-center gap-4 mb-8 opacity-40 ${i === 1 ? 'text-slate-400' : 'text-slate-300'}`}>
-                <div className="h-px bg-current flex-1" />
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] italic">Commitment</p>
-                <div className="h-px bg-current flex-1" />
-             </div>
-            {pkg.features.map((f, idx) => (
-              <div key={idx} className="flex items-start gap-5">
-                <div className={`w-6 h-6 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-sm ${i === 1 ? 'bg-primary text-slate-950' : 'bg-slate-50 text-emerald-500 border border-slate-100'}`}>
-                  <CheckCircle2 size={14} />
-                </div>
-                <span className={`text-[15px] font-bold tracking-tight leading-snug ${i === 1 ? 'text-slate-200' : 'text-slate-600'}`}>{f}</span>
-              </div>
-            ))}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {group.items.map((item, idx) => {
+               // Dynamic Icon handling
+               const IconComp = 
+                item.icon === 'Globe' ? Globe : 
+                item.icon === 'Search' ? Search : 
+                item.icon === 'Monitor' ? Monitor : 
+                item.icon === 'Facebook' ? Facebook : 
+                item.icon === 'Video' ? Video : 
+                item.icon === 'Camera' ? Camera : 
+                item.icon === 'TrendingUp' ? TrendingUp : 
+                item.icon === 'Zap' ? Zap : 
+                item.icon === 'Image' ? ImageIcon : 
+                item.icon === 'ShoppingBag' ? ShoppingBag : 
+                Sparkles;
 
-          <div className={`mt-auto w-full p-10 rounded-[3rem] transition-all duration-500 ${i === 1 ? 'bg-white/5 border border-white/10 shadow-inner' : 'bg-slate-50 border border-slate-100 group-hover:bg-white'}`}>
-            <p className={`text-[10px] uppercase font-bold mb-4 tracking-[0.3em] opacity-40 ${i === 1 ? 'text-slate-400' : 'text-slate-500'}`}>Recommended Ads Spend</p>
-            <p className={`text-3xl font-bold italic tracking-tighter font-display ${i === 1 ? 'text-white' : 'text-slate-900'}`}>{pkg.ads}</p>
+               return (
+                 <div key={idx} className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 hover:border-primary/40 hover:bg-white transition-all duration-500 group/service hover:shadow-2xl">
+                    <div className="flex justify-between items-start mb-8">
+                       <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm group-hover/service:bg-primary group-hover/service:text-slate-950 transition-all">
+                          <IconComp size={20} />
+                       </div>
+                       <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-100">{item.unit}</span>
+                    </div>
+                    <h5 className="text-md font-bold text-slate-900 mb-4 leading-tight group-hover/service:text-primary transition-colors italic tracking-tight">{item.name}</h5>
+                    <div className="mt-auto pt-6 border-t border-slate-100">
+                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 opacity-60">Mức đầu tư dự kiến</p>
+                       <p className="text-xl font-display font-bold text-slate-900 italic tracking-tighter">{item.price}</p>
+                    </div>
+                 </div>
+               );
+            })}
           </div>
         </div>
       ))}
@@ -885,20 +824,20 @@ const BudgetTab = () => (
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.06),transparent_80%)]" />
       <div className="relative z-10 flex flex-col items-center">
         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-10 border border-primary/20"><TrendingUp size={40} className="text-primary" /></div>
-        <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white tracking-tighter text-center">National Partnership Model</h3>
-        <p className="text-slate-500 font-bold mb-16 uppercase tracking-[0.3em] italic max-w-2xl leading-relaxed text-center">Win-Win Partnership Strategy 2026 - Central Region Exclusive</p>
+        <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white tracking-tighter text-center">Mô hình Hợp tác Toàn quốc</h3>
+        <p className="text-slate-500 font-bold mb-16 uppercase tracking-[0.3em] italic max-w-2xl leading-relaxed text-center">Chiến lược Hợp tác Đôi bên cùng có lợi 2026 - Độc quyền Miền Trung</p>
         
         <div className="flex flex-col md:flex-row gap-12 justify-center items-center w-full">
           <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Based on Revenue</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Doanh thu</p>
             <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">2% - 5%</p>
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic">Gross Online Revenue Share</p>
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic">Chia sẻ Doanh thu Online (Gross)</p>
           </div>
           <div className="text-3xl font-bold text-white/5 italic uppercase pointer-events-none">X</div>
           <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Based on Net Profit</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Lợi nhuận Ròng</p>
             <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">5% - 10%</p>
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic text-center text-wrap">Net Profit Dividend Model</p>
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic text-center text-wrap">Mô hình Chia cổ tức Lợi nhuận Ròng</p>
           </div>
         </div>
       </div>
@@ -1000,7 +939,7 @@ function AppContent() {
 
   const activeTab = useMemo(() => {
     const part = pathname.replace(/^\//, '') as TabType;
-    return ['overview', 'strategy', 'content', 'website', 'channels', 'execution', 'budget', 'roadmap'].includes(part) ? part : 'overview';
+    return ['overview', 'strategy', 'content', 'website', 'channels', 'budget', 'roadmap'].includes(part) ? part : 'overview';
   }, [pathname]);
 
   const handleLoginSuccess = (userData: any) => {
@@ -1036,7 +975,7 @@ function AppContent() {
               <Route path="/content" element={<ContentTab />} />
               <Route path="/website" element={<WebsiteTab />} />
               <Route path="/channels" element={<ChannelsTab />} />
-              <Route path="/execution" element={<ExecutionTab />} />
+
               <Route path="/budget" element={<BudgetTab />} />
               <Route path="/roadmap" element={<RoadmapTab />} />
               <Route path="/" element={<Navigate to="/overview" replace />} />
