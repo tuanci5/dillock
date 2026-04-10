@@ -101,22 +101,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl shadow-blue-900/20">
           {/* Logo & Header */}
           <div className="flex flex-col items-center mb-10">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 mb-6 transition-transform hover:scale-110">
-              <Wifi className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-600 rounded-3xl flex items-center justify-center shadow-lg shadow-primary/20 mb-6 transition-transform hover:scale-110">
+              <Lock className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Sky Mobile Dashboard</h1>
-            <p className="text-slate-400 text-sm font-medium">Hệ thống Quản trị Doanh nghiệp</p>
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Dlock Marketing Plan</h1>
+            <p className="text-slate-400 text-sm font-medium">Hệ thống Quản trị & Kế hoạch Thực thi</p>
           </div>
 
           {/* Info Card */}
-          <div className="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-5 mb-8 flex items-start gap-4">
-            <div className="p-2 bg-blue-500/10 rounded-lg shrink-0">
-              <ShieldCheck className="w-5 h-5 text-blue-400" />
+          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5 mb-8 flex items-start gap-4">
+            <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+              <ShieldCheck className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-blue-200 text-sm font-bold mb-1">Xác thực 2 Lớp</h3>
-              <p className="text-blue-200/60 text-xs leading-relaxed">
-                Hệ thống yêu cầu đăng nhập tài khoản Google và kiểm tra email thủ công để cấp quyền truy cập.
+              <h3 className="text-primary text-sm font-bold mb-1">Xác thực Phân quyền</h3>
+              <p className="text-primary/60 text-xs leading-relaxed">
+                Hệ thống yêu cầu đăng nhập tài khoản Google để kiểm tra quyền hạn truy cập bản kế hoạch.
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         </div>
 
         <p className="text-center mt-10 text-slate-600 text-sm">
-          &copy; 2026 Sky Mobile. All rights reserved.
+          &copy; 2026 Dlock by Dillock. All rights reserved.
         </p>
       </motion.div>
     </div>

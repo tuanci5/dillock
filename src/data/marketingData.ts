@@ -1,0 +1,224 @@
+import { 
+  Target, 
+  Users, 
+  ShoppingBag, 
+  Video, 
+  Facebook, 
+  Layout, 
+  DollarSign, 
+  TrendingUp, 
+  Clock,
+  Briefcase,
+  ShieldCheck,
+  Zap,
+  Star,
+  MessageSquare,
+  Award,
+  FileText,
+  Megaphone,
+  HeartHandshake,
+  Image as ImageIcon,
+  Layers,
+  Globe,
+  MapPin,
+  Monitor,
+  MousePointer2,
+  ListRestart
+} from 'lucide-react';
+import React from 'react';
+
+export const MARKETING_DATA = {
+  brand: {
+    name: "Dlock",
+    fullName: "Dillock",
+    slogan: "Trao chất lượng – Nhận niềm tin",
+    secondarySlogan: "Tinh hoa Công nghệ Đức",
+    website: "dillock.vn",
+    regionalWebsite: "dillock.com",
+    positioning: "Đại lý độc quyền Dillock Miền Trung - Giải pháp khoá thông minh toàn quốc",
+    experience: "Gần 15 năm kinh nghiệm ngành khoá thông minh",
+    owner: "Công ty Cổ phần Công nghệ DILSMART",
+    status: "Đại lý Độc quyền Miền Trung (Nghệ An - Đà Nẵng - Huế) & Lắp đặt Toàn quốc"
+  },
+  
+  research: {
+    productCategories: [
+      {
+        name: "Khoá vân tay thông minh Dillock",
+        description: "Tích hợp FaceID, Nhận diện tĩnh mạch lòng bàn tay chuẩn Đức.",
+        models: [
+          { name: "Dillock DLZ.2.0729 (Premium)", price: "16.490.000 VNĐ", features: ["FaceID", "Palm Vein"] },
+          { name: "Dillock DL T8 Pro (Budget)", price: "2.490.000 VNĐ", features: ["FPC Fingerprint"] }
+        ]
+      },
+      {
+        name: "Khoá phân thể & Tiêu âm Dillock",
+        description: "Dòng khoá Dillock êm ái cho cửa nhôm Xingfa và nội thất.",
+        models: [
+          { name: "Dillock DLH.1.2003 (Tiêu âm)", price: "1.250.000 - 1.500.000 VNĐ", features: ["Thân khoá nam châm"] }
+        ]
+      },
+      {
+        name: "Khoá khách sạn & Chống cháy Dillock",
+        description: "Tiêu chuẩn quốc tế cho dự án và căn hộ cao cấp.",
+        models: [
+          { name: "Khóa thẻ từ khách sạn Dillock", price: "Từ 1.200.000 VNĐ", features: ["Quản lý tập trung"] },
+          { name: "Khóa chống cháy Dillock EN1634", price: "Liên hệ", features: ["Chống cháy 120p"] }
+        ]
+      }
+    ],
+    technologies: [
+      { name: "PVD Black Oiled Dillock", desc: "Công nghệ mạ Dillock chống trầy, chống vân tay, độ bền màu vĩnh cửu." },
+      { name: "Palm Vein Recognition Dillock", desc: "Nhận diện tĩnh mạch lòng bàn tay Dillock - bảo mật sinh trắc học cao nhất." },
+      { name: "MOSS Password Dillock", desc: "Mã số ảo Dillock chống nhìn trộm và chuẩn mã hoá quân đội." },
+      { name: "Thân khoá Tiêu âm Dillock", desc: "Nam châm tích hợp Dillock giúp loại bỏ âm thanh cơ học." }
+    ],
+    brandAdvantages: [
+      "Đại lý Độc quyền trọng điểm: Nghệ An, Đà Nẵng, Huế, Nha Trang...",
+      "Đội ngũ kỹ thuật lắp đặt tận nơi toàn quốc (Hà Nội, TP.HCM và các tỉnh lẻ)",
+      "Bảo hành chính hãng 24/7 trực tiếp tại các chi nhánh Miền Trung",
+      "Vật liệu Dillock cao cấp SUS 304 & Nhôm hàng không"
+    ]
+  },
+
+  goals: [
+    {
+      phase: "Giai đoạn 1: Xây nền Dillock",
+      tasks: [
+        "Ra mắt Website dillock.com - Hub thông tin bán hàng Nghệ An & Miền Trung",
+        "Xây dựng thư viện nội dung Technical Dillock (PVD, Palm Vein)",
+        "Setup Gian hàng Dillock Mall trên Shopee & TikTok Shop",
+        "Khẳng định vị thế Độc quyền Nghệ An - Miền Trung"
+      ]
+    },
+    {
+      phase: "Giai đoạn 2: Launching Dillock",
+      tasks: [
+        "Campaign SEO: 'Khóa thông minh Nghệ An', 'Khóa điện tử Đà Nẵng'",
+        "Mở rộng dịch vụ lắp đặt nhanh tại Hà Nội & TP.HCM cho khách lẻ",
+        "Ads chuyển đổi tập trung khu vực Vinh - Nghệ An & Đà Nẵng"
+      ]
+    },
+    {
+      phase: "Giai đoạn 3: Scale-up Dillock",
+      tasks: [
+        "Mở rộng mạng lưới cộng tác viên Dillock trên toàn quốc",
+        "Tiếp cận thị trường dự án Nghệ An & Miền Trung (Hotels & Resorts)",
+        "Tối ưu tỉ lệ bảo trì Dillock và up-sell khách hàng cũ"
+      ]
+    }
+  ],
+
+  personas: [
+    {
+      title: "Chủ nhà Nghệ An & Miền Trung",
+      age: "28–45",
+      concerns: ["Đơn vị chính hãng tại Vinh", "Lắp đặt nhanh khu vực Nghệ An", "Support 24/7 địa phương"]
+    },
+    {
+      title: "Khách lẻ Bắc/Nam",
+      age: "30–50",
+      concerns: ["Tin tưởng Đại lý Độc quyền", "Hỗ trợ lắp đặt tận nơi mặc dù ở xa", "Giá trị thương hiệu"]
+    },
+    {
+      title: "Chủ đầu tư / Resorts",
+      age: "Tất cả",
+      concerns: ["Quản lý Dillock tập trung", "Tiêu chuẩn Dillock EN1634", "Bảo trì dự án dài hạn"]
+    }
+  ],
+
+  channels: [
+    { id: "website", name: "dillock.com", icon: "Globe", role: "Cửa hàng online & Hub bán hàng Miền Trung", kpi: "10k+ visits/tháng" },
+    { id: "fb", name: "Facebook Dillock", icon: "Facebook", role: "Tư vấn & Kéo Lead toàn quốc", kpi: "5k followers, 1k+ tương tác" },
+    { id: "tiktok", name: "TikTok Dillock", icon: "Video", role: "Short-video Viral & Review", kpi: "100k views/tháng" }
+  ],
+
+  websiteStrategy: {
+    domain: "dillock.com",
+    brandTitle: "Dillock Nghệ An - Miền Trung | Độc quyền & Lắp đặt Toàn quốc",
+    sections: [
+      {
+        title: "Cấu trúc Website Bán hàng",
+        items: [
+           "Trang chủ: Headline khẳng định vị thế Độc quyền Nghệ An & Miền Trung",
+           "Cửa hàng: Phân cấp theo dòng máy (Smart, Phân thể, Dự án)",
+           "Dịch vụ: Hotline 2h tại nội thành Vinh & Đà Nẵng và Lắp đặt Toàn quốc",
+           "Dự án: Hình ảnh công trình thực tế tại Nghệ An/Đà Nẵng/Hà Nội/HCM",
+           "Bảo hành: Kích hoạt bảo hành điện tử Dillock Online"
+        ]
+      },
+      {
+        title: "Chiến lược SEO & Traffic",
+        items: [
+           "Từ khóa Top 1: 'Khóa cửa vân tay Nghệ An', 'Khóa thông minh Vinh'",
+           "Từ khóa khu vực: 'Khóa điện tử Đà Nẵng', 'Dillock Miền Trung'",
+           "Blog: Tư vấn lắp đặt khóa cho cửa gỗ & nhôm tại Nghệ An",
+           "Review: Đánh giá khách hàng lắp khóa Dillock tại TP. Vinh"
+        ]
+      }
+    ]
+  },
+
+  contentStrategy: {
+    pillars: [
+      { label: "Bán lẻ Dillock trực tiếp", value: 40, color: "bg-amber-500", desc: "Tập trung chuyển đổi đơn hàng Dillock" },
+      { label: "Giáo dục thị trường Dillock", value: 25, color: "bg-blue-500", desc: "Xây dựng nhận thức công nghệ Dillock" },
+      { label: "Uy tín thương hiệu Dillock", value: 20, color: "bg-emerald-500", desc: "Chứng minh chất lượng Dillock Đức" },
+      { label: "Case thực tế Dillock", value: 15, color: "bg-indigo-500", desc: "Minh chứng khách hàng Dillock thực tế" }
+    ],
+    groups: [
+      {
+        id: "A",
+        title: "Nội dung bán hàng Dillock",
+        items: ["Khoá Dillock phù hợp cửa nào?", "Mức giá khoá Dillock?", "Tặng quà mua khoá Dillock?", "Dịch vụ lắp đặt toàn quốc?", "Hướng dẫn đặt mua khoá Dillock"]
+      },
+      {
+        id: "B",
+        title: "Giáo dục thị trường Dillock",
+        items: ["Khoá phân thể Dillock là gì?", "Khoá tiêu âm khác gì khoá thường?", "Vì sao dùng khoá vân tay Dillock?", "Chọn khoá Dillock cho cửa Xingfa", "Nhà trẻ nhỏ nên chọn khoá Dillock nào?"]
+      },
+      {
+        id: "C",
+        title: "Uy tín thương hiệu Dillock",
+        items: ["Hình ảnh Dillock tại Vietbuild", "Hậu trường kho và lắp đặt Dillock", "Chứng nhận xuất xứ Dillock", "Dillock - Độc quyền Miền Trung", "Quy trình bảo hành điện tử Dillock"]
+      },
+      {
+        id: "D",
+        title: "Nội dung chuyển đổi Dillock",
+        items: ["Feedback từ khách hàng Dillock", "Trước/Sau lắp đặt khoá Dillock", "Video test hỏa hoạn/biển mặn Dillock", "Kỹ thuật viên Dillock tư vấn tận nơi", "So sánh tính năng khoá Dillock"]
+      }
+    ],
+    facebookCalendar: [
+      {
+        week: 1, goal: "Nhận diện & Giáo dục công nghệ Dillock",
+        days: [
+          { day: "Thứ 2", title: "Dillock Nghệ An - Miền Trung - Tinh hoa Đức phục vụ Toàn Quốc", format: "Hình ảnh Brand", type: "Uy tín" },
+          { day: "Thứ 3", title: "Dillock TP. Vinh: Lắp đặt siêu hành 2h cho khách nội thành", format: "Carousel", type: "Bán lẻ" },
+          { day: "Thứ 4", title: "Khóa Dillock tại Nghệ An? Đơn vị độc quyền đã có mặt!", format: "Video Team", type: "Uy tín" },
+          { day: "Thứ 5", title: "Top 3 mẫu khóa Dillock tốt nhất cho nhà phố Nghệ An", format: "Album ảnh", type: "Bán lẻ" },
+          { day: "Thứ 6", title: "Dillock Vietbuild: Đón khách Nghệ An ghé gian hàng", format: "Video Sự kiện", type: "Uy tín" },
+          { day: "Thứ 7", title: "Feedback khách hàng Nghệ An review lắp khoá Dillock", format: "Video thực thực tế", type: "Feedback" },
+          { day: "Chủ nhật", title: "Chốt đơn Dillock - Miễn phí lắp đặt tại Nghệ An & Toàn quốc", format: "Banner Sales", type: "Bán lẻ" }
+        ]
+      }
+    ]
+  },
+
+  costs: {
+    setup: [
+      { name: "dillock.com - Nghệ An & Central Portal", price: "20M - 35M" },
+      { name: "Regional Content Production (Nghệ An focus)", price: "15M - 30M" },
+      { name: "Monthly Digital Ads (Focus Nghệ An - Miền Trung)", price: "15M - 50M" }
+    ],
+    operation: [
+      { name: "Dillock Web & SEO (Key: Nghệ An, Vinh)", price: "10M - 15M/tháng" },
+      { name: "Fanpage & Support toàn diện", price: "8M - 12M/tháng" },
+      { name: "Logistics & Lắp đặt khu vực Nghệ An", price: "Tùy biến" }
+    ],
+    packages: [
+      { name: "Gói Khởi Động Dillock", fee: "25M", ads: "15M+", features: ["Setup Website", "Top 10 từ khóa Nghệ An/Đà Nẵng", "Kế hoạch FB 1 tháng"] },
+      { name: "Gói Tăng Trưởng Dillock", fee: "45M", ads: "35M+", features: ["SEO Nghệ An/Miền Trung", "Vận hành đa kênh", "Phễu khách hàng khu vực", "Lắp đặt linh hoạt"] },
+      { name: "Gói Toàn Diện Dillock", fee: "85M", ads: "60M+", features: ["Full Funnel Strategy", "Phát triển đại lý Vinh/Nghệ An", "Quản lý truyền thông", "Tối ưu hóa B2B"] }
+    ]
+  }
+};
