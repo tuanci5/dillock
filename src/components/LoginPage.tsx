@@ -14,7 +14,7 @@ interface LoginPageProps {
   onLoginSuccess: (user: any) => void;
 }
 
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/18COLyL6c9rO0QQjg3EndMpqvAa2aRiDCYyqQK_KcoZI/export?format=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1u1ICMZWpUO4bxLbXFO0M094PSr1H9TtRGLP-z7IiAg0/export?format=csv';
 
 // ── Dev-only demo accounts ──────────────────────────────────────────────────
 const DEV_ACCOUNTS = [

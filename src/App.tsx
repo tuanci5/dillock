@@ -67,7 +67,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPage from './components/LoginPage';
 import { MARKETING_DATA } from './data/marketingData';
 
-const GOOGLE_CLIENT_ID = '637002508826-b7jmlrenhbagrh6rjp4m4uq8n210fq9a.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '637002508826-qcp2focvlutcoo0s0i9vd46964hrctfu.apps.googleusercontent.com';
 
 // --- Types ---
 
