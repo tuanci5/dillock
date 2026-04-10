@@ -237,34 +237,55 @@ const OverviewTab = () => (
     className="space-y-16"
   >
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-      <div className="lg:col-span-2 space-y-10">
-        <div className="p-10 white-card relative overflow-hidden group">
-          <div className="absolute top-[-100px] right-[-100px] w-64 h-64 bg-slate-50 rounded-full blur-3xl" />
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900">
-               <div className="p-3 bg-primary/10 rounded-2xl text-primary"><ShoppingBag className="w-6 h-6" /></div>
-               Cấu trúc Hệ sinh thái Sản phẩm Dillock
+    <div className="lg:col-span-2 space-y-12">
+      <div className="p-12 white-card relative overflow-hidden group border-2 border-slate-100">
+        <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none transform rotate-12 scale-150 text-primary"><Award size={200} /></div>
+        
+        <div className="relative z-10">
+          {/* Section A: Core Strategy Pillars */}
+          <div className="mb-16 pb-12 border-b border-slate-100">
+            <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
+               <div className="p-3 bg-slate-900 rounded-2xl text-primary"><Zap className="w-6 h-6 animate-pulse" /></div>
+               Chiến lược Cốt lõi & Ưu thế Brand
             </h3>
-            <div className="grid grid-cols-1 gap-8">
-              {MARKETING_DATA.research.productCategories.map((cat, i) => (
-                <div key={i} className="p-8 bg-slate-50/50 border border-slate-200 rounded-[2.5rem] hover:border-primary/40 transition-all group/cat">
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <h4 className="text-xl font-bold text-slate-900 mb-2">{cat.name}</h4>
-                      <p className="text-xs text-slate-500 font-bold opacity-70">{cat.description}</p>
-                    </div>
-                    <div className="px-4 py-1.5 bg-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500 rounded-full border border-slate-200">Nổi bật</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {MARKETING_DATA.research.brandAdvantages.map((adv, i) => (
+                <div key={i} className="flex items-center gap-5 p-6 bg-slate-50 rounded-[1.5rem] border border-slate-100 hover:border-primary/50 hover:bg-white transition-all duration-500 shadow-sm group/adv">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 group-hover/adv:bg-primary group-hover/adv:text-slate-950 transition-all">
+                    <CheckCircle2 size={18} className="text-emerald-500 group-hover/adv:text-slate-950" />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <span className="text-sm font-bold text-slate-700 leading-snug group-hover/adv:text-slate-900">{adv}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section B: Product Ecosystem */}
+          <div>
+            <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
+               <div className="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:text-primary transition-colors"><ShoppingBag className="w-6 h-6" /></div>
+               Hệ sinh thái Sản phẩm Dillock
+            </h3>
+            <div className="grid grid-cols-1 gap-10">
+              {MARKETING_DATA.research.productCategories.map((cat, i) => (
+                <div key={i} className="p-8 bg-slate-50/50 border border-slate-100 rounded-[2.5rem] hover:border-primary/30 hover:bg-white transition-all duration-700 group/cat">
+                  <div className="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
+                    <div>
+                      <h4 className="text-xl font-bold text-slate-900 mb-2 italic tracking-tight uppercase">{cat.name}</h4>
+                      <p className="text-xs text-slate-500 font-bold opacity-70 italic">{cat.description}</p>
+                    </div>
+                    <div className="px-5 py-2 bg-slate-900 text-primary text-[9px] font-bold uppercase tracking-[0.3em] rounded-full shadow-lg">Featured Category</div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {cat.models.map((model, idx) => (
-                      <div key={idx} className="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3 group/model hover:border-primary/50 transition-all">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-bold text-slate-900 tracking-tight">{model.name}</span>
-                          <span className="text-xs text-primary font-bold px-3 py-1 bg-primary/5 rounded-lg border border-primary/10">{model.price}</span>
+                      <div key={idx} className="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm space-y-4 group/model hover:border-primary/50 hover:shadow-xl transition-all duration-500">
+                        <div className="flex justify-between items-start">
+                          <span className="text-md font-bold text-slate-900 tracking-tighter italic leading-snug flex-1">{model.name}</span>
+                          <span className="text-[10px] text-primary font-bold px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 whitespace-nowrap ml-4 italic">{model.price}</span>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-50">
                           {model.features.map((f, fidx) => (
-                            <span key={fidx} className="text-[8px] text-slate-500 font-bold tracking-widest uppercase bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100 italic">#{f}</span>
+                            <span key={fidx} className="text-[7px] text-slate-400 font-bold tracking-widest uppercase bg-slate-50/80 px-2.5 py-1.5 rounded-lg border border-slate-100 italic group-hover/model:text-primary transition-colors">#{f}</span>
                           ))}
                         </div>
                       </div>
@@ -275,24 +296,8 @@ const OverviewTab = () => (
             </div>
           </div>
         </div>
-
-        <div className="p-10 bg-slate-100/50 border border-slate-200 rounded-[3rem] relative overflow-hidden group">
-          <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900">
-             <div className="p-3 bg-emerald-100 text-emerald-600 rounded-2xl"><ShieldCheck className="w-6 h-6" /></div>
-             Ưu thế Thương hiệu Dillock Toàn quốc
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {MARKETING_DATA.research.brandAdvantages.map((adv, i) => (
-              <div key={i} className="flex items-center gap-5 p-6 bg-white rounded-[1.5rem] border border-slate-200 hover:border-primary transition-all shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
-                  <CheckCircle2 size={18} className="text-emerald-500" />
-                </div>
-                <span className="text-sm font-bold text-slate-700 leading-snug">{adv}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
+    </div>
 
       {/* Quick Analysis Sidebar */}
       <div className="space-y-10">
