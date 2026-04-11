@@ -113,7 +113,7 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const baseMenuItems = [
-    { id: 'overview', label: 'Hệ sinh thái SP', icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: 'overview', label: 'Nghiên cứu SP & Đối thủ', icon: <Search className="w-5 h-5" /> },
     { id: 'strategy', label: 'Chiến lược cốt lõi', icon: <Target className="w-5 h-5" /> },
     { id: 'content', label: 'Chiến lược nội dung', icon: <FileText className="w-5 h-5" /> },
     { id: 'website', label: 'Website & Hệ thống', icon: <Monitor className="w-5 h-5" /> },
@@ -157,7 +157,7 @@ const Sidebar = ({
 
       {/* Sidebar Content */}
       <motion.aside
-        className={`fixed inset-y-0 left-0 w-72 bg-dark-card text-white z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] md:relative md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 w-80 bg-dark-card text-white z-50 transform transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] md:relative md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >
         <div className="p-8 h-full flex flex-col">
@@ -199,7 +199,7 @@ const Sidebar = ({
                   <div className={`${isActive ? 'text-slate-950' : 'text-slate-600 group-hover:text-primary transition-colors'}`}>
                     {item.icon}
                   </div>
-                  <span className="font-bold text-[13px] tracking-wide">{item.label}</span>
+                  <span className="font-bold text-[12px] tracking-tight whitespace-nowrap">{item.label}</span>
                   {isActive && (
                     <motion.div layoutId="navMarker" className="ml-auto">
                         <ArrowRight size={14} className="text-slate-950" />
@@ -229,7 +229,7 @@ const Sidebar = ({
 
 // --- Tab Components ---
 
-const OverviewTab = () => (
+const ResearchTab = () => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
@@ -237,105 +237,154 @@ const OverviewTab = () => (
     className="space-y-16"
   >
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-    <div className="lg:col-span-2 space-y-12">
-      <div className="p-12 white-card relative overflow-hidden group border-2 border-slate-100">
-        <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none transform rotate-12 scale-150 text-primary"><Award size={200} /></div>
-        
-        <div className="relative z-10">
-          {/* Section A: Core Strategy Pillars */}
-          <div className="mb-16 pb-12 border-b border-slate-100">
-            <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
-               <div className="p-3 bg-slate-900 rounded-2xl text-primary"><Zap className="w-6 h-6 animate-pulse" /></div>
-               Chiến lược Cốt lõi & Ưu thế Brand
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {MARKETING_DATA.research.brandAdvantages.map((adv, i) => (
-                <div key={i} className="flex items-center gap-5 p-6 bg-slate-50 rounded-[1.5rem] border border-slate-100 hover:border-primary/50 hover:bg-white transition-all duration-500 shadow-sm group/adv">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 group-hover/adv:bg-primary group-hover/adv:text-slate-950 transition-all">
-                    <CheckCircle2 size={18} className="text-emerald-500 group-hover/adv:text-slate-950" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-700 leading-snug group-hover/adv:text-slate-900">{adv}</span>
+      <div className="lg:col-span-2 space-y-12">
+        {/* Section 1: Keyword Landscape */}
+        <div className="p-12 white-card border-2 border-slate-100 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-10 opacity-[0.03] text-primary pointer-events-none">
+            <Search size={150} />
+          </div>
+          <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
+            <div className="p-3 bg-slate-900 rounded-2xl text-primary"><Search className="w-6 h-6" /></div>
+            Bản đồ Từ khóa & Thị trường (Top 10)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {MARKETING_DATA.research.marketResearch.keywords.map((kw, i) => (
+              <div key={i} className="group p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-primary/50 hover:bg-white transition-all duration-300">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="font-bold text-slate-900 text-sm">{kw.term}</span>
+                  <span className={`text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${
+                    kw.competition.includes('Rất cao') ? 'bg-red-50 text-red-500' :
+                    kw.competition.includes('Cao') ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'
+                  }`}>
+                    {kw.competition}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section B: Product Ecosystem */}
-          <div>
-            <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
-               <div className="p-3 bg-slate-100 rounded-2xl text-slate-400 group-hover:text-primary transition-colors"><ShoppingBag className="w-6 h-6" /></div>
-               Hệ sinh thái Sản phẩm Dillock
-            </h3>
-            <div className="grid grid-cols-1 gap-10">
-              {MARKETING_DATA.research.productCategories.map((cat, i) => (
-                <div key={i} className="p-8 bg-slate-50/50 border border-slate-100 rounded-[2.5rem] hover:border-primary/30 hover:bg-white transition-all duration-700 group/cat">
-                  <div className="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
-                    <div>
-                      <h4 className="text-xl font-bold text-slate-900 mb-2 italic tracking-tight uppercase">{cat.name}</h4>
-                      <p className="text-xs text-slate-500 font-bold opacity-70 italic">{cat.description}</p>
-                    </div>
-                    <div className="px-5 py-2 bg-slate-900 text-primary text-[9px] font-bold uppercase tracking-[0.3em] rounded-full shadow-lg">Featured Category</div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {cat.models.map((model, idx) => (
-                      <div key={idx} className="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm space-y-4 group/model hover:border-primary/50 hover:shadow-xl transition-all duration-500">
-                        <div className="flex justify-between items-start">
-                          <span className="text-md font-bold text-slate-900 tracking-tighter italic leading-snug flex-1">{model.name}</span>
-                          <span className="text-[10px] text-primary font-bold px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 whitespace-nowrap ml-4 italic">{model.price}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-50">
-                          {model.features.map((f, fidx) => (
-                            <span key={fidx} className="text-[7px] text-slate-400 font-bold tracking-widest uppercase bg-slate-50/80 px-2.5 py-1.5 rounded-lg border border-slate-100 italic group-hover/model:text-primary transition-colors">#{f}</span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap gap-2">
+                  {kw.topSites.map((site, idx) => (
+                    <span key={idx} className="text-[10px] text-slate-400 font-medium px-2 py-0.5 bg-white border border-slate-200 rounded-md group-hover:text-primary transition-colors">
+                      {site}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-      {/* Quick Analysis Sidebar */}
-      <div className="space-y-10">
-        <div className="p-10 white-card relative overflow-hidden border-2 border-slate-100 shadow-2xl">
-          <div className="absolute bottom-[-50px] right-[-50px] p-4 opacity-[0.03] text-slate-900 pointer-events-none">
-            <Award size={300} />
-          </div>
-          <h3 className="text-md font-bold mb-8 text-slate-400 uppercase tracking-[0.3em] text-center italic border-b border-slate-100 pb-4">Nhận diện Doanh nghiệp</h3>
-          <div className="space-y-2 mb-10 text-center relative z-10">
-             <p className="text-lg font-bold text-slate-900 leading-tight uppercase font-display">{MARKETING_DATA.brand.owner}</p>
-             <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{MARKETING_DATA.brand.experience}</p>
-          </div>
-          <div className="space-y-4 relative z-10">
-            {[
-              { label: 'Nền tảng', value: 'dillock.vn' },
-              { label: 'Khu vực', value: 'dillock.com' },
-              { label: 'Công nghệ', value: 'Tiêu chuẩn Đức' },
-              { label: 'Mạng lưới', value: '63 Tỉnh thành' }
-            ].map((item, i) => (
-              <div key={i} className="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</span>
-                <span className="font-bold text-slate-900 text-xs tracking-tight">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
-        
-        <div className="p-12 bg-slate-900 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.5em] mb-8 block text-center opacity-60 italic">Slogan Chiến dịch Cốt lõi</p>
-          <p className="text-3xl font-display font-bold text-white italic leading-[1.15] text-center mb-10 group-hover:gold-text transition-all duration-700">
-            "{MARKETING_DATA.brand.slogan}"
-          </p>
-          <div className="flex flex-col items-center gap-5">
-            <div className="h-px w-16 bg-white/10" />
-            <div className="flex items-center gap-4">
-              <Zap className="w-6 h-6 text-primary fill-primary animate-pulse" />
-              <span className="text-[11px] font-bold uppercase text-slate-300 tracking-[0.3em]">{MARKETING_DATA.brand.secondarySlogan}</span>
+
+        {/* Section 2: Deep Dive Competitors */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {MARKETING_DATA.research.marketResearch.competitors.map((comp, i) => (
+            <div key={i} className="p-10 bg-slate-900 rounded-[2.5rem] relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-8 opacity-10 text-white transform rotate-12 group-hover:text-primary transition-colors">
+                <ShieldCheck size={120} />
+              </div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-primary border border-white/10">
+                    <Briefcase size={24} />
+                  </div>
+                  <div>
+                    <h4 className="text-2xl font-bold text-white tracking-tight">{comp.brand}</h4>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">{comp.positioning}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 mb-8">
+                   <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                      <p className="text-[10px] text-primary font-bold uppercase mb-1">Thế mạnh (USP)</p>
+                      <p className="text-sm text-slate-300 leading-relaxed font-medium">{comp.usp}</p>
+                   </div>
+                   <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                        <p className="text-[9px] text-slate-500 font-bold uppercase mb-1 text-center">Giá bán</p>
+                        <p className="text-xs text-white font-bold text-center">{comp.priceRange}</p>
+                      </div>
+                      <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                        <p className="text-[9px] text-slate-500 font-bold uppercase mb-1 text-center">Thị phần</p>
+                        <p className="text-xs text-white font-bold text-center">{comp.marketShare}</p>
+                      </div>
+                   </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] font-bold text-red-400 uppercase bg-red-400/10 px-4 py-2 rounded-xl border border-red-400/20 w-fit">
+                   <AlertCircle size={14} />
+                   Hạn chế: {comp.weakness}
+                </div>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Section: Detailed Comparison Table */}
+        <div className="p-12 white-card border-2 border-slate-100 relative overflow-hidden">
+          <div className="absolute top-0 left-0 p-10 opacity-[0.03] text-primary pointer-events-none">
+            <Layers size={150} />
+          </div>
+          <h3 className="text-2xl font-bold mb-10 flex items-center gap-4 text-slate-900 italic tracking-tighter">
+            <div className="p-3 bg-slate-900 rounded-2xl text-primary"><Layers className="w-6 h-6" /></div>
+            Bảng So sánh Ưu & Nhược điểm Chi tiết
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b-2 border-slate-100">
+                  <th className="py-5 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tiêu chí</th>
+                  <th className="py-5 px-6 text-center text-sm font-bold text-primary italic bg-primary/5 rounded-t-2xl border-x-2 border-t-2 border-primary/20">Dillock (Chúng ta)</th>
+                  <th className="py-5 px-6 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kaadas</th>
+                  <th className="py-5 px-6 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">Philips</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {MARKETING_DATA.research.marketResearch.comparisonTable.map((row, i) => (
+                  <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="py-6 px-6 text-xs font-bold text-slate-900 italic">{row.feature}</td>
+                    <td className="py-6 px-6 text-xs font-bold text-slate-900 text-center bg-primary/5 border-x-2 border-primary/20">
+                      {row.dillock}
+                    </td>
+                    <td className="py-6 px-6 text-xs font-medium text-slate-500 text-center">{row.kaadas}</td>
+                    <td className="py-6 px-6 text-xs font-medium text-slate-500 text-center">{row.philips}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 3: Dillock Strategic Edge */}
+      <div className="space-y-8">
+        <div className="p-10 bg-white rounded-[3rem] border-2 border-slate-100 shadow-2xl relative overflow-hidden">
+          <div className="absolute bottom-[-40px] right-[-40px] opacity-[0.02] transform -rotate-12">
+            <TrendingUp size={250} />
+          </div>
+          <h3 className="text-sm font-bold mb-10 text-slate-400 uppercase tracking-[0.3em] text-center italic border-b border-slate-100 pb-4">
+            Ưu thế Dillock vs Đối thủ
+          </h3>
+          <div className="space-y-6">
+            {MARKETING_DATA.research.marketResearch.dillockAdvantages.map((adv, i) => (
+              <div key={i} className="flex gap-5 p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-primary/50 transition-all group">
+                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center shrink-0 text-primary shadow-lg">
+                  {i === 0 ? <MapPin size={20} /> : i === 1 ? <Layers size={20} /> : <Zap size={20} />}
+                </div>
+                <div>
+                  <h5 className="font-bold text-slate-900 text-sm mb-1 group-hover:text-primary transition-colors tracking-tight">{adv.title}</h5>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">{adv.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-10 bg-slate-900 rounded-[3rem] shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5 text-white"><Rocket size={100} /></div>
+          <p className="text-[10px] font-bold text-primary uppercase tracking-[0.4em] mb-4">Chiến lược 2026</p>
+          <h4 className="text-2xl font-bold text-white mb-6 leading-tight italic tracking-tight">
+            "Chiếm lĩnh thị trường ngách & Khẳng định vị thế Độc quyền"
+          </h4>
+          <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+             <p className="text-[11px] text-slate-300 leading-relaxed font-medium">
+                Tập trung vào lợi thế bảo mật <span className="text-primary font-bold italic">Tĩnh mạch lòng bàn tay</span> và dòng khóa <span className="text-primary font-bold italic">Cửa nhôm tiêu chuẩn Đức</span> để né tránh trực diện cuộc chiến giá rẻ của các thương hiệu phổ thông.
+             </p>
           </div>
         </div>
       </div>
@@ -665,9 +714,12 @@ const ChannelsTab = () => (
     transition={{ duration: 0.7 }}
     className="space-y-16"
   >
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       {MARKETING_DATA.channels.map((chan, i) => {
-        const Icon = chan.id === 'fb' ? Facebook : chan.id === 'shopee' ? ShoppingBag : chan.id === 'website' ? Globe : Video;
+        const Icon = chan.id === 'fb' ? Facebook : 
+                    chan.id === 'shopee' ? ShoppingBag : 
+                    chan.id === 'website' ? Globe : 
+                    chan.id === 'gmap' ? MapPin : Video;
         return (
           <div key={i} className="group p-12 white-card relative overflow-hidden">
             <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 -rotate-12 transform scale-150">
@@ -700,25 +752,62 @@ const ChannelsTab = () => (
             <Activity className="w-8 h-8 text-primary animate-pulse" />
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-slate-900 tracking-tighter italic">Quuy trình Tối ưu Chuyển đổi</h3>
+            <h3 className="text-3xl font-bold text-slate-900 tracking-tighter italic">Quy trình Tối ưu Chuyển đổi</h3>
             <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">Quy trình Chiến lược Chuyển đổi Trực tiếp</p>
           </div>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
         {[
-          { icon: <Search/>, title: "Discovery", body: "Tiếp cận khách toàn quốc qua Ads & Website dillock.com." },
-          { icon: <MessageSquare/>, title: "Engagement", body: "Tư vấn kỹ thuật Dillock sâu (PVD, Palm Vein)." },
-          { icon: <Award/>, title: "Authority", body: "Khẳng định Độc quyền Miền Trung & Chất lượng Đức." },
-          { icon: <ShoppingBag/>, title: "Conversion", body: "Lắp đặt tại chỗ 63 tỉnh thành & Bảo hành 24/7." }
+          { 
+            icon: <Search/>, 
+            title: "Khám phá", 
+            body: "Tiếp cận khách toàn quốc qua Ads & Website dillock.com.",
+            platform: "FB/Google Ads, TikTok Viral",
+            content: "Short Video, Banner Tiếp cận"
+          },
+          { 
+            icon: <MessageSquare/>, 
+            title: "Tương tác", 
+            body: "Tư vấn kỹ thuật Dillock sâu (PVD, Palm Vein).",
+            platform: "Fanpage, Website Blog, Messenger",
+            content: "Technical Blog, Video tư vấn"
+          },
+          { 
+            icon: <Award/>, 
+            title: "Uy tín", 
+            body: "Khẳng định Độc quyền Miền Trung & Chất lượng Đức.",
+            platform: "Website, FB (Feedback/Showroom)",
+            content: "Case Study, Ảnh thực tế kỹ thuật"
+          },
+          { 
+            icon: <ShoppingBag/>, 
+            title: "Chuyển đổi", 
+            body: "Lắp đặt tại chỗ 63 tỉnh thành & Bảo hành 24/7.",
+            platform: "Shopee Mall, TikTok Shop, Zalo",
+            content: "Flash Sale, Ưu đãi, Cam kết 2h"
+          }
         ].map((step, i) => (
           <div key={i} className="relative text-center p-8 space-y-6 group/step">
              <div className="w-20 h-20 mx-auto bg-white rounded-[2rem] flex items-center justify-center text-slate-400 border border-slate-200 group-hover/step:text-primary group-hover/step:border-primary/50 group-hover/step:bg-slate-50 transition-all duration-500 shadow-xl group-hover/step:shadow-inner transform group-hover/step:scale-110">
                {React.cloneElement(step.icon as React.ReactElement, { size: 32 })}
              </div>
-             <div className="space-y-3">
-               <h4 className="font-bold text-slate-900 uppercase tracking-[0.2em] text-sm italic">{step.title}</h4>
-               <p className="text-xs text-slate-500 leading-relaxed font-bold italic px-2">{step.body}</p>
+             <div className="space-y-4">
+               <div>
+                  <h4 className="font-bold text-slate-900 uppercase tracking-[0.2em] text-sm italic">{step.title}</h4>
+                  <p className="text-[10px] text-slate-500 leading-relaxed font-bold italic px-2 mt-2">{step.body}</p>
+               </div>
+               
+               <div className="pt-4 border-t border-slate-100 space-y-2">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Nền tảng</span>
+                    <span className="text-[10px] font-bold text-primary italic">{step.platform}</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Nội dung</span>
+                    <span className="text-[10px] font-bold text-slate-700 italic">{step.content}</span>
+                  </div>
+               </div>
              </div>
              {i < 3 && (
                <div className="absolute right-[-30px] top-12 text-slate-100 hidden lg:block">
@@ -766,8 +855,8 @@ const BudgetTab = () => {
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">#</span>
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-4">Hạng mục</span>
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Đơn vị</span>
-      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest text-right pr-2">Thấp nhất</span>
-      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest text-right pr-2">Cao nhất</span>
+      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest text-right pr-2">Tối thiểu</span>
+      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest text-right pr-2">Tối đa</span>
       <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest text-right pr-2">Ghi chú</span>
     </div>
   );
@@ -782,10 +871,10 @@ const BudgetTab = () => {
       {/* === HEADER KPI CARDS === */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Đầu tư 1 lần (Min)", value: fmtM(oneTimeMin), sub: "Chi phí tối thiểu setup", color: "from-amber-500 to-amber-600", icon: <Zap size={20}/> },
-          { label: "Đầu tư 1 lần (Max)", value: fmtM(oneTimeMax), sub: "Chi phí tối đa setup", color: "from-orange-500 to-red-500", icon: <Layers size={20}/> },
-          { label: "Hàng tháng (Min)", value: fmtM(monthlyMin), sub: "Chi phí tối thiểu/tháng", color: "from-blue-500 to-indigo-600", icon: <Activity size={20}/> },
-          { label: "Hàng tháng (Max)", value: fmtM(monthlyMax), sub: "Chi phí tối đa/tháng", color: "from-indigo-500 to-purple-600", icon: <TrendingUp size={20}/> },
+          { label: "Đầu tư 1 lần (Tối thiểu)", value: fmtM(oneTimeMin), sub: "Chi phí tối thiểu thiết lập", color: "from-amber-500 to-amber-600", icon: <Zap size={20}/> },
+          { label: "Đầu tư 1 lần (Tối đa)", value: fmtM(oneTimeMax), sub: "Chi phí tối đa thiết lập", color: "from-orange-500 to-red-500", icon: <Layers size={20}/> },
+          { label: "Hàng tháng (Tối thiểu)", value: fmtM(monthlyMin), sub: "Chi phí tối thiểu/tháng", color: "from-blue-500 to-indigo-600", icon: <Activity size={20}/> },
+          { label: "Hàng tháng (Tối đa)", value: fmtM(monthlyMax), sub: "Chi phí tối đa/tháng", color: "from-indigo-500 to-purple-600", icon: <TrendingUp size={20}/> },
         ].map((kpi, i) => (
           <motion.div
             key={i}
@@ -815,7 +904,7 @@ const BudgetTab = () => {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white tracking-tight">CHI PHÍ ĐẦU TƯ 1 LẦN</h3>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">One-time Investment • Thiết lập hệ thống ban đầu</p>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Đầu tư thiết lập • Xây dựng hệ thống ban đầu</p>
             </div>
           </div>
           <div className="text-right hidden md:block">
@@ -833,8 +922,8 @@ const BudgetTab = () => {
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Danh mục</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Hạng mục chi phí</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-24">Đơn vị</th>
-                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Min (triệu)</th>
-                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Max (triệu)</th>
+                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Tối thiểu (triệu)</th>
+                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Tối đa (triệu)</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4 w-64">Ghi chú</th>
               </tr>
             </thead>
@@ -912,7 +1001,7 @@ const BudgetTab = () => {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white tracking-tight">CHI PHÍ VẬN HÀNH HÀNG THÁNG</h3>
-              <p className="text-[10px] text-blue-300/60 font-bold uppercase tracking-[0.3em] mt-1">Monthly Recurring Cost • Chi phí tái tục mỗi tháng</p>
+              <p className="text-[10px] text-blue-300/60 font-bold uppercase tracking-[0.3em] mt-1">Chi phí định kỳ hàng tháng • Duy trì và tối ưu liên tục</p>
             </div>
           </div>
           <div className="text-right hidden md:block">
@@ -930,8 +1019,8 @@ const BudgetTab = () => {
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Danh mục</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Hạng mục chi phí</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-24">Đơn vị</th>
-                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Min (triệu)</th>
-                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Max (triệu)</th>
+                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Tối thiểu (triệu)</th>
+                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Tối đa (triệu)</th>
                 <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4 w-64">Ghi chú</th>
               </tr>
             </thead>
@@ -1282,7 +1371,7 @@ function AppContent() {
           
           <AnimatePresence mode="wait">
             <Routes>
-              <Route path="/overview" element={<OverviewTab />} />
+              <Route path="/overview" element={<ResearchTab />} />
               <Route path="/strategy" element={<StrategyTab />} />
               <Route path="/content" element={<ContentTab />} />
               <Route path="/website" element={<WebsiteTab />} />

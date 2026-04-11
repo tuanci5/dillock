@@ -81,7 +81,54 @@ export const MARKETING_DATA = {
       "Đội ngũ kỹ thuật lắp đặt tận nơi toàn quốc (Hà Nội, TP.HCM và các tỉnh lẻ)",
       "Bảo hành chính hãng 24/7 trực tiếp tại các chi nhánh Miền Trung",
       "Vật liệu Dillock cao cấp SUS 304 & Nhôm hàng không"
-    ]
+    ],
+    marketResearch: {
+      keywords: [
+        { term: "Khóa cửa thông minh", competition: "Rất cao", topSites: ["smarttech247.vn", "vinlock.com.vn", "kaadasvietnam.com.vn"] },
+        { term: "Khóa cửa vân tay", competition: "Cao", topSites: ["kitos.com.vn", "beelock.vn", "vuhoangtelecom.vn"] },
+        { term: "Khóa cửa nhôm Xingfa", competition: "Trung bình", topSites: ["onelock.vn", "khoacuahomekit.com", "dillock.vn"] },
+        { term: "Khóa cửa gỗ", competition: "Trung bình", topSites: ["vietwood.vn", "khoahuyhoang.com"] },
+        { term: "Khóa khách sạn thẻ từ", competition: "Thấp - B2B", topSites: ["adelgroup.vn", "lionlock.vn", "dillock.vn"] },
+        { term: "Khóa cổng ngoài trời", competition: "Cao", topSites: ["onelock.vn", "khoa-s.com"] },
+        { term: "Khóa cửa kính cường lực", competition: "Trung bình", topSites: ["beetechgroup.com", "kinggia.com"] },
+        { term: "Khóa Face ID", competition: "Cao - Xu hướng", topSites: ["kaadasvietnam.com.vn", "philips-smartlock.vn", "dillock.vn"] },
+        { term: "Hệ thống kiểm soát cửa", competition: "Trung bình - B2B", topSites: ["soeco.com.vn", "buigiatech.com"] },
+        { term: "Khóa cửa Wifi / App", competition: "Rất cao", topSites: ["gucongnghe.com", "ihomes.vn"] }
+      ],
+      competitors: [
+        {
+          brand: "Kaadas",
+          origin: "Đức",
+          positioning: "Premium - Thiết kế Lamborghini",
+          usp: "Cảm biến vân tay FPC Thụy Điển, nhận diện 3D Face siêu nhanh.",
+          priceRange: "4M - 20M+ VNĐ",
+          marketShare: "Top 1 Phân khúc Cao cấp",
+          weakness: "Giá thành cao, kén cửa mỏng"
+        },
+        {
+          brand: "Philips",
+          origin: "Hà Lan",
+          positioning: "Premium - Tin cậy Toàn cầu",
+          usp: "Thiết kế Ergonomic, đèn báo trạng thái 'Smile', App cực kỳ ổn định.",
+          priceRange: "6M - 25M+ VNĐ",
+          marketShare: "Top 2 Phân khúc Cao cấp",
+          weakness: "Mẫu mã ít thay đổi, phụ kiện thay thế đắt"
+        }
+      ],
+      dillockAdvantages: [
+        { title: "Độc quyền Miền Trung", desc: "Lợi thế dịch vụ tại chỗ, bảo hành trong 2h tại Nghệ An/Đà Nẵng." },
+        { title: "Chuyên biệt Cửa nhôm", desc: "Dòng khóa Dillock có đố cửa hẹp cực kỳ đa dạng cho hệ Xingfa." },
+        { title: "Công nghệ Tĩnh mạch", desc: "Bảo mật cao hơn vân tay, không lo mòn vân tay khi sử dụng lâu dài." }
+      ],
+      comparisonTable: [
+        { feature: "Thương hiệu", dillock: "Đức/VN - Mới, đang phát triển", kaadas: "Đức - Lâu đời, phổ biến", philips: "Hà Lan - Global, uy tín rất cao" },
+        { feature: "Công nghệ chính", dillock: "Tĩnh mạch (Palm Vein), FaceID 3D", kaadas: "Vân tay FPC Thụy Điển", philips: "FaceID, Cảm biến hồng ngoại" },
+        { feature: "Phân khúc giá", dillock: "Tầm trung - Cạnh tranh cực mạnh", kaadas: "Trung bình - Cao", philips: "Cao - Rất cao" },
+        { feature: "Thế mạnh", dillock: "Chuyên cửa nhôm, hỗ trợ tại chỗ 24/7", kaadas: "Thiết kế sang trọng, mẫu mã đa dạng", philips: "Độ bền tuyệt đối, App ổn định nhất" },
+        { feature: "Ưu điểm Dillock", dillock: "Giá tốt hơn 30-50% cùng tính năng", kaadas: "Lợi thế thương hiệu lâu đời hơn", philips: "Phân khúc khách hàng siêu giàu" },
+        { feature: "Nhược điểm", dillock: "Độ nhận diện thương hiệu chưa cao", kaadas: "Giá linh kiện thay thế đắt", philips: "Kén cửa, kén đại lý lắp đặt" }
+      ]
+    }
   },
 
   goals: [
@@ -133,7 +180,9 @@ export const MARKETING_DATA = {
   channels: [
     { id: "website", name: "dillock.com", icon: "Globe", role: "Cửa hàng online & Hub bán hàng Miền Trung", kpi: "10k+ visits/tháng" },
     { id: "fb", name: "Facebook Dillock", icon: "Facebook", role: "Tư vấn & Kéo Lead toàn quốc", kpi: "5k followers, 1k+ tương tác" },
-    { id: "tiktok", name: "TikTok Dillock", icon: "Video", role: "Short-video Viral & Review", kpi: "100k views/tháng" }
+    { id: "tiktok", name: "TikTok Dillock", icon: "Video", role: "Short-video Viral & Review", kpi: "100k views/tháng" },
+    { id: "shopee", name: "Shopee & TMĐT", icon: "ShoppingBag", role: "Kênh bán lẻ & Traffic ngoại", kpi: "100+ đơn/tháng, 4.9/5 stars" },
+    { id: "gmap", name: "Google Map Dillock", icon: "MapPin", role: "SEO Local & Uy tín tại Vinh/Đà Nẵng", kpi: "50+ reviews/tháng, Top 3 Local" }
   ],
 
   websiteStrategy: {

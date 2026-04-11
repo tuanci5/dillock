@@ -22,7 +22,7 @@ const DEV_ACCOUNTS = [
     label: 'Quản trị (Admin)',
     user: {
       email: 'admin@skymobile.dev',
-      name: 'Admin Demo',
+      name: 'Quản trị viên Demo',
       picture: 'https://api.dicebear.com/9.x/initials/svg?seed=AD&backgroundColor=3b82f6&textColor=ffffff',
       role: 'Quản trị',
     },
@@ -31,7 +31,7 @@ const DEV_ACCOUNTS = [
     label: 'Trưởng nhóm Marketing',
     user: {
       email: 'mkt@skymobile.dev',
-      name: 'Marketing Lead',
+      name: 'Trưởng nhóm MKT',
       picture: 'https://api.dicebear.com/9.x/initials/svg?seed=ML&backgroundColor=8b5cf6&textColor=ffffff',
       role: 'Trưởng nhóm Marketing',
     },
@@ -40,7 +40,7 @@ const DEV_ACCOUNTS = [
     label: 'Nhân viên Sale',
     user: {
       email: 'sale@skymobile.dev',
-      name: 'Sale Staff',
+      name: 'Nhân viên Bán hàng',
       picture: 'https://api.dicebear.com/9.x/initials/svg?seed=SS&backgroundColor=10b981&textColor=ffffff',
       role: 'Nhân viên Sale',
     },
@@ -104,7 +104,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-600 rounded-3xl flex items-center justify-center shadow-lg shadow-primary/20 mb-6 transition-transform hover:scale-110">
               <Lock className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Dlock Marketing Plan</h1>
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Kế hoạch Marketing Dillock</h1>
             <p className="text-slate-400 text-sm font-medium">Hệ thống Quản trị & Kế hoạch Thực thi</p>
           </div>
 
@@ -164,7 +164,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-bold hover:bg-amber-500/20 transition-colors"
                 >
                   <FlaskConical className="w-4 h-4" />
-                  Đăng nhập Demo (Dev Only)
+                  Đăng nhập nhanh (Chế độ Thử nghiệm)
                 </button>
 
                 {showDevMenu && (
@@ -198,7 +198,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
             <div className="flex items-center justify-center gap-2 pt-2">
               <Lock className="w-3 h-3 text-slate-500" />
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Authorized Personnel Only</span>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Chỉ dành cho nhân sự được ủy quyền</span>
             </div>
           </div>
         </div>
