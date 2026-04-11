@@ -1,12 +1,12 @@
-import { 
-  Target, 
-  Users, 
-  ShoppingBag, 
-  Video, 
-  Facebook, 
-  Layout, 
-  DollarSign, 
-  TrendingUp, 
+import {
+  Target,
+  Users,
+  ShoppingBag,
+  Video,
+  Facebook,
+  Layout,
+  DollarSign,
+  TrendingUp,
   Clock,
   Briefcase,
   ShieldCheck,
@@ -43,7 +43,7 @@ export const MARKETING_DATA = {
     owner: "Công ty Cổ phần Công nghệ DILSMART",
     status: "Đại lý Độc quyền Miền Trung (Nghệ An - Đà Nẵng - Huế) & Lắp đặt Toàn quốc"
   },
-  
+
   research: {
     productCategories: [
       {
@@ -143,20 +143,20 @@ export const MARKETING_DATA = {
       {
         title: "Cấu trúc Website Bán hàng",
         items: [
-           "Trang chủ: Headline khẳng định vị thế Độc quyền Nghệ An & Miền Trung",
-           "Cửa hàng: Phân cấp theo dòng máy (Smart, Phân thể, Dự án)",
-           "Dịch vụ: Hotline 2h tại Vinh & Đà Nẵng và Lắp đặt Toàn quốc",
-           "Dự án: Hình ảnh công trình thực tế tại Nghệ An/Đà Nẵng/Hà Nội/HCM",
-           "Bảo hành: Kích hoạt bảo hành điện tử Dillock Online"
+          "Trang chủ: Headline khẳng định vị thế Độc quyền Nghệ An & Miền Trung",
+          "Cửa hàng: Phân cấp theo dòng máy (Smart, Phân thể, Dự án)",
+          "Dịch vụ: Hotline 2h tại Vinh & Đà Nẵng và Lắp đặt Toàn quốc",
+          "Dự án: Hình ảnh công trình thực tế tại Nghệ An/Đà Nẵng/Hà Nội/HCM",
+          "Bảo hành: Kích hoạt bảo hành điện tử Dillock Online"
         ]
       },
       {
         title: "Chiến lược SEO & Traffic",
         items: [
-           "Từ khóa Top 1: 'Khóa cửa vân tay Nghệ An', 'Khóa thông minh Vinh'",
-           "Từ khóa khu vực: 'Khóa điện tử Đà Nẵng', 'Dillock Miền Trung'",
-           "Blog: Tư vấn lắp đặt khóa cho cửa gỗ & nhôm tại Nghệ An",
-           "Review: Đánh giá khách hàng lắp khóa Dillock tại TP. Vinh"
+          "Từ khóa Top 1: 'Khóa cửa vân tay Nghệ An', 'Khóa thông minh Vinh'",
+          "Từ khóa khu vực: 'Khóa điện tử Đà Nẵng', 'Dillock Miền Trung'",
+          "Blog: Tư vấn lắp đặt khóa cho cửa gỗ & nhôm tại Nghệ An",
+          "Review: Đánh giá khách hàng lắp khóa Dillock tại TP. Vinh"
         ]
       }
     ]
@@ -250,6 +250,24 @@ export const MARKETING_DATA = {
           { name: "Tối ưu hóa Gian hàng/Mall", price: "3.000.000 VNĐ", unit: "Dự án", icon: "Sparkles" }
         ]
       }
+    ],
+    // Bảng tổng hợp chi phí dạng sheet
+    oneTime: [
+      { stt: 1, category: "Website & Hệ thống", item: "Thiết kế & Dev Website dillock.com", unit: "Dự án", min: 20, max: 35, note: "Bao gồm domain, hosting 1 năm, thiết kế UI/UX" },
+      { stt: 2, category: "Website & Hệ thống", item: "Tối ưu hóa Gian hàng Shopee/TikTok Mall", unit: "Dự án", min: 3, max: 5, note: "Setup ban đầu, trang trí gian hàng, template" },
+      { stt: 3, category: "Website & Hệ thống", item: "Setup Phễu & Tài khoản Quảng cáo DN", unit: "Dự án", min: 5, max: 8, note: "Facebook Business, Google Ads account, pixel" },
+      { stt: 4, category: "Nội dung & Sản xuất", item: "Bộ ảnh Sản phẩm & Showroom chuyên nghiệp", unit: "Buổi", min: 5, max: 10, note: "3–5 buổi chụp đầy đủ dòng sản phẩm Dillock" },
+      { stt: 5, category: "Quảng cáo & Launch", item: "Chi phí Ads Launch (3 tháng đầu - giai đoạn khai trương)", unit: "Gói", min: 30, max: 60, note: "Facebook Ads + Google Ads giai đoạn nhận diện" },
+    ],
+    monthly: [
+      { stt: 1, category: "SEO & Web", item: "Quản trị & Bảo trì Website dillock.com", unit: "Tháng", min: 3, max: 5, note: "Cập nhật nội dung, bảo mật, tốc độ tải trang" },
+      { stt: 2, category: "SEO & Web", item: "SEO Tổng thể – Từ khóa Nghệ An, Đà Nẵng, Vinh", unit: "Tháng", min: 10, max: 20, note: "Bao gồm bài chuẩn SEO, backlink, báo cáo ranking" },
+      { stt: 3, category: "Nội dung & MXH", item: "Quản lý Fanpage Facebook (30 bài/tháng + Design)", unit: "Tháng", min: 6, max: 10, note: "Lên kế hoạch, thiết kế, đăng bài, reply comment" },
+      { stt: 4, category: "Nội dung & MXH", item: "Sản xuất Video TikTok / Reels (4–8 video/tháng)", unit: "Tháng", min: 8, max: 20, note: "Kịch bản, quay, dựng, đăng, tối ưu hashtag" },
+      { stt: 5, category: "Quảng cáo", item: "Ngân sách Quảng cáo Facebook Ads", unit: "Tháng", min: 10, max: 30, note: "Tùy theo mùa & chiến dịch, không bao gồm phí quản lý" },
+      { stt: 6, category: "Quảng cáo", item: "Ngân sách Google Ads (Search & Display)", unit: "Tháng", min: 5, max: 15, note: "Từ khóa cạnh tranh khu vực Nghệ An, Đà Nẵng" },
+      { stt: 7, category: "Quảng cáo", item: "Phí quản lý Ads (15–20% ngân sách)", unit: "Tháng", min: 3, max: 9, note: "Tính trên tổng ngân sách chạy quảng cáo thực tế" },
+      { stt: 8, category: "TMĐT & Vận hành", item: "Vận hành Shopee Mall / TikTok Shop", unit: "Tháng", min: 5, max: 8, note: "Đăng sản phẩm, chạy Flash Sale, xử lý đơn hàng" },
     ]
   }
 };

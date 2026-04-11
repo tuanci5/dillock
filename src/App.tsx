@@ -733,122 +733,429 @@ const ChannelsTab = () => (
 );
 
 
-const BudgetTab = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="space-y-16"
-  >
-    <div className="p-16 white-card bg-slate-50 border-2 border-slate-200 relative overflow-hidden">
-      <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none transform rotate-12 scale-150"><DollarSign size={200} /></div>
-      <h3 className="text-4xl font-bold mb-20 text-center text-slate-900 tracking-tighter italic">Dự toán Tài chính Kế hoạch Dillock</h3>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 relative z-10">
-        <div className="space-y-12">
-           <div className="flex items-center gap-5 px-8 border-l-4 border-primary">
-              <div className="p-3 bg-primary/10 rounded-2xl"><Layers size={22} className="text-primary"/></div>
-              <h4 className="text-md font-bold text-slate-900 uppercase tracking-widest italic">Setup & Asset Production Toàn quốc</h4>
-           </div>
-           <div className="space-y-6">
-             {MARKETING_DATA.costs.setup.map((item, i) => (
-               <div key={i} className="flex justify-between items-center p-8 bg-white border border-slate-200 rounded-[2.5rem] group hover:border-primary transition-all shadow-sm">
-                 <span className="text-md font-bold text-slate-600 group-hover:text-slate-900 transition-colors uppercase tracking-tight">{item.name}</span>
-                 <span className="text-primary font-bold text-xl italic tracking-tighter leading-none border-b-2 border-primary/10 whitespace-nowrap shrink-0">{item.price}</span>
-               </div>
-             ))}
-           </div>
-        </div>
-        <div className="space-y-12">
-           <div className="flex items-center gap-5 px-8 border-l-4 border-slate-900">
-              <div className="p-3 bg-slate-900 rounded-2xl shadow-xl"><Activity size={22} className="text-primary"/></div>
-              <h4 className="text-md font-bold text-slate-900 uppercase tracking-widest italic">Hệ thống Vận hành & SEO</h4>
-           </div>
-           <div className="space-y-6">
-             {MARKETING_DATA.costs.operation.map((item, i) => (
-               <div key={i} className="flex justify-between items-center p-8 bg-white border border-slate-200 rounded-[2.5rem] group hover:border-primary transition-all shadow-sm">
-                 <span className="text-md font-bold text-slate-600 group-hover:text-slate-900 transition-colors uppercase tracking-tight">{item.name}</span>
-                 <span className="text-slate-900 font-bold text-xl italic tracking-tighter leading-none border-b-2 border-slate-200 whitespace-nowrap shrink-0">{item.price}</span>
-               </div>
-             ))}
-           </div>
-        </div>
-      </div>
-    </div>
+// Helper to format triệu VNĐ
+const fmtM = (val: number) => `${val} triệu`;
 
-    <div className="space-y-12">
-      {MARKETING_DATA.costs.services.map((group, i) => (
-        <div key={i} className="p-10 white-card bg-white border border-slate-200 rounded-[3rem] shadow-xl overflow-hidden group">
-          <div className="flex items-center gap-6 mb-12 border-b border-slate-100 pb-8">
-            <div className="p-4 bg-slate-900 rounded-2xl shadow-xl shadow-slate-900/10">
-               <Layers className="w-8 h-8 text-primary" />
+// Category color map
+const catColorMap: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+  "Website & Hệ thống": { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200", dot: "bg-blue-500" },
+  "Nội dung & Sản xuất": { bg: "bg-violet-50", text: "text-violet-700", border: "border-violet-200", dot: "bg-violet-500" },
+  "Quảng cáo & Launch": { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-500" },
+  "SEO & Web":           { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200", dot: "bg-emerald-500" },
+  "Nội dung & MXH":     { bg: "bg-violet-50", text: "text-violet-700", border: "border-violet-200", dot: "bg-violet-500" },
+  "Quảng cáo":           { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", dot: "bg-amber-500" },
+  "TMĐT & Vận hành":   { bg: "bg-indigo-50", text: "text-indigo-700", border: "border-indigo-200", dot: "bg-indigo-500" },
+};
+const getCatStyle = (cat: string) => catColorMap[cat] ?? { bg: "bg-slate-50", text: "text-slate-600", border: "border-slate-200", dot: "bg-slate-400" };
+
+const BudgetTab = () => {
+  const oneTimeData = MARKETING_DATA.costs.oneTime;
+  const monthlyData = MARKETING_DATA.costs.monthly;
+
+  const oneTimeMin = oneTimeData.reduce((s, r) => s + r.min, 0);
+  const oneTimeMax = oneTimeData.reduce((s, r) => s + r.max, 0);
+  const monthlyMin = monthlyData.reduce((s, r) => s + r.min, 0);
+  const monthlyMax = monthlyData.reduce((s, r) => s + r.max, 0);
+
+  // 3-month total (setup + 3 months of operation)
+  const totalMin = oneTimeMin + monthlyMin * 3;
+  const totalMax = oneTimeMax + monthlyMax * 3;
+
+  const TableHeader = () => (
+    <div className="grid grid-cols-[2rem_1fr_6rem_7rem_7rem_7rem] gap-0 border-b-2 border-slate-200 bg-slate-900 rounded-t-2xl px-4 py-4">
+      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">#</span>
+      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-4">Hạng mục</span>
+      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Đơn vị</span>
+      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest text-right pr-2">Thấp nhất</span>
+      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest text-right pr-2">Cao nhất</span>
+      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest text-right pr-2">Ghi chú</span>
+    </div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-16"
+    >
+      {/* === HEADER KPI CARDS === */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { label: "Đầu tư 1 lần (Min)", value: fmtM(oneTimeMin), sub: "Chi phí tối thiểu setup", color: "from-amber-500 to-amber-600", icon: <Zap size={20}/> },
+          { label: "Đầu tư 1 lần (Max)", value: fmtM(oneTimeMax), sub: "Chi phí tối đa setup", color: "from-orange-500 to-red-500", icon: <Layers size={20}/> },
+          { label: "Hàng tháng (Min)", value: fmtM(monthlyMin), sub: "Chi phí tối thiểu/tháng", color: "from-blue-500 to-indigo-600", icon: <Activity size={20}/> },
+          { label: "Hàng tháng (Max)", value: fmtM(monthlyMax), sub: "Chi phí tối đa/tháng", color: "from-indigo-500 to-purple-600", icon: <TrendingUp size={20}/> },
+        ].map((kpi, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08 }}
+            className={`p-7 rounded-[2rem] bg-gradient-to-br ${kpi.color} text-white shadow-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform`}
+          >
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+              {kpi.icon}
+            </div>
+            <div className="mb-4 p-2 bg-white/15 rounded-xl w-fit">{kpi.icon}</div>
+            <p className="text-3xl font-bold tracking-tighter mb-1">{kpi.value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">{kpi.label}</p>
+            <p className="text-[9px] mt-2 opacity-50 italic">{kpi.sub}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* === BẢNG 1: CHI PHÍ ĐẦU TƯ 1 LẦN === */}
+      <div className="white-card overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-slate-100">
+        {/* Section Header */}
+        <div className="p-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <div className="p-3 bg-amber-500/20 rounded-2xl border border-amber-500/30">
+              <Zap className="w-7 h-7 text-amber-400" />
             </div>
             <div>
-               <h4 className="text-2xl font-bold text-slate-900 tracking-tighter italic">{group.category}</h4>
-               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Giải pháp theo Nền tảng</p>
+              <h3 className="text-xl font-bold text-white tracking-tight">CHI PHÍ ĐẦU TƯ 1 LẦN</h3>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">One-time Investment • Thiết lập hệ thống ban đầu</p>
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {group.items.map((item, idx) => {
-               // Dynamic Icon handling
-               const IconComp = 
-                item.icon === 'Globe' ? Globe : 
-                item.icon === 'Search' ? Search : 
-                item.icon === 'Monitor' ? Monitor : 
-                item.icon === 'Facebook' ? Facebook : 
-                item.icon === 'Video' ? Video : 
-                item.icon === 'Camera' ? Camera : 
-                item.icon === 'TrendingUp' ? TrendingUp : 
-                item.icon === 'Zap' ? Zap : 
-                item.icon === 'Image' ? ImageIcon : 
-                item.icon === 'ShoppingBag' ? ShoppingBag : 
-                Sparkles;
-
-               return (
-                 <div key={idx} className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 hover:border-primary/40 hover:bg-white transition-all duration-500 group/service hover:shadow-2xl">
-                    <div className="flex justify-between items-start mb-8">
-                       <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm group-hover/service:bg-primary group-hover/service:text-slate-950 transition-all">
-                          <IconComp size={20} />
-                       </div>
-                       <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-100">{item.unit}</span>
-                    </div>
-                    <h5 className="text-md font-bold text-slate-900 mb-4 leading-tight group-hover/service:text-primary transition-colors italic tracking-tight">{item.name}</h5>
-                    <div className="mt-auto pt-6 border-t border-slate-100">
-                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 opacity-60">Mức đầu tư dự kiến</p>
-                       <p className="text-xl font-display font-bold text-slate-900 italic tracking-tighter whitespace-nowrap">{item.price}</p>
-                    </div>
-                 </div>
-               );
-            })}
+          <div className="text-right hidden md:block">
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Tổng ước tính</p>
+            <p className="text-lg font-bold text-amber-400 tracking-tight">{fmtM(oneTimeMin)} – {fmtM(oneTimeMax)}</p>
           </div>
         </div>
-      ))}
-    </div>
 
-    <div className="p-20 white-card bg-slate-900 text-center relative overflow-hidden group shadow-3xl">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.06),transparent_80%)]" />
-      <div className="relative z-10 flex flex-col items-center">
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-10 border border-primary/20"><TrendingUp size={40} className="text-primary" /></div>
-        <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white tracking-tighter text-center">Mô hình Hợp tác Toàn quốc</h3>
-        <p className="text-slate-500 font-bold mb-16 uppercase tracking-[0.3em] italic max-w-2xl leading-relaxed text-center">Chiến lược Hợp tác Đôi bên cùng có lợi 2026 - Độc quyền Miền Trung</p>
-        
-        <div className="flex flex-col md:flex-row gap-12 justify-center items-center w-full">
-          <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Doanh thu</p>
-            <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">2% - 5%</p>
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic">Chia sẻ Doanh thu Online (Gross)</p>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-50 border-b-2 border-slate-200">
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-10">#</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Danh mục</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Hạng mục chi phí</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-24">Đơn vị</th>
+                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Min (triệu)</th>
+                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Max (triệu)</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4 w-64">Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              {oneTimeData.map((row, i) => {
+                const cs = getCatStyle(row.category);
+                const isEven = i % 2 === 0;
+                return (
+                  <motion.tr
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className={`border-b border-slate-100 group hover:bg-amber-50/50 transition-colors ${isEven ? 'bg-white' : 'bg-slate-50/40'}`}
+                  >
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-[11px] font-bold text-slate-300">{String(row.stt).padStart(2,'0')}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border ${cs.bg} ${cs.text} ${cs.border}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${cs.dot}`} />
+                        {row.category}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{row.item}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">{row.unit}</span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="text-sm font-bold text-amber-600 tracking-tight">{fmtM(row.min)}</span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="text-sm font-bold text-emerald-600 tracking-tight">{fmtM(row.max)}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-[11px] text-slate-400 italic leading-snug">{row.note}</span>
+                    </td>
+                  </motion.tr>
+                );
+              })}
+            </tbody>
+            {/* Subtotal Row */}
+            <tfoot>
+              <tr className="bg-slate-900">
+                <td colSpan={4} className="py-5 px-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="text-sm font-bold text-white uppercase tracking-widest">TỔNG CHI PHÍ ĐẦU TƯ 1 LẦN</span>
+                  </div>
+                </td>
+                <td className="py-5 px-4 text-right">
+                  <span className="text-lg font-bold text-amber-400 tracking-tighter">{fmtM(oneTimeMin)}</span>
+                </td>
+                <td className="py-5 px-4 text-right">
+                  <span className="text-lg font-bold text-emerald-400 tracking-tighter">{fmtM(oneTimeMax)}</span>
+                </td>
+                <td className="py-5 px-4">
+                  <span className="text-[10px] text-slate-500 italic">Chi phí setup tối thiểu → tối đa</span>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      {/* === BẢNG 2: CHI PHÍ HÀNG THÁNG === */}
+      <div className="white-card overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-slate-100">
+        {/* Section Header */}
+        <div className="p-8 bg-gradient-to-r from-indigo-900 via-blue-900 to-indigo-900 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <div className="p-3 bg-blue-400/20 rounded-2xl border border-blue-400/30">
+              <Activity className="w-7 h-7 text-blue-300" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white tracking-tight">CHI PHÍ VẬN HÀNH HÀNG THÁNG</h3>
+              <p className="text-[10px] text-blue-300/60 font-bold uppercase tracking-[0.3em] mt-1">Monthly Recurring Cost • Chi phí tái tục mỗi tháng</p>
+            </div>
           </div>
-          <div className="text-3xl font-bold text-white/5 italic uppercase pointer-events-none">X</div>
-          <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Lợi nhuận Ròng</p>
-            <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">5% - 10%</p>
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic text-center text-wrap">Mô hình Chia cổ tức Lợi nhuận Ròng</p>
+          <div className="text-right hidden md:block">
+            <p className="text-[10px] text-blue-400/60 uppercase tracking-widest font-bold">Ước tính / tháng</p>
+            <p className="text-lg font-bold text-blue-300 tracking-tight">{fmtM(monthlyMin)} – {fmtM(monthlyMax)}</p>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-slate-50 border-b-2 border-slate-200">
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-10">#</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Danh mục</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4">Hạng mục chi phí</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center py-4 px-4 w-24">Đơn vị</th>
+                <th className="text-[10px] font-bold text-amber-600 uppercase tracking-widest text-right py-4 px-4 w-32">Min (triệu)</th>
+                <th className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest text-right py-4 px-4 w-32">Max (triệu)</th>
+                <th className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left py-4 px-4 w-64">Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              {monthlyData.map((row, i) => {
+                const cs = getCatStyle(row.category);
+                const isEven = i % 2 === 0;
+                return (
+                  <motion.tr
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className={`border-b border-slate-100 group hover:bg-blue-50/40 transition-colors ${isEven ? 'bg-white' : 'bg-slate-50/40'}`}
+                  >
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-[11px] font-bold text-slate-300">{String(row.stt).padStart(2,'0')}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border ${cs.bg} ${cs.text} ${cs.border}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${cs.dot}`} />
+                        {row.category}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{row.item}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">{row.unit}</span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="text-sm font-bold text-amber-600 tracking-tight">{fmtM(row.min)}</span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="text-sm font-bold text-emerald-600 tracking-tight">{fmtM(row.max)}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-[11px] text-slate-400 italic leading-snug">{row.note}</span>
+                    </td>
+                  </motion.tr>
+                );
+              })}
+            </tbody>
+            {/* Subtotal Row */}
+            <tfoot>
+              <tr className="bg-indigo-900">
+                <td colSpan={4} className="py-5 px-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-blue-300 animate-pulse" />
+                    <span className="text-sm font-bold text-white uppercase tracking-widest">TỔNG CHI PHÍ HÀNG THÁNG</span>
+                  </div>
+                </td>
+                <td className="py-5 px-4 text-right">
+                  <span className="text-lg font-bold text-amber-400 tracking-tighter">{fmtM(monthlyMin)}</span>
+                </td>
+                <td className="py-5 px-4 text-right">
+                  <span className="text-lg font-bold text-emerald-400 tracking-tighter">{fmtM(monthlyMax)}</span>
+                </td>
+                <td className="py-5 px-4">
+                  <span className="text-[10px] text-blue-300/50 italic">Tổng chi phí/tháng tối thiểu → tối đa</span>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      {/* === TỔNG KẾT CUỐI === */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="white-card overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-primary/20"
+      >
+        <div className="p-8 bg-gradient-to-br from-slate-900 to-black">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="p-3 bg-primary/20 rounded-2xl border border-primary/30">
+              <DollarSign className="w-7 h-7 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white">BẢNG TỔNG HỢP NGÂN SÁCH</h3>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Budget Summary • Dự toán Tổng thể Chiến dịch Dillock 2026</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Setup */}
+            <div className="p-6 bg-white/5 rounded-[2rem] border border-white/10 hover:border-amber-500/40 transition-all group">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                  <Zap size={16} className="text-amber-400" />
+                </div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đầu tư 1 Lần</span>
+              </div>
+              <p className="text-3xl font-bold text-white tracking-tighter mb-1">{fmtM(oneTimeMin)}</p>
+              <p className="text-[10px] text-slate-500 italic mb-4">đến {fmtM(oneTimeMax)}</p>
+              <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-amber-500 to-orange-400 rounded-full" style={{width:'65%'}} />
+              </div>
+              <p className="text-[9px] text-slate-600 mt-2 italic">Setup hệ thống, nội dung, tài khoản</p>
+            </div>
+
+            {/* Monthly x 3 */}
+            <div className="p-6 bg-white/5 rounded-[2rem] border border-white/10 hover:border-blue-400/40 transition-all group">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-blue-400/20 flex items-center justify-center">
+                  <Activity size={16} className="text-blue-300" />
+                </div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vận hành (3 tháng)</span>
+              </div>
+              <p className="text-3xl font-bold text-white tracking-tighter mb-1">{fmtM(monthlyMin * 3)}</p>
+              <p className="text-[10px] text-slate-500 italic mb-4">đến {fmtM(monthlyMax * 3)}</p>
+              <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full" style={{width:'80%'}} />
+              </div>
+              <p className="text-[9px] text-slate-600 mt-2 italic">Chi phí vận hành 3 tháng đầu</p>
+            </div>
+
+            {/* Grand Total */}
+            <div className="p-6 bg-primary/10 rounded-[2rem] border-2 border-primary/30 hover:border-primary/60 transition-all relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(212,175,55,0.1),transparent_70%)]" />
+              <div className="flex items-center gap-3 mb-5 relative z-10">
+                <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center">
+                  <TrendingUp size={16} className="text-primary" />
+                </div>
+                <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Tổng 3 Tháng Đầu</span>
+              </div>
+              <p className="text-4xl font-bold gold-text tracking-tighter mb-1 relative z-10">{fmtM(totalMin)}</p>
+              <p className="text-[11px] text-slate-400 italic mb-4 relative z-10">đến {fmtM(totalMax)}</p>
+              <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden relative z-10">
+                <div className="h-full bg-gradient-to-r from-primary to-amber-300 rounded-full shadow-[0_0_8px_rgba(212,175,55,0.8)]" style={{width:'100%'}} />
+              </div>
+              <p className="text-[9px] text-slate-500 mt-2 italic relative z-10">Setup + 3 tháng vận hành = Giai đoạn Kickoff</p>
+            </div>
+          </div>
+
+          {/* Footer note */}
+          <div className="mt-8 p-5 bg-white/5 rounded-2xl border border-white/5 flex items-start gap-4">
+            <AlertCircle size={18} className="text-slate-500 shrink-0 mt-0.5" />
+            <p className="text-[11px] text-slate-400 leading-relaxed italic">
+              <span className="text-white font-bold">Lưu ý:</span> Các con số trên là ước tính dự toán, có thể thay đổi theo quy mô chiến dịch thực tế. 
+              Chi phí quảng cáo (Ads) chưa bao gồm <span className="text-primary">ngân sách tiêu thụ mùa cao điểm</span>. 
+              Khuyến nghị dự phòng thêm <span className="text-emerald-400 font-bold">10–15%</span> tổng ngân sách cho phát sinh.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* === CÁC GÓI DỊCH VỤ CHI TIẾT === */}
+      <div className="space-y-12">
+        {MARKETING_DATA.costs.services.map((group, i) => (
+          <div key={i} className="p-10 white-card bg-white border border-slate-200 rounded-[3rem] shadow-xl overflow-hidden group">
+            <div className="flex items-center gap-6 mb-12 border-b border-slate-100 pb-8">
+              <div className="p-4 bg-slate-900 rounded-2xl shadow-xl shadow-slate-900/10">
+                 <Layers className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                 <h4 className="text-2xl font-bold text-slate-900 tracking-tighter italic">{group.category}</h4>
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Giải pháp theo Nền tảng</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {group.items.map((item, idx) => {
+                 const IconComp = 
+                  item.icon === 'Globe' ? Globe : 
+                  item.icon === 'Search' ? Search : 
+                  item.icon === 'Monitor' ? Monitor : 
+                  item.icon === 'Facebook' ? Facebook : 
+                  item.icon === 'Video' ? Video : 
+                  item.icon === 'Camera' ? Camera : 
+                  item.icon === 'TrendingUp' ? TrendingUp : 
+                  item.icon === 'Zap' ? Zap : 
+                  item.icon === 'Image' ? ImageIcon : 
+                  item.icon === 'ShoppingBag' ? ShoppingBag : 
+                  Sparkles;
+
+                 return (
+                   <div key={idx} className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 hover:border-primary/40 hover:bg-white transition-all duration-500 group/service hover:shadow-2xl">
+                      <div className="flex justify-between items-start mb-8">
+                         <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-slate-100 shadow-sm group-hover/service:bg-primary group-hover/service:text-slate-950 transition-all">
+                            <IconComp size={20} />
+                         </div>
+                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full border border-slate-100">{item.unit}</span>
+                      </div>
+                      <h5 className="text-md font-bold text-slate-900 mb-4 leading-tight group-hover/service:text-primary transition-colors italic tracking-tight">{item.name}</h5>
+                      <div className="mt-auto pt-6 border-t border-slate-100">
+                         <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 opacity-60">Mức đầu tư dự kiến</p>
+                         <p className="text-xl font-display font-bold text-slate-900 italic tracking-tighter whitespace-nowrap">{item.price}</p>
+                      </div>
+                   </div>
+                 );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* === MÔ HÌNH HỢP TÁC === */}
+      <div className="p-20 white-card bg-slate-900 text-center relative overflow-hidden group shadow-3xl">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.06),transparent_80%)]" />
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-10 border border-primary/20"><TrendingUp size={40} className="text-primary" /></div>
+          <h3 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white tracking-tighter text-center">Mô hình Hợp tác Toàn quốc</h3>
+          <p className="text-slate-500 font-bold mb-16 uppercase tracking-[0.3em] italic max-w-2xl leading-relaxed text-center">Chiến lược Hợp tác Đôi bên cùng có lợi 2026 - Độc quyền Miền Trung</p>
+          
+          <div className="flex flex-col md:flex-row gap-12 justify-center items-center w-full">
+            <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Doanh thu</p>
+              <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">2% - 5%</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic">Chia sẻ Doanh thu Online (Gross)</p>
+            </div>
+            <div className="text-3xl font-bold text-white/5 italic uppercase pointer-events-none">X</div>
+            <div className="p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 min-w-[380px] hover:border-primary/50 transition-all group/bonus">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Dựa trên Lợi nhuận Ròng</p>
+              <p className="text-7xl font-display font-bold gold-text mb-6 italic tracking-tighter drop-shadow-2xl group-hover/bonus:scale-110 transition-transform">5% - 10%</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-loose border-t border-white/5 pt-6 italic text-center text-wrap">Mô hình Chia cổ tức Lợi nhuận Ròng</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 const RoadmapTab = () => (
   <motion.div
