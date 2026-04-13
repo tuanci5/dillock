@@ -850,6 +850,17 @@ const BudgetTab = () => {
   const totalMin = oneTimeMin + monthlyMin * 3;
   const totalMax = oneTimeMax + monthlyMax * 3;
 
+  // Functional breakdown
+  const brandOneTime = oneTimeData.filter(i => i.type === 'brand');
+  const brandMonthly = monthlyData.filter(i => i.type === 'brand');
+  const salesOneTime = oneTimeData.filter(i => i.type === 'sales');
+  const salesMonthly = monthlyData.filter(i => i.type === 'sales');
+
+  const brandMin = brandOneTime.reduce((s, r) => s + r.min, 0) + brandMonthly.reduce((s, r) => s + r.min, 0) * 3;
+  const brandMax = brandOneTime.reduce((s, r) => s + r.max, 0) + brandMonthly.reduce((s, r) => s + r.max, 0) * 3;
+  const salesMin = salesOneTime.reduce((s, r) => s + r.min, 0) + salesMonthly.reduce((s, r) => s + r.min, 0) * 3;
+  const salesMax = salesOneTime.reduce((s, r) => s + r.max, 0) + salesMonthly.reduce((s, r) => s + r.max, 0) * 3;
+
   const TableHeader = () => (
     <div className="grid grid-cols-[2rem_1fr_6rem_7rem_7rem_7rem] gap-0 border-b-2 border-slate-200 bg-slate-900 rounded-t-2xl px-4 py-4">
       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">#</span>
@@ -1064,28 +1075,125 @@ const BudgetTab = () => {
                 );
               })}
             </tbody>
-            {/* Subtotal Row */}
-            <tfoot>
-              <tr className="bg-indigo-900">
-                <td colSpan={4} className="py-5 px-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-blue-300 animate-pulse" />
-                    <span className="text-sm font-bold text-white uppercase tracking-widest">TỔNG CHI PHÍ HÀNG THÁNG</span>
-                  </div>
-                </td>
-                <td className="py-5 px-4 text-right">
-                  <span className="text-lg font-bold text-amber-400 tracking-tighter">{fmtM(monthlyMin)}</span>
-                </td>
-                <td className="py-5 px-4 text-right">
-                  <span className="text-lg font-bold text-emerald-400 tracking-tighter">{fmtM(monthlyMax)}</span>
-                </td>
-                <td className="py-5 px-4">
-                  <span className="text-[10px] text-blue-300/50 italic">Tổng chi phí/tháng tối thiểu → tối đa</span>
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </div>
+      </div>
+
+      {/* === PHÂN TÁCH THEO MỤC TIÊU CHIẾN LƯỢC === */}
+      <div className="space-y-12">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+           <div className="flex items-center gap-5">
+              <div className="p-4 bg-slate-900 rounded-2xl shadow-xl shadow-slate-900/10">
+                 <PieChart className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                 <h3 className="text-3xl font-bold text-slate-900 tracking-tighter italic">PHÂN TÍCH THEO MỤC TIÊU</h3>
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-1">Brand vs Sales • Tối ưu hiệu quả đầu tư</p>
+              </div>
+           </div>
+           <div className="flex gap-4">
+              <div className="p-6 bg-white border border-slate-200 rounded-[2rem] shadow-sm flex flex-col items-center min-w-[180px]">
+                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 italic">Tổng Brand (3 tháng)</p>
+                 <p className="text-xl font-bold gold-text">{fmtM(brandMin)} – {fmtM(brandMax)}</p>
+              </div>
+              <div className="p-6 bg-white border border-slate-200 rounded-[2rem] shadow-sm flex flex-col items-center min-w-[180px]">
+                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 italic">Tổng Sales (3 tháng)</p>
+                 <p className="text-xl font-bold text-emerald-600">{fmtM(salesMin)} – {fmtM(salesMax)}</p>
+              </div>
+           </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+           {/* BRAND TABLE */}
+           <div className="white-card overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-slate-100 flex flex-col">
+              <div className="p-8 bg-gradient-to-br from-slate-900 to-slate-800 flex items-center gap-4">
+                 <div className="p-3 bg-primary/20 rounded-xl border border-primary/30">
+                    <Award size={20} className="text-primary" />
+                 </div>
+                 <h4 className="text-lg font-bold text-white tracking-tight italic">CHI PHÍ THƯƠNG HIỆU</h4>
+              </div>
+              <div className="flex-1 overflow-x-auto">
+                 <table className="w-full">
+                    <thead>
+                       <tr className="bg-slate-50 border-b border-slate-100">
+                          <th className="text-[9px] font-bold text-slate-400 uppercase py-4 px-4 text-left">Hạng mục</th>
+                          <th className="text-[9px] font-bold text-slate-400 uppercase py-4 px-4 text-center">Tần suất</th>
+                          <th className="text-[9px] font-bold text-primary uppercase py-4 px-4 text-right">Dự toán</th>
+                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                       {[...brandOneTime, ...brandMonthly].map((row, i) => (
+                          <tr key={i} className="hover:bg-slate-50 group transition-colors">
+                             <td className="py-4 px-4">
+                                <p className="text-xs font-bold text-slate-700 group-hover:text-slate-900">{row.item}</p>
+                                <p className="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">{row.category}</p>
+                             </td>
+                             <td className="py-4 px-4 text-center">
+                                <span className={`text-[8px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${row.unit === 'Dự án' || row.unit === 'Buổi' || row.unit === 'Gói' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
+                                   {row.unit}
+                                </span>
+                             </td>
+                             <td className="py-4 px-4 text-right">
+                                <span className="text-xs font-bold text-slate-900 italic">{fmtM(row.min)} - {fmtM(row.max)}</span>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
+                    <tfoot className="bg-slate-900/5">
+                       <tr>
+                          <td colSpan={2} className="py-4 px-4 text-[10px] font-bold text-slate-500 uppercase italic">Ước tính (Theo 3 tháng)</td>
+                          <td className="py-4 px-4 text-right text-sm font-bold gold-text">{fmtM(brandMin)} - {fmtM(brandMax)}</td>
+                       </tr>
+                    </tfoot>
+                 </table>
+              </div>
+           </div>
+
+           {/* SALES TABLE */}
+           <div className="white-card overflow-hidden rounded-[2.5rem] shadow-2xl border-2 border-slate-100 flex flex-col">
+              <div className="p-8 bg-gradient-to-br from-slate-900 to-slate-800 flex items-center gap-4">
+                 <div className="p-3 bg-emerald-500/20 rounded-xl border border-emerald-500/30">
+                    <TrendingUp size={20} className="text-emerald-400" />
+                 </div>
+                 <h4 className="text-lg font-bold text-white tracking-tight italic">CHI PHÍ BÁN HÀNG</h4>
+              </div>
+              <div className="flex-1 overflow-x-auto">
+                 <table className="w-full">
+                    <thead>
+                       <tr className="bg-slate-50 border-b border-slate-100">
+                          <th className="text-[9px] font-bold text-slate-400 uppercase py-4 px-4 text-left">Hạng mục</th>
+                          <th className="text-[9px] font-bold text-slate-400 uppercase py-4 px-4 text-center">Tần suất</th>
+                          <th className="text-[9px] font-bold text-emerald-600 uppercase py-4 px-4 text-right">Dự toán</th>
+                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                       {[...salesOneTime, ...salesMonthly].map((row, i) => (
+                          <tr key={i} className="hover:bg-slate-50 group transition-colors">
+                             <td className="py-4 px-4">
+                                <p className="text-xs font-bold text-slate-700 group-hover:text-slate-900">{row.item}</p>
+                                <p className="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">{row.category}</p>
+                             </td>
+                             <td className="py-4 px-4 text-center">
+                                <span className={`text-[8px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${row.unit === 'Dự án' || row.unit === 'Buổi' || row.unit === 'Gói' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
+                                   {row.unit}
+                                </span>
+                             </td>
+                             <td className="py-4 px-4 text-right">
+                                <span className="text-xs font-bold text-slate-900 italic">{fmtM(row.min)} - {fmtM(row.max)}</span>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
+                    <tfoot className="bg-slate-900/5">
+                       <tr>
+                          <td colSpan={2} className="py-4 px-4 text-[10px] font-bold text-slate-500 uppercase italic">Ước tính (Theo 3 tháng)</td>
+                          <td className="py-4 px-4 text-right text-sm font-bold text-emerald-600">{fmtM(salesMin)} - {fmtM(salesMax)}</td>
+                       </tr>
+                    </tfoot>
+                 </table>
+              </div>
+           </div>
+         </div>
       </div>
 
       {/* === TỔNG KẾT CUỐI === */}
